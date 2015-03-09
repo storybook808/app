@@ -189,22 +189,25 @@ void setDirection(Motor channel, Direction state)
 	return;
 }
 
-uint32_t currentSpeed(Motor channel)
-{
+int currentSpeed(Motor channel) {
 	if (channel == LEFTMOTOR) return leftMotorSpeed;
 	else return rightMotorSpeed;
 }
 
-void setSpeed(Motor channel, uint32_t speed)
-{
-	if (channel == LEFTMOTOR)
-	{
+void setSpeed(Motor channel, int speed) {
+	if (speed >= 0) {
+		setDirection(channel, FORWARD);
+	}
+	else {
+		setDirection(channel, BACKWARD);
+	}
+
+	if (channel == LEFTMOTOR) {
 		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7) == GPIO_PIN_SET) speed = PERIOD - speed;
 		leftMotorSpeed = speed;
 		__HAL_TIM_SetCompare(&motorHandler, TIM_CHANNEL_1, speed);
 	}
-	else
-	{
+	else {
 		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9) == GPIO_PIN_SET) speed = PERIOD - speed;
 		rightMotorSpeed = speed;
 		__HAL_TIM_SetCompare(&motorHandler, TIM_CHANNEL_3, speed);
