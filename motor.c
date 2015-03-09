@@ -28,7 +28,7 @@ static uint32_t targetTimeDifference;
 
 static int leftSpeedBuffer, rightSpeedBuffer;
 
-void initMotor() {
+void initMotor(void) {
 	leftMotorSpeed  = 0;
 	rightMotorSpeed = 0;
 	countMinor = 0;
