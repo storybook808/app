@@ -214,15 +214,12 @@ void setSpeed(Motor channel, int speed) {
 	}
 }
 
-void toggleDirection(Motor channel)
-{
-	if (channel == LEFTMOTOR)
-	{
+void toggleDirection(Motor channel) {
+	if (channel == LEFTMOTOR) {
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
 		setSpeed(channel, leftMotorSpeed);
 	}
-	else
-	{
+	else {
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
 		setSpeed(channel, rightMotorSpeed);
 	}
