@@ -43,7 +43,7 @@ void main(void) {
 		//Check for a low battery fault
 		batteryFault();
 
-		value = ADC_getSampleAvgNDeleteX(20,8,LEFT_DET);
+		value = ADC_getSampleAvgNDeleteX(30,10,LEFT_DET);
 		printUSART(value);
 		printNL();
 	}
