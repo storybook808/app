@@ -53,6 +53,9 @@ int readRightCenterSensor();
 int readLeftCenterSesnor();
 int readLeftSensor();
 
+void initSensorData();
+double rightSensorDistance(int value);
+
 uint16_t ADC_getSampleAvgNDeleteX(uint8_t N, uint8_t X, int channel);
 void Sort_tab(uint16_t tab[], uint8_t length);
 //void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);

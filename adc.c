@@ -14,7 +14,35 @@ uint16_t uhADCxConvertedValue = 0;
 int convertedValue[6];
 int currentTarget;
 
+struct sensorData {
+    int reading[20];
+    float m[20];
+    float b[20];
+} sensorData;
+
+sensorData rightSensor;
+
+void initSensorData() {
+    rightSensor.reading = {3648,3482,3204,2781,2468,2255,2098,1969,1877,1806,1742,1695,1652,1617,1588,1565,1546,130,1517,1506};
+    rightSensor.m = {-0.00602,-0.00360,-0.00236,-0.00319,-0.00469,-0.00637,-0.00775,-0.01087,-0.01408,-0.01536,-0.02128,-0.02326,-0.02857,-0.03448,-0.04348,-0.05263,-0.06250,-0.07692,-0.09091,-0.1};
+    rightSensor.b = {21.9759,13.52518,9.57447,11.88498,15.58685,19.36306,22.23357,28.40217,34.43662,37.21875,47.06383,50.41860,59.2,68.75862,83.04348,97.36842,112.625,134.69231,155.90909,169.6};
+}
+
+double rightSensorDistance(int value) {
+    int i;
+    for (i = 0; i < 19; i++) {
+        if (value < rightSensor.reading[i] && value > rightSensor[i+1]) {
+            return rightSensor.m*value+rightSensor.b;
+        }
+        else
+            return 20.0;
+    }
+}
+
 void initADC() {
+    
+    initSensorData();
+    
     currentTarget = 0;
     convertedValue[0] = 0;
     convertedValue[1] = 0;
