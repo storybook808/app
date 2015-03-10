@@ -53,7 +53,6 @@ int readRightCenterSensor();
 int readLeftCenterSesnor();
 int readLeftSensor();
 
-void initSensorData();
 double rightSensorDistance(int value);
 double leftSensorDistance(int value);
 double rightCenterSensorDistance(int value);

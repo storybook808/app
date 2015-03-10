@@ -37,21 +37,17 @@ void main(void) {
 	printStringUSART("Hello world!");
 	printNL();
 
-	int right;
-	int left;
-	int distance = 0;
+	int value;
+	double distance;
 
 	while (1) {
 		//Check for a low battery fault
 		batteryFault();
-		left = readRightCenterSensor();
-		printUSART(distance);
-		printStringUSART(",");
-		printUSART(left);
+
+		value = readRightSensor();
+		distance = rightSensorDistance(value);
+		printFloat(distance);
 		printNL();
-		if(distance == 21) printStringUSART("Finished taking readings");
-		HAL_Delay(10000);
-		distance++;
 	}
 
     return;
