@@ -43,9 +43,12 @@ void main(void) {
 		//Check for a low battery fault
 		batteryFault();
 
-		encoder = readEncoder(RIGHTENCODER);
-		printUSART(encoder);
-		printNL();
+		setLED(WHITE);
+		setSpeed(RIGHTMOTOR, 100);
+		HAL_Delay(1000);
+		resetLED(WHITE);
+		setSpeed(RIGHTMOTOR, -100);
+		HAL_Delay(1000);
 	}
 
     return;

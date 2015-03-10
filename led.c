@@ -34,7 +34,7 @@ void initLED(void) {
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
-void setLED(int color) {
+void setLED(Led color) {
 	switch (color) {
 	case WHITE:
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET);
