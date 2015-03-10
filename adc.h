@@ -55,6 +55,9 @@ int readLeftSensor();
 
 void initSensorData();
 double rightSensorDistance(int value);
+double leftSensorDistance(int value);
+double rightCenterSensorDistance(int value);
+double leftCenterSensorDistance(int value);
 
 uint16_t ADC_getSampleAvgNDeleteX(uint8_t N, uint8_t X, int channel);
 void Sort_tab(uint16_t tab[], uint8_t length);
