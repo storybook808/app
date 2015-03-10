@@ -37,15 +37,69 @@ void main(void) {
 	printStringUSART("Hello world!");
 	printNL();
 
-	int value;
+	int rightBase = 100;
+	int leftBase  = 100;
+
+	int rightCorrected, leftCorrected;
+
+	setSpeed(LEFTMOTOR, leftBase);
+	setSpeed(RIGHTMOTOR, rightBase);
 
 	while (1) {
+		int left, right;
+		int leftF[4], rightF[4];
 		//Check for a low battery fault
 		batteryFault();
 
-		value = ADC_getSampleAvgNDeleteX(20,8,LEFT_DET);
-		printUSART(value);
-		printNL();
+		if (readADC(LEFT_DET) > 1600 && readADC(RIGHT_DET) > 1600)
+		{
+			setSpeed(LEFTMOTOR, 0);
+			setSpeed(RIGHTMOTOR, 0);
+			resetEncoder(LEFTENCODER);
+			resetEncoder(RIGHTENCODER);
+			setLED(WHITE);
+			setSpeed(LEFTMOTOR, -leftBase);
+			setSpeed(RIGHTMOTOR, rightBase);
+			while (readEncoder(RIGHTENCODER) < 1500);
+			setSpeed(LEFTMOTOR, 0);
+			setSpeed(RIGHTMOTOR, 0);
+
+		}
+		else
+		{
+			int x;
+			resetLED(WHITE);
+			left = readADC(LEFT_CEN_DET);
+			right = readRightSensor();
+			if (right < 1000)
+			{
+				setSpeed(LEFTMOTOR, leftBase);
+				setSpeed(RIGHTMOTOR, rightBase);
+				resetEncoder(RIGHTENCODER);
+				while (readEncoder(RIGHTENCODER) < 3200);
+				setSpeed(LEFTMOTOR, 0);
+				setSpeed(RIGHTMOTOR, 0);
+
+				setSpeed(LEFTMOTOR, leftBase*2);
+				setSpeed(RIGHTMOTOR, -rightBase*2);
+				resetEncoder(LEFTENCODER);
+				while (readEncoder(LEFTENCODER) < 1900);
+				setSpeed(LEFTMOTOR, 0);
+				setSpeed(RIGHTMOTOR, 0);
+			}
+			else
+			{
+				if (left > 1600) rightCorrected = (3800 - left)/((3800-1600)/rightBase);
+				else rightCorrected = rightBase;
+				if (right > 1600) leftCorrected = (3800 - right)/((3800-1600)/leftBase);
+				else leftCorrected = leftBase;
+
+				setSpeed(LEFTMOTOR, leftCorrected);
+				setSpeed(RIGHTMOTOR, rightCorrected);
+			}
+
+
+		}
 	}
 
     return;
