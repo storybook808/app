@@ -48,6 +48,11 @@ double rightCenterSensorConversion(uint32_t reading);
 double leftCenterSensorConversion(uint32_t reading);
 void sensorCalibrationPrint(int sensor, int distance);
 
-uint16_t ADC_GetSampleAvgNDeleteX(uint8_t N, uint8_t X, int channel);
+int readRightSensor();
+int readRightCenterSensor();
+int readLeftCenterSesnor();
+int readLeftSensor();
+
+uint16_t ADC_getSampleAvgNDeleteX(uint8_t N, uint8_t X, int channel);
 void Sort_tab(uint16_t tab[], uint8_t length);
 //void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);

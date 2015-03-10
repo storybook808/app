@@ -37,15 +37,21 @@ void main(void) {
 	printStringUSART("Hello world!");
 	printNL();
 
-	int value;
+	int right;
+	int left;
+	int distance = 0;
 
 	while (1) {
 		//Check for a low battery fault
 		batteryFault();
-
-		value = ADC_getSampleAvgNDeleteX(30,10,LEFT_DET);
-		printUSART(value);
+		left = readRightCenterSensor();
+		printUSART(distance);
+		printStringUSART(",");
+		printUSART(left);
 		printNL();
+		if(distance == 21) printStringUSART("Finished taking readings");
+		HAL_Delay(10000);
+		distance++;
 	}
 
     return;
