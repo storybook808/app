@@ -37,14 +37,14 @@ void main(void) {
 	printStringUSART("Hello world!");
 	printNL();
 
-	int encoder;
+	int value;
 
 	while (1) {
 		//Check for a low battery fault
 		batteryFault();
 
-		encoder = readEncoder(RIGHTENCODER);
-		printUSART(encoder);
+		value = ADC_getSampleAvgNDeleteX(20,8,LEFT_DET);
+		printUSART(value);
 		printNL();
 	}
 

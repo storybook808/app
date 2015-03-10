@@ -42,10 +42,10 @@
 void initADC();
 uint32_t readADC(int channel);
 uint32_t readBattery(void);
-double rightSensorConversion(int reading);
-double leftSensorConversion(int reading);
-double rightCenterSensorConversion(int reading);
-double leftCenterSensorConversion(int reading);
+double rightSensorConversion(uint32_t reading);
+double leftSensorConversion(uint32_t reading);
+double rightCenterSensorConversion(uint32_t reading);
+double leftCenterSensorConversion(uint32_t reading);
 void sensorCalibrationPrint(int sensor, int distance);
 
 uint16_t ADC_GetSampleAvgNDeleteX(uint8_t N, uint8_t X, int channel);

@@ -189,7 +189,7 @@ uint32_t readADC(int channel) {
     return HAL_ADC_GetValue(&ADCHandle);
 }
 
-float rightSensorConversion(uint32_t x) {
+double rightSensorConversion(uint32_t x) {
     if (x > 2335) {
         return (-3*0.000000001*x*x*x + 3*0.00001*x*x - 0.0801*x + 86.366);
     }
@@ -210,7 +210,7 @@ float rightSensorConversion(uint32_t x) {
     }
 }
 
-float leftSensorConversion(uint32_t x) {
+double leftSensorConversion(uint32_t x) {
     if (x > 1915) {
         return (-2*0.000000001*x*x*x + 0.00001*x*x -0.0377*x + 40.632);
     }
@@ -231,7 +231,7 @@ float leftSensorConversion(uint32_t x) {
     }
 }
 
-float rightCenterSensorConversion(uint32_t x) {
+double rightCenterSensorConversion(uint32_t x) {
     if (x > 3660) {
         return (-8*0.00001*x*x + 0.5542*x - 1008.6);
     }
@@ -252,7 +252,7 @@ float rightCenterSensorConversion(uint32_t x) {
     }
 }
 
-float leftCenterSensorConversion(uint32_t x) {
+double leftCenterSensorConversion(uint32_t x) {
     if (x > 3493) {
         return (-0.0000001*x*x*x + 0.0012*x*x - 4.46*x + 5399.2);
     }
@@ -273,7 +273,7 @@ float leftCenterSensorConversion(uint32_t x) {
     }
 }
 
-uint16_t ADC_GetSampleAvgNDeleteX(uint8_t N, uint8_t X, int channel) {
+uint16_t ADC_getSampleAvgNDeleteX(uint8_t N, uint8_t X, int channel) {
     uint32_t avg_sample = 0x00;
     uint16_t adc_sample[N];
     uint8_t index = 0x00;
@@ -302,7 +302,7 @@ void Sort_tab(uint16_t tab[], uint8_t length) {
     uint8_t exchange = 0x01;
     uint16_t tmp=0x00;
     
-    while (echange==1)) {
+    while (exchange==1) {
         exchange = 0;
         for (l = 0; l < length-1; l++) {
             if (tab[l] > tab[l+1]) {
