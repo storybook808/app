@@ -36,70 +36,36 @@ void main(void) {
 
 	printStringUSART("Hello world!");
 	printNL();
+	
+	int idealLeft = readLeftCenterSensor();
+	int idealRight = readRightCenterSensor();
 
-	int rightBase = 100;
-	int leftBase  = 100;
+	int leftBase  = 125;
+	int rightBase = 125;
 
-	int rightCorrected, leftCorrected;
+	int left, right;
+	int leftCenter, rightCenter;
 
-	setSpeed(LEFTMOTOR, leftBase);
-	setSpeed(RIGHTMOTOR, rightBase);
+	float leftError, rightError;
+
+	int kPLeft = 16, kPRight = 16;
 
 	while (1) {
-		int left, right;
-		int leftF[4], rightF[4];
-		//Check for a low battery fault
 		batteryFault();
 
-		if (readADC(LEFT_DET) > 1600 && readADC(RIGHT_DET) > 1600)
-		{
-			setSpeed(LEFTMOTOR, 0);
-			setSpeed(RIGHTMOTOR, 0);
-			resetEncoder(LEFTENCODER);
-			resetEncoder(RIGHTENCODER);
-			setLED(WHITE);
-			setSpeed(LEFTMOTOR, -leftBase);
-			setSpeed(RIGHTMOTOR, rightBase);
-			while (readEncoder(RIGHTENCODER) < 1500);
-			setSpeed(LEFTMOTOR, 0);
-			setSpeed(RIGHTMOTOR, 0);
+		left = readLeftSensor();
+		right = readRightSensor();
+		leftCenter = readLeftCenterSensor();
+		rightCenter = readRightCenterSensor();
 
-		}
-		else
-		{
-			int x;
-			resetLED(WHITE);
-			left = readADC(LEFT_CEN_DET);
-			right = readRightSensor();
-			if (right < 1000)
-			{
-				setSpeed(LEFTMOTOR, leftBase);
-				setSpeed(RIGHTMOTOR, rightBase);
-				resetEncoder(RIGHTENCODER);
-				while (readEncoder(RIGHTENCODER) < 3200);
-				setSpeed(LEFTMOTOR, 0);
-				setSpeed(RIGHTMOTOR, 0);
+		leftError = (leftCenter - idealLeft) / (float)idealLeft;
+		rightError = (rightCenter - idealRight) / (float)idealRight;
 
-				setSpeed(LEFTMOTOR, leftBase*2);
-				setSpeed(RIGHTMOTOR, -rightBase*2);
-				resetEncoder(LEFTENCODER);
-				while (readEncoder(LEFTENCODER) < 1900);
-				setSpeed(LEFTMOTOR, 0);
-				setSpeed(RIGHTMOTOR, 0);
-			}
-			else
-			{
-				if (left > 1600) rightCorrected = (3800 - left)/((3800-1600)/rightBase);
-				else rightCorrected = rightBase;
-				if (right > 1600) leftCorrected = (3800 - right)/((3800-1600)/leftBase);
-				else leftCorrected = leftBase;
+		leftError = leftError * 100 * 0.3;
+		rightError = rightError * 100 * 0.3;
 
-				setSpeed(LEFTMOTOR, leftCorrected);
-				setSpeed(RIGHTMOTOR, rightCorrected);
-			}
-
-
-		}
+		setSpeed(LEFTMOTOR, leftBase - (int)rightError);
+		setSpeed(RIGHTMOTOR, rightBase - (int)leftError);
 	}
 
     return;
