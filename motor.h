@@ -1,4 +1,4 @@
-#define PERIOD 600
+#define PERIOD 1000
 
 typedef enum
 {
