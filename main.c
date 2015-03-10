@@ -37,18 +37,15 @@ void main(void) {
 	printStringUSART("Hello world!");
 	printNL();
 
-	int encoder;
+	int value;
 
 	while (1) {
 		//Check for a low battery fault
 		batteryFault();
 
-		setLED(WHITE);
-		setSpeed(RIGHTMOTOR, 100);
-		HAL_Delay(1000);
-		resetLED(WHITE);
-		setSpeed(RIGHTMOTOR, -100);
-		HAL_Delay(1000);
+		value = ADC_getSampleAvgNDeleteX(20,8,LEFT_DET);
+		printUSART(value);
+		printNL();
 	}
 
     return;

@@ -15,100 +15,100 @@ int convertedValue[6];
 int currentTarget;
 
 void initADC() {
-	currentTarget = 0;
-	convertedValue[0] = 0;
-	convertedValue[1] = 0;
-	convertedValue[2] = 0;
-	convertedValue[3] = 0;
-	convertedValue[4] = 0;
-	convertedValue[5] = 0;
-
-	//Data structure for GPIO configuration
-	GPIO_InitTypeDef GPIO_InitStructure;
-
-	ADC_ChannelConfTypeDef sConfig;
-
-	//Enable GPIO clock for LED module (C & H)
-	__GPIOA_CLK_ENABLE();
-	__GPIOB_CLK_ENABLE();
-	__GPIOC_CLK_ENABLE();
-	__GPIOH_CLK_ENABLE();
-
-	//Enable ADC clock
-	__ADC1_CLK_ENABLE();
-
-	//Configure data structure for GPIO output
-	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStructure.Pull = GPIO_NOPULL;
-	GPIO_InitStructure.Speed = GPIO_SPEED_MEDIUM;
-
-	//Left emitter
-	GPIO_InitStructure.Pin = GPIO_PIN_1;
-	HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
-
-	//Left center emitter
-	GPIO_InitStructure.Pin = GPIO_PIN_15;
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
-
-	//Right center emitter
-	GPIO_InitStructure.Pin = GPIO_PIN_0;
-	HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
-
-	//Right emitter
-	GPIO_InitStructure.Pin = GPIO_PIN_14;
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
-
-	GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
-	GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
-
-	//Left detector
-	GPIO_InitStructure.Pin = GPIO_PIN_0;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-	//Left center detector
-	GPIO_InitStructure.Pin = GPIO_PIN_7;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-	//Right center detector
-	GPIO_InitStructure.Pin = GPIO_PIN_4;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-	//Right detector
-	GPIO_InitStructure.Pin = GPIO_PIN_5;
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
-
-	//Voltage detector
-	GPIO_InitStructure.Pin = GPIO_PIN_1;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-	//Gyroscope
-
-	ADCHandle.Instance = ADC1;
-
-	ADCHandle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
-	ADCHandle.Init.Resolution = ADC_RESOLUTION12b;
-	ADCHandle.Init.ScanConvMode = ENABLE;
-	ADCHandle.Init.ContinuousConvMode = DISABLE;
-	ADCHandle.Init.NbrOfConversion = 1;
-	ADCHandle.Init.DiscontinuousConvMode = DISABLE;
-	ADCHandle.Init.NbrOfDiscConversion = 0;
-	ADCHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-	ADCHandle.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC1;
-	ADCHandle.Init.DMAContinuousRequests = DISABLE;
-	ADCHandle.Init.EOCSelection = DISABLE;
-
-	HAL_ADC_Init(&ADCHandle);
-
-	//Left detector
-	sConfig.Channel = ADC_CHANNEL_8;
-	sConfig.Rank = 1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-	sConfig.Offset = 0;
-	HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
-
-//	HAL_NVIC_EnableIRQ(ADC_IRQn);
-
-	return;
+    currentTarget = 0;
+    convertedValue[0] = 0;
+    convertedValue[1] = 0;
+    convertedValue[2] = 0;
+    convertedValue[3] = 0;
+    convertedValue[4] = 0;
+    convertedValue[5] = 0;
+    
+    //Data structure for GPIO configuration
+    GPIO_InitTypeDef GPIO_InitStructure;
+    
+    ADC_ChannelConfTypeDef sConfig;
+    
+    //Enable GPIO clock for LED module (C & H)
+    __GPIOA_CLK_ENABLE();
+    __GPIOB_CLK_ENABLE();
+    __GPIOC_CLK_ENABLE();
+    __GPIOH_CLK_ENABLE();
+    
+    //Enable ADC clock
+    __ADC1_CLK_ENABLE();
+    
+    //Configure data structure for GPIO output
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStructure.Pull = GPIO_NOPULL;
+    GPIO_InitStructure.Speed = GPIO_SPEED_MEDIUM;
+    
+    //Left emitter
+    GPIO_InitStructure.Pin = GPIO_PIN_1;
+    HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
+    
+    //Left center emitter
+    GPIO_InitStructure.Pin = GPIO_PIN_15;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+    
+    //Right center emitter
+    GPIO_InitStructure.Pin = GPIO_PIN_0;
+    HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
+    
+    //Right emitter
+    GPIO_InitStructure.Pin = GPIO_PIN_14;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+    
+    GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
+    
+    //Left detector
+    GPIO_InitStructure.Pin = GPIO_PIN_0;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+    
+    //Left center detector
+    GPIO_InitStructure.Pin = GPIO_PIN_7;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+    
+    //Right center detector
+    GPIO_InitStructure.Pin = GPIO_PIN_4;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+    
+    //Right detector
+    GPIO_InitStructure.Pin = GPIO_PIN_5;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+    
+    //Voltage detector
+    GPIO_InitStructure.Pin = GPIO_PIN_1;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+    
+    //Gyroscope
+    
+    ADCHandle.Instance = ADC1;
+    
+    ADCHandle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
+    ADCHandle.Init.Resolution = ADC_RESOLUTION12b;
+    ADCHandle.Init.ScanConvMode = ENABLE;
+    ADCHandle.Init.ContinuousConvMode = DISABLE;
+    ADCHandle.Init.NbrOfConversion = 1;
+    ADCHandle.Init.DiscontinuousConvMode = DISABLE;
+    ADCHandle.Init.NbrOfDiscConversion = 0;
+    ADCHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+    ADCHandle.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC1;
+    ADCHandle.Init.DMAContinuousRequests = DISABLE;
+    ADCHandle.Init.EOCSelection = DISABLE;
+    
+    HAL_ADC_Init(&ADCHandle);
+    
+    //Left detector
+    sConfig.Channel = ADC_CHANNEL_8;
+    sConfig.Rank = 1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+    sConfig.Offset = 0;
+    HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+    
+    //	HAL_NVIC_EnableIRQ(ADC_IRQn);
+    
+    return;
 }
 
 uint32_t readBattery() {
@@ -120,149 +120,199 @@ uint32_t readBattery() {
     sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
     sConfig.Offset = 0;
     HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
-
+    
     HAL_ADC_Start(&ADCHandle);
     //Wait for conversion
     while(HAL_ADC_PollForConversion(&ADCHandle, HAL_MAX_DELAY) != HAL_OK);
-
+    
     return HAL_ADC_GetValue(&ADCHandle);
 }
 
 uint32_t readADC(int channel) {
-	ADC_ChannelConfTypeDef sConfig;
-	int x = 14444;
+    ADC_ChannelConfTypeDef sConfig;
+    int x = 14444;
     int i = x;
-
-	switch (channel) {
-		case LEFT_DET:
-			//Left detector
-			sConfig.Channel = ADC_CHANNEL_8;
-			sConfig.Rank = 1;
-			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-			sConfig.Offset = 0;
-			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
-			HAL_GPIO_WritePin(GPIOH, GPIO_PIN_1, GPIO_PIN_SET);
-			break;
-		case LEFT_CEN_DET:
-			//Left center detector
-			sConfig.Channel = ADC_CHANNEL_7;
-			sConfig.Rank = 1;
-			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-			sConfig.Offset = 0;
-			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
-			break;
-		case RIGHT_CEN_DET:
-			//Right center detector
-			sConfig.Channel = ADC_CHANNEL_4;
-			sConfig.Rank = 1;
-			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-			sConfig.Offset = 0;
-			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
-			HAL_GPIO_WritePin(GPIOH, GPIO_PIN_0, GPIO_PIN_SET);
-			break;
-		case RIGHT_DET:
-			//Right detector
-			sConfig.Channel = ADC_CHANNEL_15;
-			sConfig.Rank = 1;
-			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-			sConfig.Offset = 0;
-			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
-			break;
-	}
+    
+    switch (channel) {
+        case LEFT_DET:
+            //Left detector
+            sConfig.Channel = ADC_CHANNEL_8;
+            sConfig.Rank = 1;
+            sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+            sConfig.Offset = 0;
+            HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+            HAL_GPIO_WritePin(GPIOH, GPIO_PIN_1, GPIO_PIN_SET);
+            break;
+        case LEFT_CEN_DET:
+            //Left center detector
+            sConfig.Channel = ADC_CHANNEL_7;
+            sConfig.Rank = 1;
+            sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+            sConfig.Offset = 0;
+            HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+            break;
+        case RIGHT_CEN_DET:
+            //Right center detector
+            sConfig.Channel = ADC_CHANNEL_4;
+            sConfig.Rank = 1;
+            sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+            sConfig.Offset = 0;
+            HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+            HAL_GPIO_WritePin(GPIOH, GPIO_PIN_0, GPIO_PIN_SET);
+            break;
+        case RIGHT_DET:
+            //Right detector
+            sConfig.Channel = ADC_CHANNEL_15;
+            sConfig.Rank = 1;
+            sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+            sConfig.Offset = 0;
+            HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
+            break;
+    }
     // Wait 8us
     while(i--);
     i = x;
-
-	HAL_ADC_Start(&ADCHandle);
-
-	//Wait for conversion
-	while(HAL_ADC_PollForConversion(&ADCHandle, HAL_MAX_DELAY) != HAL_OK);
-	HAL_GPIO_WritePin(GPIOH, GPIO_PIN_1, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOH, GPIO_PIN_0, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET);
+    
+    HAL_ADC_Start(&ADCHandle);
+    
+    //Wait for conversion
+    while(HAL_ADC_PollForConversion(&ADCHandle, HAL_MAX_DELAY) != HAL_OK);
+    HAL_GPIO_WritePin(GPIOH, GPIO_PIN_1, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOH, GPIO_PIN_0, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET);
     
     while(i--);
     
-	return HAL_ADC_GetValue(&ADCHandle);
+    return HAL_ADC_GetValue(&ADCHandle);
 }
 
-void sensorCalibrationPrint(int sensor, int distance) {
-	int i = 0;
-	if(sensor == RIGHT_DET) printStringUSART("Right Sensor");
-	if(sensor == LEFT_DET) printStringUSART("Left Sensor");
-	if(sensor == RIGHT_CEN_DET) printStringUSART("Right Center Sensor");
-	if(sensor == LEFT_CEN_DET) printStringUSART("Left Center Sensor");
-	printNL();
-	int readings[distance+1];
-	while(i < distance+1) {
-		printStringUSART("Move to ");
-		printUSART(i);
-		printStringUSART("cm");
-		printNL();
-		HAL_Delay(10000);
-
-		int value = 0;
-		int j;
-		for(j = 0; j < 10; j++)
-			value+=readADC(sensor);
-		value/=10;
-		readings[i] = value;
-		i++;
-
-		if(i == distance+1) {
-			printStringUSART("Printing CSV");
-			printNL();
-			HAL_Delay(5000);
-			for(j = 0; j < distance+1; j++) {
-				printUSART(j);
-				printStringUSART(",");
-				printUSART(readings[j]);
-				printNL();
-			}
-		}
-	}
-	printStringUSART("Finished Generating");
-	printNL();
-	HAL_Delay(5000);
+double rightSensorConversion(uint32_t x) {
+    if (x > 2335) {
+        return (-3*0.000000001*x*x*x + 3*0.00001*x*x - 0.0801*x + 86.366);
+    }
+    else if (x > 1823) {
+        return (0.00001*x*x - 0.0622*x + 81.166);
+    }
+    else if (x > 1642) {
+        return (6*0.00001*x*x - 0.2513*x + 253.42);
+    }
+    else if (x > 1568) {
+        return (-0.0666*x + 124.07);
+    }
+    else if (x > 1533) {
+        return (-0.1388*x + 237.54);
+    }
+    else {
+        return (-0.2857*x + 462.79);
+    }
 }
 
-double rightSensorConversion(int x) {
-	int y = (-4.936*0.000000001*x*x*x + 4.23*0.00001*x*x - 0.122*x + 121.158);
-
-    if(x > RIGHT_MAX) {return 0.00;}
-    else if(x < RIGHT_MIN) {return CALI_DIST;}
-    else {return y;}
+double leftSensorConversion(uint32_t x) {
+    if (x > 1915) {
+        return (-2*0.000000001*x*x*x + 0.00001*x*x -0.0377*x + 40.632);
+    }
+    else if (x > 1348) {
+        return (8*0.000001*x*x - 0.0342*x + 41.765);
+    }
+    else if (x > 1137) {
+        return (5*0.00001*x*x - 0.1475*x + 118.19);
+    }
+    else if (x > 1049) {
+        return (-0.0561*x + 78.584);
+    }
+    else if ( x > 1006) {
+        return (-0.113*x + 138.43);
+    }
+    else {
+        return (-0.2249*x + 251.06);
+    }
 }
 
-double leftSensorConversion(int x) {
-	int y;
-
-    if(x > LEFT_MAX) {return 0.00;}
-    else if(x < LEFT_MIN) {return CALI_DIST;}
-    else if(x <= LEFT_MAX && x > LEFT_5) y = -4.234*0.000000000000001*x*x*x*x*x + 5.694*0.00000000001*x*x*x*x - 3.042*0.0000001*x*x*x + 8.077*0.0001*x*x - 1.069*x + 570.707;
-    else if(x <= LEFT_5 && x > LEFT_10) y = -8.796*0.000000001*x*x*x + 5.115*0.00001*x*x - 0.104*x + 77.862;
-    else y = 4.603*0.00001*x*x - 0.132*x + 104.653;
-
-    return y;
+double rightCenterSensorConversion(uint32_t x) {
+    if (x > 3660) {
+        return (-8*0.00001*x*x + 0.5542*x - 1008.6);
+    }
+    else if (x > 2533) {
+        return (-4*0.000000001*x*x*x + 4*0.00001*x*x - 0.1163*x + 132.56);
+    }
+    else if (x > 2023) {
+        return (0.00001*x*x - 0.0554*x + 86.04);
+    }
+    else if (x > 1833) {
+        return (5*0.00001*x*x - 0.2281*x + 261.94);
+    }
+    else if (x > 1742) {
+        return (0.0546*x + 119.97);
+    }
+    else {
+        return (-0.1*x + 199.01);
+    }
 }
 
-double rightCenterSensorConversion(int x) {
-	int y = (-4.782*0.000000001*x*x*x + 4.196*0.00001*x*x - 0.125*x + 134.84);
-
-    if(x > RIGHT_MAX) {return 0.00;}
-    else if(x < RIGHT_CEN_MIN) {return 50.00;}
-    else {return y;}
+double leftCenterSensorConversion(uint32_t x) {
+    if (x > 3493) {
+        return (-0.0000001*x*x*x + 0.0012*x*x - 4.46*x + 5399.2);
+    }
+    else if (x > 2221) {
+        return (-3*0.000000001*x*x*x + 2*0.00001*x*x - 0.0749*x + 87.392);
+    }
+    else if (x > 1812) {
+        return (2*0.00001*x*x - 0.0744*x + 99.119);
+    }
+    else if (x > 1666) {
+        return (0.0001*x*x - 0.3747*x + 372.42);
+    }
+    else if (x > 1601) {
+        return (-0.076*x + 146.38);
+    }
+    else {
+        return (-0.1315*x + 235.41);
+    }
 }
 
-double leftCenterSensorConversion(int x) {
-	int y = (-4.806*0.000000001*x*x*x + 4.285*0.00001*x*x - 0.129*x + 139.434);
+uint16_t ADC_getSampleAvgNDeleteX(uint8_t N, uint8_t X, int channel) {
+    uint32_t avg_sample = 0x00;
+    uint16_t adc_sample[N];
+    uint8_t index = 0x00;
+    
+    for (index = 0x00; index<N; index++) {
+        adc_sample[index] = 0x00;
+    }
+    
+    for (index = 0x00; index<N; index++) {
+        adc_sample[index] = readADC(channel);
+    }
+    
+    Sort_tab(adc_sample, N);
+    
+    for (index=X/2; index<N-X/2; index++) {
+        avg_sample += adc_sample[index];
+    }
+    
+    avg_sample /= N-X;
+    
+    return avg_sample;
+}
 
-    if(x > LEFT_MAX) {return 0.00;}
-    else if(x < LEFT_CEN_MIN) {return 15.00;}
-    else {return y;}
+void Sort_tab(uint16_t tab[], uint8_t length) {
+    uint8_t l = 0x00;
+    uint8_t exchange = 0x01;
+    uint16_t tmp=0x00;
+    
+    while (exchange==1) {
+        exchange = 0;
+        for (l = 0; l < length-1; l++) {
+            if (tab[l] > tab[l+1]) {
+                tmp = tab[1];
+                tab[l] = tab[l+1];
+                tab[l+1] = tmp;
+                exchange = 1;
+            }
+        }
+    }
 }
 
 //void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
