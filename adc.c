@@ -14,6 +14,78 @@ uint16_t uhADCxConvertedValue = 0;
 int convertedValue[6];
 int currentTarget;
 
+int rightSensorreading[20] = {3648,3482,3204,2781,2468,2255,2098,1969,1877,1806,1742,1695,1652,1617,1588,1565,1546,130,1517,1506};
+float rightSensorm[20] = {-0.00602,-0.00360,-0.00236,-0.00319,-0.00469,-0.00637,-0.00775,-0.01087,-0.01408,-0.01536,-0.02128,-0.02326,-0.02857,-0.03448,-0.04348,-0.05263,-0.06250,-0.07692,-0.09091,-0.1};
+float rightSensorb[20] = {21.9759,13.52518,9.57447,11.88498,15.58685,19.36306,22.23357,28.40217,34.43662,37.21875,47.06383,50.41860,59.2,68.75862,83.04348,97.36842,112.625,134.69231,155.90909,169.6};
+    
+int leftSensorreading[20] = {3614,3438,2984,2482,2132,1877,1697,1548,1441,1365,1298,1247,1199,1164,1131,1104,1082,1060,1044,1029};
+float leftSensorm[20] = {-0.00568,-0.0022,-0.00199,-0.00286,-0.00392,-0.00538,-0.00699,-0.00935,-0.01316,-0.01493,-0.01961,-0.02083,-0.02857,-0.0303,-0.03704,-0.04545,-0.04545,-0.06250,-0.06667,+0.06667};
+float leftSensorb[20] = {20.53409,8.57269,7.94422,10.09143,12.36078,15.09140,17.82517,21.46729,26.96053,29.37313,35.45098,36.97917,46.25714,48.27273,55.88889,65.18182,65.18182,83.25,84.6,87.6,87.6};
+    
+int rightCenterSensorreading[20] = {4000,3868,3846,3791,3658,3338,2657,2208,1881,1615,1431,1295,1182,1095,1024,963,914,872,932,907,780,760};
+float rightCenterSensorm[20] = {-.1,-.1-0.01818,-0.00752,-0.00313,-0.00147,-0.00223,-0.00306,-0.00376,-0.00543,-0.00735,-0.00885,-0.01149,-0.01408,-0.01639,-0.02041,-0.02381,-0.025,-0.04,-0.03704,-0.05,-0.00132};
+float rightCenterSensorb[20] = {80,80,71.92727,31.50376,15.43125,9.90162,11.91759,13.75229,15.07143,17.77717,20.52206,22.46018,25.58621,28.42254,30.78689,34.65306,37.76190,38.8,51.28,48.88889,59,22};
+    
+int leftCenterSensorreading[20] = {3911,3884,3837,3767,3632,3466,3199,2853,2606,2401,2260,2155,2065,1998,1940,1896,1859,1828,1801,1778,1757,1742};
+float leftCenterSensorm[20] = {-0.03704,-0.02128,-0.01429,-0.00741,-0.00602,-0.00375,-0.00289,-0.00405,-0.00488,-0.00709,-0.00952,-0.01111,-0.01493,-0.01724,-0.02273,-0.02703,-0.03226,-0.03704,-0.04348,-0.04762};
+float leftCenterSensorb[20] = {144.85185,83.63830,56.81426,30.9037,25.87952,17.98127,15.24566,18.55061,20.7122,26.02837,31.52381,34.94444,42.8209,47.44828,58.09091,66.24324,75.96774,84.7037,96.30435,103.66667};
+
+double rightSensorDistance(int value) {
+    if (value > rightSensorreading[0]) {
+        return 0;
+    }
+    double value2 = (float)value;
+    int i;
+    for (i = 0; i < 19; i++) {
+        if (value < rightSensorreading[i] && value > rightSensorreading[i+1]) {
+            return rightSensorm[i]*value2+rightSensorb[i];
+        }
+    }
+    return 20.0;
+}
+
+double leftSensorDistance(int value) {
+    if (value > leftSensorreading[0]) {
+        return 0;
+    }
+    double value2 = (float)value;
+    int i;
+    for (i = 0; i < 19; i++) {
+        if (value < leftSensorreading[i] && value > leftSensorreading[i+1]) {
+            return leftSensorm[i]*value2+leftSensorb[i];
+        }
+    }
+    return 20.0;
+}
+
+double rightCenterSensorDistance(int value) {
+    if (value > rightCenterSensorreading[0]) {
+        return 0;
+    }
+    double value2 = (float)value;
+    int i;
+    for (i = 0; i < 19; i++) {
+        if (value < rightCenterSensorreading[i] && value > rightCenterSensorreading[i+1]) {
+            return rightCenterSensorm[i]*value2+rightCenterSensorb[i];
+        }
+    }
+    return 20.0;
+}
+
+double leftCenterSensorDistance(int value) {
+    if (value > leftCenterSensorreading[0]) {
+        return 0;
+    }
+    double value2 = (float)value;
+    int i;
+    for (i = 0; i < 19; i++) {
+        if (value < leftCenterSensorreading[i] && value > leftCenterSensorreading[i+1]) {
+            return leftCenterSensorm[i]*value2+leftCenterSensorb[i];
+        }
+    }
+    return 20.0;
+}
+
 void initADC() {
     currentTarget = 0;
     convertedValue[0] = 0;

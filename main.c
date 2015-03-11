@@ -37,33 +37,30 @@ void main(void) {
 	printStringUSART("Hello world!");
 	printNL();
 	
-	int idealLeft = readLeftCenterSensor();
-	int idealRight = readRightCenterSensor();
+	double idealLeft = leftCenterSensorDistance(readLeftCenterSensor());
+	double idealRight = rightCenterSensorDistance(readRightCenterSensor());
 
 	int leftBase  = 125;
 	int rightBase = 125;
 
-	int left, right;
-	int leftCenter, rightCenter;
+	double left, right;
+	double leftCenter, rightCenter;
 
-	float leftError, rightError;
-
-	int kPLeft = 16, kPRight = 16;
+	double leftError, rightError;
 
 	while (1) {
 		batteryFault();
 
-		left = readLeftSensor();
-		right = readRightSensor();
-		leftCenter = readLeftCenterSensor();
-		rightCenter = readRightCenterSensor();
+		left = leftSensorDistance(readLeftSensor());
+		right = rightSensorDistance(readRightSensor());
+		leftCenter = leftCenterSensorDistance(readLeftCenterSensor());
+		rightCenter = rightCenterSensorDistance(readRightCenterSensor());
 
-		leftError = (leftCenter - idealLeft) / (float)idealLeft;
-		rightError = (rightCenter - idealRight) / (float)idealRight;
+		leftError = (idealLeft - leftCenter) / (double)idealLeft;
+		rightError = (idealRight - rightCenter) / (double)idealRight;
 
 		leftError = leftError * 100 * 0.3;
 		rightError = rightError * 100 * 0.3;
-
 		setSpeed(LEFTMOTOR, leftBase - (int)rightError);
 		setSpeed(RIGHTMOTOR, rightBase - (int)leftError);
 	}
