@@ -40,29 +40,43 @@ void main(void) {
 	double idealLeft = leftCenterSensorDistance(readLeftCenterSensor());
 	double idealRight = rightCenterSensorDistance(readRightCenterSensor());
 
-	int leftBase  = 125;
-	int rightBase = 125;
+	int leftBase  = 90;
+	int rightBase = (int)(0.92*leftBase);
 
 	double left, right;
 	double leftCenter, rightCenter;
 
-	double leftError, rightError;
+	double leftError = 0, rightError = 0;
+	double leftErrorPrevious, rightErrorPrevious;
+	double frontRatio;
 
 	while (1) {
 		batteryFault();
+
+		leftErrorPrevious = leftError;
+		rightErrorPrevious = rightError;
 
 		left = leftSensorDistance(readLeftSensor());
 		right = rightSensorDistance(readRightSensor());
 		leftCenter = leftCenterSensorDistance(readLeftCenterSensor());
 		rightCenter = rightCenterSensorDistance(readRightCenterSensor());
 
+		if (left < 19.0 && right < 19.0) {
+			frontRatio = (left - 5) / (19.0);
+			
+		}
+		else {
+			frontRatio = 1;
+		}
+
 		leftError = (idealLeft - leftCenter) / (double)idealLeft;
 		rightError = (idealRight - rightCenter) / (double)idealRight;
 
-		leftError = leftError * 100 * 0.3;
-		rightError = rightError * 100 * 0.3;
-		setSpeed(LEFTMOTOR, leftBase - (int)rightError);
-		setSpeed(RIGHTMOTOR, rightBase - (int)leftError);
+		leftError = leftError * 100;
+		rightError = rightError * 100;
+
+		setSpeed(LEFTMOTOR, (int)((leftBase - (rightError*0.1))*frontRatio*frontRatio*frontRatio) /*+ (int)((rightErrorPrevious-rightError)*0.3)*/);
+		setSpeed(RIGHTMOTOR, (int)((rightBase - (leftError*0.5))*frontRatio*frontRatio*frontRatio) /*+ (int)((leftErrorPrevious-leftError)*0.3)*/);
 	}
 
     return;
