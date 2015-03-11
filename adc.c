@@ -36,7 +36,7 @@ double rightSensorDistance(int value) {
     }
     double value2 = (float)value;
     int i;
-    for (i = 0; i < 19; i++) {
+    for (i = 0; i <= 19; i++) {
         if (value < rightSensorreading[i] && value > rightSensorreading[i+1]) {
             return rightSensorm[i]*value2+rightSensorb[i];
         }
@@ -50,7 +50,7 @@ double leftSensorDistance(int value) {
     }
     double value2 = (float)value;
     int i;
-    for (i = 0; i < 19; i++) {
+    for (i = 0; i <= 19; i++) {
         if (value < leftSensorreading[i] && value > leftSensorreading[i+1]) {
             return leftSensorm[i]*value2+leftSensorb[i];
         }
@@ -64,7 +64,7 @@ double rightCenterSensorDistance(int value) {
     }
     double value2 = (float)value;
     int i;
-    for (i = 0; i < 19; i++) {
+    for (i = 0; i <= 19; i++) {
         if (value < rightCenterSensorreading[i] && value > rightCenterSensorreading[i+1]) {
             return rightCenterSensorm[i]*value2+rightCenterSensorb[i];
         }
@@ -78,7 +78,7 @@ double leftCenterSensorDistance(int value) {
     }
     double value2 = (float)value;
     int i;
-    for (i = 0; i < 19; i++) {
+    for (i = 0; i <= 19; i++) {
         if (value < leftCenterSensorreading[i] && value > leftCenterSensorreading[i+1]) {
             return leftCenterSensorm[i]*value2+leftCenterSensorb[i];
         }
