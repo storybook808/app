@@ -4,6 +4,7 @@
 #define RIGHT_DET     3
 #define VOLT_DET      4
 #define GYRO          5
+#define FLASH		  6
 
 #define CALI_DIST 15.00
 
