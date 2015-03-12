@@ -37,25 +37,10 @@ void main(void) {
 	printStringUSART("Hello world!");
 	printNL();
 
-	int right;
-	int left;
-	double distance1;
-	double distance2;
 	while (1) {
 		//Check for a low battery fault
 		batteryFault();
-		left = readLeftSensor();
-		right = readRightSensor();
-		distance1 = leftSensorDistance(left);
-		distance2 = rightSensorDistance(right);
-		printUSART(left);
-		printStringUSART(",");
-		printFloat(distance1);
-		printStringUSART(",");
-		printUSART(right);
-		printStringUSART(",");
-		printFloat(distance2);
-		printNL();
+
 	}
 
     return;
