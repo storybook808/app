@@ -12,6 +12,7 @@
 #include "stm32f4xx_it.h"
 #include "usart.h"
 #include <string.h>
+#include "calibration.h"
 
 //Private prototypes
 void testChaser(int mode, int period);
