@@ -1,4 +1,4 @@
-#define PERIOD 600
+#define PERIOD 1000
 
 typedef enum
 {
@@ -12,10 +12,9 @@ typedef enum
 	BACKWARD
 }Direction;
 
-void initMotor();
-void setBuzzer();
-void setDirection(Motor channel, Direction state);
-uint32_t currentSpeed(Motor channel);
-void setSpeed(Motor channel, uint32_t speed);
-void toggleDirection(Motor channel);
+void initMotor(void);
+void setBuzzer(int state);
+static void setDirection(Motor channel, Direction state);
+int currentSpeed(Motor channel);
+void setSpeed(Motor channel, int speed);
 void travelDistance(uint32_t distance, uint32_t maxSpeed, uint32_t dt);

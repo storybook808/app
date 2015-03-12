@@ -28,7 +28,7 @@ static uint32_t targetTimeDifference;
 
 static int leftSpeedBuffer, rightSpeedBuffer;
 
-void initMotor() {
+void initMotor(void) {
 	leftMotorSpeed  = 0;
 	rightMotorSpeed = 0;
 	countMinor = 0;
@@ -126,102 +126,49 @@ void initMotor() {
 	HAL_TIM_Base_Init(&rightHandler);
 	HAL_TIM_Base_Stop_IT(&rightHandler);
 
-	setDirection(LEFTMOTOR, FORWARD);
-	setDirection(RIGHTMOTOR, FORWARD);
-
-	return;
+	setSpeed(LEFTMOTOR, 0);
+	setSpeed(RIGHTMOTOR, 0);
 }
 
-void setBuzzer(int state)
-{
-	if (state)
-	{
-		HAL_TIM_Base_Start_IT(&buzzerHandler);
+void setBuzzer(int state) {
+	if (state) HAL_TIM_Base_Start_IT(&buzzerHandler);
+	else HAL_TIM_Base_Stop_IT(&buzzerHandler);
+}
+
+static void setDirection(Motor channel, Direction state) {
+	if (channel == LEFTMOTOR) {
+		if (state == FORWARD) HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
+		else HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
 	}
-	else
-	{
-		HAL_TIM_Base_Stop_IT(&buzzerHandler);
+	else {
+		if (state == FORWARD) HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+		else HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
 	}
 }
 
-void setDirection(Motor channel, Direction state)
-{
-	if (channel == LEFTMOTOR)
-	{
-		if (state == FORWARD) //Forward
-		{
-			if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7) == GPIO_PIN_RESET)
-			{
-				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
-				setSpeed(channel, leftMotorSpeed);
-			}
-		}
-		else //Backward
-		{
-			if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7) == GPIO_PIN_SET)
-			{
-				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-				leftMotorSpeed = PERIOD - leftMotorSpeed;
-				setSpeed(channel, leftMotorSpeed);
-			}
-		}
-	}
-	else
-	{
-		if (state == FORWARD) //Forward
-		{
-			if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9) == GPIO_PIN_RESET)
-			{
-				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-				setSpeed(channel, rightMotorSpeed);
-			}
-		}
-		else //Backward
-		{
-			if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9) == GPIO_PIN_SET)
-			{
-				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
-				rightMotorSpeed = PERIOD - rightMotorSpeed;
-				setSpeed(channel, rightMotorSpeed);
-			}
-		}
-	}
-	return;
-}
-
-uint32_t currentSpeed(Motor channel)
-{
+int currentSpeed(Motor channel) {
 	if (channel == LEFTMOTOR) return leftMotorSpeed;
 	else return rightMotorSpeed;
 }
 
-void setSpeed(Motor channel, uint32_t speed)
-{
-	if (channel == LEFTMOTOR)
-	{
+void setSpeed(Motor channel, int speed) {
+	if (speed >= 0) {
+		setDirection(channel, FORWARD);
+	}
+	else {
+		speed = ~speed;
+		setDirection(channel, BACKWARD);
+	}
+
+	if (channel == LEFTMOTOR) {
 		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7) == GPIO_PIN_SET) speed = PERIOD - speed;
 		leftMotorSpeed = speed;
 		__HAL_TIM_SetCompare(&motorHandler, TIM_CHANNEL_1, speed);
 	}
-	else
-	{
+	else {
 		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9) == GPIO_PIN_SET) speed = PERIOD - speed;
 		rightMotorSpeed = speed;
 		__HAL_TIM_SetCompare(&motorHandler, TIM_CHANNEL_3, speed);
-	}
-}
-
-void toggleDirection(Motor channel)
-{
-	if (channel == LEFTMOTOR)
-	{
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
-		setSpeed(channel, leftMotorSpeed);
-	}
-	else
-	{
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
-		setSpeed(channel, rightMotorSpeed);
 	}
 }
 

@@ -4,7 +4,7 @@
 
 #include "led.h"
 
-void initLED() {
+void initLED(void) {
 	//Data structure for GPIO configuration
 	GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -34,52 +34,57 @@ void initLED() {
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
-void setLED(int channel, int state) {
-	switch (channel) {
+void setLED(Led color) {
+	switch (color) {
 	case WHITE:
-		if (state) {
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET);
-		} else {
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET);
-		} break;
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET);
+		break;
 	case BLUE:
-		if (state) {
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
-		} else {
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
-		} break;
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
+		break;
 	case GREEN:
-		if (state) {
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-		} else {
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-		} break;
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+		break;
 	case RED:
-		if (state) {
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
-		} else {
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
-		}
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+		break;
+	}
+}
+
+void resetLED(Led color) {
+	switch (color) {
+	case WHITE:
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET);
+		break;
+	case BLUE:
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
+		break;
+	case GREEN:
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+		break;
+	case RED:
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+		break;
 	}
 }
 
 //Control the state of all 4 LED at once
-void setLEDAll(int state) {
-	if (state) { //On state
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
-	} else { //Off state
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
-	}
+void setLEDAll(void) {
+	setLED(WHITE);
+	setLED(BLUE);
+	setLED(GREEN);
+	setLED(RED);
 }
 
-void toggleLED(int channel) {
-	switch (channel) {
+void resetLEDAll(void) {
+	resetLED(WHITE);
+	resetLED(BLUE);
+	resetLED(GREEN);
+	resetLED(RED);
+}
+
+void toggleLED(Led color) {
+	switch (color) {
 	case WHITE:
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_11);
 		break;
@@ -96,9 +101,9 @@ void toggleLED(int channel) {
 }
 
 //Toggle the state of all 4 LED at once
-void toggleLEDAll() {
-	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_11);
-	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_10);
-	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
+void toggleLEDAll(void) {
+	toggleLED(WHITE);
+	toggleLED(BLUE);
+	toggleLED(GREEN);
+	toggleLED(RED);
 }
