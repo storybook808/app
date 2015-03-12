@@ -6,6 +6,7 @@
 #include "components/coocox-master/STM32F405xx_cmsisboot/source/Hal/stm32f4xx_hal_rcc.h"
 
 #include "adc.h"
+#include "calibration.h"
 #include "encoder.h"
 #include "led.h"
 #include "motor.h"
@@ -31,52 +32,72 @@ void main(void) {
 	initEncoder();
 	initADC();
 
+	uint8_t startFlag = 0;
+	double leftWall, rightWall;
+	double idealLeftCenter, idealRightCenter;
+
+	do {
+		if (readADC(FLASH) < 100) {
+			startFlag = 1;
+		}
+		toggleLED(WHITE);
+		HAL_Delay(500);
+	} while (!startFlag);
+
+	calibrateLeftWall();
+	leftWall = getLeftWall();
+
+	resetLED(WHITE);
+	HAL_Delay(1000);
+
+	startFlag = 0;
+	do {
+		if (readADC(FLASH) < 100) {
+			startFlag = 1;
+		}
+		toggleLED(BLUE);
+		HAL_Delay(500);
+	} while (!startFlag);
+
+	calibrateRightWall();
+	rightWall = getRightWall();
+
+	resetLED(BLUE);
+	HAL_Delay(1000);
+
+	startFlag = 0;
+	do {
+		if (readADC(FLASH) < 100) {
+			startFlag = 1;
+		}
+		toggleLED(GREEN);
+		HAL_Delay(500);
+	} while (!startFlag);
+
+	calibrateCenter();
+	idealLeftCenter = getIdealLeftCenter();
+	idealRightCenter = getIdealRightCenter();
+
+	resetLEDAll();
+	HAL_Delay(1000);
+
 	//LED start up sequence
 	testChaser(1, 250);
 
+
 	printStringUSART("Hello world!");
 	printNL();
-	
-	double idealLeft = leftCenterSensorDistance(readLeftCenterSensor());
-	double idealRight = rightCenterSensorDistance(readRightCenterSensor());
 
-	int leftBase  = 90;
-	int rightBase = (int)(0.92*leftBase);
-
-	double left, right;
-	double leftCenter, rightCenter;
-
-	double leftError = 0, rightError = 0;
-	double leftErrorPrevious, rightErrorPrevious;
-	double frontRatio;
+	printFloat((float)leftWall);
+	printNL();
+	printFloat((float)rightWall);
+	printNL();
+	printFloat((float)idealLeftCenter);
+	printNL();
+	printFloat((float)idealRightCenter);
 
 	while (1) {
 		batteryFault();
-
-		leftErrorPrevious = leftError;
-		rightErrorPrevious = rightError;
-
-		left = leftSensorDistance(readLeftSensor());
-		right = rightSensorDistance(readRightSensor());
-		leftCenter = leftCenterSensorDistance(readLeftCenterSensor());
-		rightCenter = rightCenterSensorDistance(readRightCenterSensor());
-
-		if (left < 19.0 && right < 19.0) {
-			frontRatio = (left - 5) / (19.0);
-			
-		}
-		else {
-			frontRatio = 1;
-		}
-
-		leftError = (idealLeft - leftCenter) / (double)idealLeft;
-		rightError = (idealRight - rightCenter) / (double)idealRight;
-
-		leftError = leftError * 100;
-		rightError = rightError * 100;
-
-		setSpeed(LEFTMOTOR, (int)((leftBase - (rightError*0.1))*frontRatio*frontRatio*frontRatio) /*+ (int)((rightErrorPrevious-rightError)*0.3)*/);
-		setSpeed(RIGHTMOTOR, (int)((rightBase - (leftError*0.5))*frontRatio*frontRatio*frontRatio) /*+ (int)((leftErrorPrevious-leftError)*0.3)*/);
 	}
 
     return;

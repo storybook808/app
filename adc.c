@@ -152,6 +152,10 @@ void initADC() {
     //Voltage detector
     GPIO_InitStructure.Pin = GPIO_PIN_1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    //Flash detector
+    GPIO_InitStructure.Pin = GPIO_PIN_4;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
     
     //Gyroscope
     
@@ -241,6 +245,13 @@ uint32_t readADC(int channel) {
             sConfig.Offset = 0;
             HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
             HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
+            break;
+        case FLASH:
+            sConfig.Channel = ADC_CHANNEL_14;
+            sConfig.Rank = 1;
+            sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+            sConfig.Offset = 0;
+            HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
             break;
     }
     // Wait 8us
