@@ -24,48 +24,57 @@ void SystemClock_Config(void);
 
 void main(void) {
 	HAL_Init();
-	SystemClock_Config();
-	initLED();
-	initUSART();
-	initMotor();
-	initEncoder();
-	initADC();
+		SystemClock_Config();
+		initLED();
+		initUSART();
+		initMotor();
+		initEncoder();
+		initADC();
 
-	//LED start up sequence
-	testChaser(1, 250);
+		// Calibrate Sensors
+		calibrateSensors();
 
-	printStringUSART("Hello world!");
-	printNL();
+		//LED start up sequence
+		testChaser(1, 250);
 
-	while (1) {
-		//Check for a low battery fault
-		batteryFault();
+		// Test USART Connection
+		printStringUSART("Hello world!");
+		printNL();
 
-	}
+		while (1) {
+			batteryFault();
 
-    return;
+//			if (readLeftSensor() > getIdealLeftFront() || readRightSensor() > getIdealRightFront()) {
+//				setSpeed(RIGHTMOTOR,0);
+//				setSpeed(LEFTMOTOR,0);
+//			}
+//			else
+				PID(100,100);
+		}
+
+	    return;
 }
 
 void testChaser(int mode, int period) {
 	switch (mode) {
 	case 0:
-		setLED(WHITE, ON);
+		setLED(WHITE);
 		HAL_Delay(period);
-		setLED(BLUE, ON);
+		setLED(BLUE);
 		HAL_Delay(period);
-		setLED(GREEN, ON);
+		setLED(GREEN);
 		HAL_Delay(period);
-		setLED(RED, ON);
+		setLED(RED);
 		HAL_Delay(period);
 		break;
 	case 1:
-		setLED(WHITE, ON);
+		setLED(WHITE);
 		HAL_Delay(period);
-		setLED(BLUE, ON);
+		setLED(BLUE);
 		HAL_Delay(period);
-		setLED(GREEN, ON);
+		setLED(GREEN);
 		HAL_Delay(period);
-		setLED(RED, ON);
+		setLED(RED);
 		HAL_Delay(period);
 		toggleLEDAll();
 		HAL_Delay(period);
@@ -78,16 +87,16 @@ void testChaser(int mode, int period) {
 		toggleLEDAll();
 		break;
 	case 2:
-		setLED(WHITE, ON);
+		setLED(WHITE);
 		HAL_Delay(period);
-		setLED(WHITE, OFF);
-		setLED(BLUE, ON);
+		resetLED(WHITE);
+		setLED(BLUE);
 		HAL_Delay(period);
-		setLED(BLUE, OFF);
-		setLED(GREEN, ON);
+		resetLED(BLUE);
+		setLED(GREEN);
 		HAL_Delay(period);
-		setLED(GREEN, OFF);
-		setLED(RED, ON);
+		resetLED(GREEN);
+		setLED(RED);
 		HAL_Delay(period);
 		break;
 	}
@@ -98,19 +107,19 @@ void testMenu(int channel) {
 	if (count < 0) {
 		count = 0;
 	} else if (count >= 0 && count <= 800) {
-		setLED(RED, ON);
-		setLED(GREEN, OFF);
+		setLED(RED);
+		resetLED(GREEN);
 	} else if (count > 800 && count <= (800*2)) {
-		setLED(RED, OFF);
-		setLED(GREEN, ON);
-		setLED(BLUE, OFF);
+		resetLED(RED);
+		setLED(GREEN);
+		resetLED(BLUE);
 	} else if (count > (800*2) && count <= (800*3)) {
-		setLED(GREEN, OFF);
-		setLED(BLUE, ON);
-		setLED(WHITE, OFF);
+		resetLED(GREEN);
+		setLED(BLUE);
+		resetLED(WHITE);
 	} else if (count > (800*3) && count <= (800*4)) {
-		setLED(BLUE, OFF);
-		setLED(WHITE, ON);
+		resetLED(BLUE);
+		setLED(WHITE);
 	} else if (count > (800*4)) {
 		count = (800*4);
 	}
@@ -144,7 +153,7 @@ void batteryFault() {
 		//Enable buzzer
 		setBuzzer(ON);
 		//Disable all LEDs
-		setLEDAll(OFF);
+		resetLEDAll();
 		//Flash red LED every half second.
 		while (1) {
 			//Invert the state of the red LED located closest to the STM

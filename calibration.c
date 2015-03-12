@@ -2,75 +2,117 @@
 
 #include "adc.h"
 #include "calibration.h"
+#include "led.h"
 
-static double leftWall, rightWall;
-static double idealLeftFront, idealRightFront;
-static double idealLeftCenter, idealRightCenter;
+static int leftWall, rightWall;
+static int idealLeftFront, idealRightFront;
+static int idealLeftCenter, idealRightCenter;
 
 /*=Public Functions===========================================================*/
+void waitForTop() {
+	uint8_t startFlag = 0;
+	do {
+				if (readADC(FLASH) < 50) {
+					startFlag = 1;
+				}
+				toggleLED(WHITE);
+				HAL_Delay(500);
+			} while (!startFlag);
+	setLED(WHITE);
+}
+
+void calibrateSensors(void) {
+	setLED(BLUE);
+	waitForTop();
+	calibrateLeftWall();
+	resetLED(BLUE);
+	resetLED(WHITE);
+	HAL_Delay(1000);
+
+	setLED(GREEN);
+	waitForTop();
+	calibrateRightWall();
+	resetLED(GREEN);
+	resetLED(WHITE);
+	HAL_Delay(1000);
+
+	setLED(RED);
+	waitForTop();
+	calibrateCenter();
+	resetLED(RED);
+	resetLED(WHITE);
+
+	setLEDAll();
+	waitForTop();
+	calibrateFrontWall();
+	resetLEDAll();
+
+	HAL_Delay(1000);
+}
+
 void calibrateLeftWall(void) {
-	setLeftWall(leftCenterSensorDistance(readLeftCenterSensor()));
+	setLeftWall(readLeftCenterSensor());
 }
 
 void calibrateRightWall(void) {
-	setRightWall(rightCenterSensorDistance(readRightCenterSensor()));
+	setRightWall(readRightCenterSensor());
 }
 
 void calibrateFrontWall(void) {
-	setIdealLeftFront(leftSensorDistance(readLeftSensor()));
-	setIdealRightFront(rightSensorDistance(readRightSensor()));
+	setIdealLeftFront(readLeftSensor());
+	setIdealRightFront(readRightSensor());
 }
 
 void calibrateCenter(void) {
-	setIdealLeftCenter(leftCenterSensorDistance(readLeftCenterSensor()));
-	setIdealRightCenter(rightCenterSensorDistance(readRightCenterSensor()));
+	setIdealLeftCenter(readLeftCenterSensor());
+	setIdealRightCenter(readRightCenterSensor());
 }
 
-double getLeftWall(void) {
+int getLeftWall(void) {
 	return leftWall;
 }
 
-double getRightWall(void) {
+int getRightWall(void) {
 	return rightWall;
 }
 
-double getIdealLeftFront(void) {
+int getIdealLeftFront(void) {
 	return idealLeftFront;
 }
 
-double getIdealRightFront(void) {
+int getIdealRightFront(void) {
 	return idealRightFront;
 }
 
-double getIdealLeftCenter(void) {
+int getIdealLeftCenter(void) {
 	return idealLeftCenter;
 }
 
-double getIdealRightCenter(void) {
+int getIdealRightCenter(void) {
 	return idealRightCenter;
 }
 
 /*=Private Functions==========================================================*/
-static void setLeftWall(double value) {
+static void setLeftWall(int value) {
 	leftWall  = value;
 }
 
-static void setRightWall(double value) {
+static void setRightWall(int value) {
 	rightWall = value;
 }
 
-static void setIdealLeftFront(double value) {
+static void setIdealLeftFront(int value) {
 	idealLeftFront = value;
 }
 
-static void setIdealRightFront(double value) {
+static void setIdealRightFront(int value) {
 	idealRightFront = value;
 }
 
-static void setIdealLeftCenter(double value) {
+static void setIdealLeftCenter(int value) {
 	idealLeftCenter = value;
 }
 
-static void setIdealRightCenter(double value) {
+static void setIdealRightCenter(int value) {
 	idealRightCenter = value;
 }
