@@ -13,6 +13,7 @@
 #include "usart.h"
 #include <string.h>
 #include "calibration.h"
+#include "correction.h"
 
 //Private prototypes
 void testChaser(int mode, int period);
@@ -20,8 +21,6 @@ void testMenu();
 void testRamp(int maxSpeed, int period);
 void batteryFault();
 void SystemClock_Config(void);
-
-
 
 void main(void) {
 	HAL_Init();
