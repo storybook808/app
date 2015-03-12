@@ -12,12 +12,13 @@
 #include "stm32f4xx_it.h"
 #include "usart.h"
 #include <string.h>
+#include "calibration.h"
 
 //Private prototypes
 void testChaser(int mode, int period);
-void testMenu(Encoder channel);
+void testMenu();
 void testRamp(int maxSpeed, int period);
-void batteryFault(void);
+void batteryFault();
 void SystemClock_Config(void);
 
 
@@ -37,15 +38,10 @@ void main(void) {
 	printStringUSART("Hello world!");
 	printNL();
 
-	int value;
-
 	while (1) {
 		//Check for a low battery fault
 		batteryFault();
 
-		value = ADC_getSampleAvgNDeleteX(30,10,LEFT_DET);
-		printUSART(value);
-		printNL();
 	}
 
     return;
@@ -54,23 +50,23 @@ void main(void) {
 void testChaser(int mode, int period) {
 	switch (mode) {
 	case 0:
-		setLED(WHITE);
+		setLED(WHITE, ON);
 		HAL_Delay(period);
-		setLED(BLUE);
+		setLED(BLUE, ON);
 		HAL_Delay(period);
-		setLED(GREEN);
+		setLED(GREEN, ON);
 		HAL_Delay(period);
-		setLED(RED);
+		setLED(RED, ON);
 		HAL_Delay(period);
 		break;
 	case 1:
-		setLED(WHITE);
+		setLED(WHITE, ON);
 		HAL_Delay(period);
-		setLED(BLUE);
+		setLED(BLUE, ON);
 		HAL_Delay(period);
-		setLED(GREEN);
+		setLED(GREEN, ON);
 		HAL_Delay(period);
-		setLED(RED);
+		setLED(RED, ON);
 		HAL_Delay(period);
 		toggleLEDAll();
 		HAL_Delay(period);
@@ -83,39 +79,39 @@ void testChaser(int mode, int period) {
 		toggleLEDAll();
 		break;
 	case 2:
-		setLED(WHITE);
+		setLED(WHITE, ON);
 		HAL_Delay(period);
-		resetLED(WHITE);
-		setLED(BLUE);
+		setLED(WHITE, OFF);
+		setLED(BLUE, ON);
 		HAL_Delay(period);
-		resetLED(BLUE);
-		setLED(GREEN);
+		setLED(BLUE, OFF);
+		setLED(GREEN, ON);
 		HAL_Delay(period);
-		resetLED(GREEN);
-		setLED(RED);
+		setLED(GREEN, OFF);
+		setLED(RED, ON);
 		HAL_Delay(period);
 		break;
 	}
 }
 
-void testMenu(Encoder channel) {
+void testMenu(int channel) {
 	int count = readEncoder(channel);
 	if (count < 0) {
 		count = 0;
 	} else if (count >= 0 && count <= 800) {
-		setLED(RED);
-		resetLED(GREEN);
+		setLED(RED, ON);
+		setLED(GREEN, OFF);
 	} else if (count > 800 && count <= (800*2)) {
-		resetLED(RED);
-		setLED(GREEN);
-		resetLED(BLUE);
+		setLED(RED, OFF);
+		setLED(GREEN, ON);
+		setLED(BLUE, OFF);
 	} else if (count > (800*2) && count <= (800*3)) {
-		resetLED(GREEN);
-		setLED(BLUE);
-		resetLED(WHITE);
+		setLED(GREEN, OFF);
+		setLED(BLUE, ON);
+		setLED(WHITE, OFF);
 	} else if (count > (800*3) && count <= (800*4)) {
-		resetLED(BLUE);
-		setLED(WHITE);
+		setLED(BLUE, OFF);
+		setLED(WHITE, ON);
 	} else if (count > (800*4)) {
 		count = (800*4);
 	}
@@ -136,7 +132,7 @@ void testRamp(int maxSpeed, int period) {
 	}
 }
 
-void batteryFault(void) {
+void batteryFault() {
 	//Take a reading from the voltage detector
 	uint32_t batteryLevel = readBattery();
 	//Check to see if voltage level is above 7V
@@ -149,7 +145,7 @@ void batteryFault(void) {
 		//Enable buzzer
 		setBuzzer(ON);
 		//Disable all LEDs
-		resetLEDAll();
+		setLEDAll(OFF);
 		//Flash red LED every half second.
 		while (1) {
 			//Invert the state of the red LED located closest to the STM
