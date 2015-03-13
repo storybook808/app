@@ -50,7 +50,7 @@ void PID(int leftBaseSpeed, int rightBaseSpeed) {
 	double idealLeft = toLinear(getIdealLeftFront());
 
 	/* Determine if brakes are needed */
-	if ((rightSensor > idealRight) && (leftSensor > idealLeft)) {
+	if ((rightSensor < idealRight) && (leftSensor < idealLeft)) {
 		rightFactor = (idealRight - rightSensor)*BR;
 		leftFactor = (idealLeft - leftSensor)*BL;
 		totalErrorL = 0;
@@ -90,32 +90,4 @@ void PID(int leftBaseSpeed, int rightBaseSpeed) {
 	}
 	setSpeed(LEFTMOTOR, (int)((leftBaseSpeed - totalErrorL)*leftFactor));
 	setSpeed(RIGHTMOTOR, (int)((rightBaseSpeed + totalErrorR)*rightFactor));
-}
-
-void PIDleft(int leftBaseSpeed, int rightBaseSpeed) {
-
-	double errorP, errorD;
-	double totalErrorL;
-
-	int leftCenterSensor = readLeftCenterSensor();
-
-	float rightFactor = 1;
-	float leftFactor = 1;
-
-	if( (leftCenterSensor > getLeftWall()) )
-	{
-		errorP = 2 * (leftCenterSensor - getIdealLeftCenter());
-		errorD = errorP - oldErrorP;
-	}
-	/* Has no walls... good luck */
-	else
-	{
-		errorP = oldErrorP;//(leftEncoder – rightEncoder*1005/1000)*3;
-		errorD = 0;
-	}
-	totalErrorL = PL * errorP + DL * errorD;
-	oldErrorP = errorP;
-
-	setSpeed(LEFTMOTOR, leftBaseSpeed);
-	setSpeed(RIGHTMOTOR, (int)((leftBaseSpeed - totalErrorL)*leftFactor));
 }
