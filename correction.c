@@ -2,6 +2,7 @@
 #include "adc.h"
 #include "motor.h"
 #include "led.h"
+#include <math.h>
 
 /* Nice P values
  * PR = 0.01
