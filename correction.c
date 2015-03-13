@@ -37,26 +37,26 @@ void PID(int leftBaseSpeed, int rightBaseSpeed) {
 	}
 	else {
 		/* Has both right & left walls */
-		if( (leftCenterSensor < getLeftWall()) && (rightCenterSensor < getRightWall()) )
+		if( (leftCenterSensor > getLeftWall()) && (rightCenterSensor > getRightWall()) )
 		{
 			/* Take the difference between the distances of right & left walls minus the ideal offset from calibration */
 			errorP = rightCenterSensor - leftCenterSensor - (getIdealRightCenter() - getIdealLeftCenter());
 			errorD = errorP - oldErrorP;
 		}
 		/* Has only left wall */
-		else if( (leftCenterSensor < getLeftWall()) )
+		else if( (leftCenterSensor > getLeftWall()) )
 		{
 			errorP = 2 * (getIdealLeftCenter() - leftCenterSensor);
 			errorD = errorP - oldErrorP;
 		}
 		/* Has only right wall */
-		else if( (rightCenterSensor < getRightWall()) )
+		else if( (rightCenterSensor > getRightWall()) )
 		{
 			errorP = 2 * (rightCenterSensor - getIdealRightCenter());
 			errorD = errorP - oldErrorP;
 		}
 		/* Has no walls... good luck */
-		else if( (leftCenterSensor > getLeftWall() && rightCenterSensor > getRightWall()) )
+		else if( (leftCenterSensor < getLeftWall() && rightCenterSensor < getRightWall()) )
 		{
 			errorP = oldErrorP;//(leftEncoder – rightEncoder*1005/1000)*3;
 			errorD = 0;
