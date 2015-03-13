@@ -31,9 +31,6 @@ void main(void) {
 	initEncoder();
 	initADC();
 
-	// Calibrate Sensors
-	calibrateSensors();
-
 	//LED start up sequence
 	testChaser(1, 250);
 
@@ -41,15 +38,19 @@ void main(void) {
 	printStringUSART("Hello world!");
 	printNL();
 
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
+
+	int encoderR;
+	int encoderL;
+
 	while (1) {
 		batteryFault();
 
-//		if (readLeftSensor() > getIdealLeftFront() || readRightSensor() > getIdealRightFront()) {
-//			setSpeed(RIGHTMOTOR,0);
-//			setSpeed(LEFTMOTOR,0);
-//		}
-//		else
-			PID(200,200);
+		setVelocity(RIGHTMOTOR, 0);
+		setVelocity(LEFTMOTOR, 0);
+		printUSART(readEncoder(RIGHTENCODER));
+		printNL();
 	}
 
 	return;

@@ -17,10 +17,16 @@ TIM_OC_InitTypeDef sConfig;
 
 static int leftMotorSpeed;
 static int rightMotorSpeed;
+static uint8_t milliCount;
 
 static uint8_t countMinor;
-static uint32_t countMajor;
-static uint32_t masterTimer;
+static double rightVelocity;
+static double leftVelocity;
+static int lastRightPosition;
+static int lastLeftPosition;
+static double targetLeftVelocity;
+static double targetRightVelocity;
+
 
 static uint32_t targetDistance;
 static uint32_t targetSpeed;
@@ -32,7 +38,13 @@ void initMotor(void) {
 	leftMotorSpeed  = 0;
 	rightMotorSpeed = 0;
 	countMinor = 0;
-	countMajor = 0;
+	milliCount = 0;
+	targetLeftVelocity = 0;
+	targetRightVelocity = 0;
+	leftVelocity = 0;
+	rightVelocity = 0;
+	lastRightPosition = 0;
+	lastLeftPosition = 0;
 
 	//Data structure for GPIO configuration
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -112,11 +124,11 @@ void initMotor(void) {
 	countHandler.Init.CounterMode = TIM_COUNTERMODE_DOWN;
 
 	HAL_TIM_Base_Init(&countHandler);
-	HAL_TIM_Base_Stop_IT(&countHandler);
+	HAL_TIM_Base_Start_IT(&countHandler);
 
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
-	//Configure TIM for countRight
+	//Configure TIM for ms
 	rightHandler.Instance = TIM5;
 	rightHandler.Init.Period = 42000;
 	rightHandler.Init.Prescaler = 0;
@@ -128,6 +140,8 @@ void initMotor(void) {
 
 	setSpeed(LEFTMOTOR, 0);
 	setSpeed(RIGHTMOTOR, 0);
+	setVelocity(RIGHTMOTOR,0);
+	setVelocity(LEFTMOTOR,0);
 }
 
 void setBuzzer(int state) {
@@ -192,8 +206,12 @@ void travelDistance(uint32_t distance, uint32_t maxSpeed, uint32_t dt)
 	setSpeed(RIGHTMOTOR, 0);
 	leftSpeedBuffer = 0;
 	rightSpeedBuffer = 0;
-	masterTimer = 0;
 	HAL_TIM_Base_Start_IT(&countHandler);
+}
+
+void setVelocity(Motor channel, double targetVelocity) {
+	if(channel == RIGHTMOTOR) targetRightVelocity = targetVelocity;
+	else targetLeftVelocity = targetVelocity;
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -201,6 +219,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	int leftDistance, rightDistance;
 	uint32_t leftSensor, rightSensor;
 	int leftSensorBuffer, rightSensorBuffer;
+	int currentRightPosition;
+	int currentLeftPosition;
+	uint8_t k = 1;
+	double thresh = 0.1;
 
 	//Buzzer interrupt
 	if (htim->Instance == TIM3) HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
@@ -208,39 +230,52 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if (htim->Instance == TIM2) //Counter interrupt
 	{
 		countMinor++;
+		currentRightPosition = readEncoder(RIGHTENCODER);
+		currentLeftPosition = readEncoder(LEFTENCODER);
 
 		if (countMinor >= 4) //A millisecond
 		{
+			/* Reset minor count for 1/4 millisec */
 			countMinor = 0;
-			countMajor++;
-			masterTimer++;
+			milliCount++;
+
+			if(milliCount >= 1000) {
+				milliCount = 0;
+				toggleLED(WHITE);
+			}
+
+//			/* Set current velocity */
+//			rightVelocity = (double)(currentRightPosition - lastRightPosition)*0.004112553663/0.0001;
+//			leftVelocity = (double)(currentLeftPosition - lastLeftPosition)*0.004101607615/0.0001;
+//			lastRightPosition = currentRightPosition;
+//			lastLeftPosition = currentLeftPosition;
+//
+//			if (milliCount >= k) {
+//				milliCount = 0;
+//				/* Update Right Motor to match target value */
+//				if( rightVelocity > (targetRightVelocity + thresh) ) {
+//					setSpeed(RIGHTMOTOR,currentSpeed(RIGHTMOTOR)-1);
+//				}
+//				else if( rightVelocity < (targetRightVelocity - thresh) ) {
+//					setSpeed(RIGHTMOTOR,currentSpeed(RIGHTMOTOR)+1);
+//				}
+//				else {
+//					setSpeed(RIGHTMOTOR,currentSpeed(RIGHTMOTOR));
+//				}
+//
+//				/* Update Left Motor to match target value */
+//				if( leftVelocity > (targetLeftVelocity + thresh) ) {
+//					setSpeed(LEFTMOTOR,currentSpeed(LEFTMOTOR)-1);
+//				}
+//				else if( leftVelocity < (targetLeftVelocity - thresh) ) {
+//					setSpeed(LEFTMOTOR,currentSpeed(LEFTMOTOR)+1);
+//				}
+//				else {
+//					setSpeed(LEFTMOTOR,currentSpeed(LEFTMOTOR));
+//				}
+//			}
 		}
-
-//		if (countMajor >= targetTimeDifference)
-//		{
-//			leftSensor = readADC(LEFT_CEN_DET);
-//			rightSensor = readADC(RIGHT_CEN_DET);
-//
-//			if (leftSensor > 2300)
-//			{
-//				setLED(WHITE, ON);
-//				rightSpeedBuffer--;
-//				if (rightSpeedBuffer < 0) rightSpeedBuffer = 0;
-//				setSpeed(RIGHTMOTOR, rightSpeedBuffer);
-//			}
-//			else setLED(WHITE,OFF);
-//
-//			if (rightSensor > 2300)
-//			{
-//				setLED(GREEN, ON);
-//				leftSpeedBuffer--;
-//				if (leftSpeedBuffer < 0) leftSpeedBuffer = 0;
-//				setSpeed(LEFTMOTOR, leftSpeedBuffer);
-//			}
-//			else setLED(GREEN, OFF);
-//		}
 	}
-
 	else if (htim->Instance == TIM5) //rightHandler
 	{
 
