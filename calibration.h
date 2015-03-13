@@ -10,6 +10,7 @@ int getIdealLeftFront(void);
 int getIdealRightFront(void);
 int getIdealLeftCenter(void);
 int getIdealRightCenter(void);
+double toLinear(int input);
 void waitForTop(void);
 
 /*=Private Functions==========================================================*/
