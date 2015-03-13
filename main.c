@@ -49,7 +49,7 @@ void main(void) {
 //			setSpeed(LEFTMOTOR,0);
 //		}
 //		else
-			PIDleft(200,200);
+			PID(200,200);
 	}
 
 	return;

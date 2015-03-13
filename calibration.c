@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <math.h>
 
 #include "adc.h"
 #include "calibration.h"
@@ -12,12 +13,12 @@ static int idealLeftCenter, idealRightCenter;
 void waitForTop() {
 	uint8_t startFlag = 0;
 	do {
-				if (readADC(FLASH) < 50) {
-					startFlag = 1;
-				}
-				toggleLED(WHITE);
-				HAL_Delay(500);
-			} while (!startFlag);
+		if (readADC(FLASH) < 50) {
+			startFlag = 1;
+		}
+		toggleLED(WHITE);
+		HAL_Delay(500);
+	} while (!startFlag);
 	setLED(WHITE);
 }
 
@@ -91,6 +92,10 @@ int getIdealLeftCenter(void) {
 
 int getIdealRightCenter(void) {
 	return idealRightCenter;
+}
+
+double toLinear(int input) {
+	return (double)5000/log((double)input);
 }
 
 /*=Private Functions==========================================================*/

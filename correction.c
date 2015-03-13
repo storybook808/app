@@ -2,6 +2,7 @@
 #include "adc.h"
 #include "motor.h"
 #include "led.h"
+#include "calibration.h"
 
 /* Nice P values
  * PR = 0.01
@@ -36,16 +37,16 @@ void PID(int leftBaseSpeed, int rightBaseSpeed) {
 	double totalErrorR;
 	double totalErrorL;
 
-	int rightCenterSensor = readRightCenterSensor();
-	int leftCenterSensor = readLeftCenterSensor();
-	int rightSensor = readRightSensor();
-	int leftSensor = readLeftSensor();
+	double rightCenterSensor = toLinear(readRightCenterSensor());
+	double leftCenterSensor = toLinear(readLeftCenterSensor());
+	double rightSensor = toLinear(readRightSensor());
+	double leftSensor = toLinear(readLeftSensor());
 
-	float rightFactor = 1;
-	float leftFactor = 1;
+	double rightFactor = 1;
+	double leftFactor = 1;
 
-	int idealRight = getIdealRightFront();
-	int idealLeft = getIdealLeftFront();
+	double idealRight = toLinear(getIdealRightFront());
+	double idealLeft = toLinear(getIdealLeftFront());
 
 	/* Determine if brakes are needed */
 	if ((rightSensor > idealRight) && (leftSensor > idealLeft)) {
@@ -58,26 +59,26 @@ void PID(int leftBaseSpeed, int rightBaseSpeed) {
 	else {
 		resetLED(BLUE);
 		/* Has both right & left walls */
-		if( (leftCenterSensor > getLeftWall()) && (rightCenterSensor > getRightWall()) )
+		if( (leftCenterSensor < toLinear(getLeftWall()) && (rightCenterSensor < toLinear(getRightWall())) ))
 		{
 			/* Take the difference between the distances of right & left walls minus the ideal offset from calibration */
-			errorP = rightCenterSensor - leftCenterSensor - (getIdealRightCenter() - getIdealLeftCenter());
+			errorP = rightCenterSensor - leftCenterSensor - (toLinear(getIdealRightCenter()) - toLinear(getIdealLeftCenter()));
 			errorD = errorP - oldErrorP;
 		}
 		/* Has only left wall */
-		else if( (leftCenterSensor > getLeftWall()) )
+		else if( (leftCenterSensor < toLinear(getLeftWall())) )
 		{
-			errorP = 2 * (getIdealLeftCenter() - leftCenterSensor);
+			errorP = 2 * (leftCenterSensor - toLinear(getIdealLeftCenter()));
 			errorD = errorP - oldErrorP;
 		}
 		/* Has only right wall */
-		else if( (rightCenterSensor > getRightWall()) )
+		else if( (rightCenterSensor < toLinear(getRightWall())) )
 		{
-			errorP = 2 * (rightCenterSensor - getIdealRightCenter());
+			errorP = 2 * (toLinear(getIdealRightCenter()) - rightCenterSensor);
 			errorD = errorP - oldErrorP;
 		}
 		/* Has no walls... good luck */
-		else if( (leftCenterSensor < getLeftWall() && rightCenterSensor < getRightWall()) )
+		else if( (leftCenterSensor > toLinear(getLeftWall()) && rightCenterSensor > toLinear(getRightWall())) )
 		{
 			errorP = oldErrorP;//(leftEncoder – rightEncoder*1005/1000)*3;
 			errorD = 0;
