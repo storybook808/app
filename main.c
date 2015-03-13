@@ -24,35 +24,35 @@ void SystemClock_Config(void);
 
 void main(void) {
 	HAL_Init();
-		SystemClock_Config();
-		initLED();
-		initUSART();
-		initMotor();
-		initEncoder();
-		initADC();
+	SystemClock_Config();
+	initLED();
+	initUSART();
+	initMotor();
+	initEncoder();
+	initADC();
 
-		// Calibrate Sensors
-		calibrateSensors();
+	// Calibrate Sensors
+	calibrateSensors();
 
-		//LED start up sequence
-		testChaser(1, 250);
+	//LED start up sequence
+	testChaser(1, 250);
 
-		// Test USART Connection
-		printStringUSART("Hello world!");
-		printNL();
+	// Test USART Connection
+	printStringUSART("Hello world!");
+	printNL();
 
-		while (1) {
-			batteryFault();
+	while (1) {
+		batteryFault();
 
-//			if (readLeftSensor() > getIdealLeftFront() || readRightSensor() > getIdealRightFront()) {
-//				setSpeed(RIGHTMOTOR,0);
-//				setSpeed(LEFTMOTOR,0);
-//			}
-//			else
-				PID(100,100);
-		}
+//		if (readLeftSensor() > getIdealLeftFront() || readRightSensor() > getIdealRightFront()) {
+//			setSpeed(RIGHTMOTOR,0);
+//			setSpeed(LEFTMOTOR,0);
+//		}
+//		else
+			PIDleft(200,200);
+	}
 
-	    return;
+	return;
 }
 
 void testChaser(int mode, int period) {

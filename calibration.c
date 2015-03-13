@@ -41,6 +41,7 @@ void calibrateSensors(void) {
 	calibrateCenter();
 	resetLED(RED);
 	resetLED(WHITE);
+	HAL_Delay(1000);
 
 	setLEDAll();
 	waitForTop();
