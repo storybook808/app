@@ -6,6 +6,7 @@
 #include "stm32f4xx_it.h"
 
 #include "encoder.h"
+#include "led.h"
 
 extern TIM_HandleTypeDef buzzerHandler;
 extern TIM_HandleTypeDef countHandler;

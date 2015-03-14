@@ -37,20 +37,15 @@ void main(void) {
 	// Test USART Connection
 	printStringUSART("Hello world!");
 	printNL();
-
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
-
+	setMilliTimer(1);
 	int encoderR;
 	int encoderL;
 
 	while (1) {
 		batteryFault();
 
-		setVelocity(RIGHTMOTOR, 0);
-		setVelocity(LEFTMOTOR, 0);
-		printUSART(readEncoder(RIGHTENCODER));
-		printNL();
 	}
 
 	return;
