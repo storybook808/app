@@ -17,17 +17,6 @@ TIM_OC_InitTypeDef sConfig;
 
 static int leftMotorSpeed;
 static int rightMotorSpeed;
-static uint16_t milliCount;
-
-static uint8_t countMinor;
-static double rightVelocity;
-static double leftVelocity;
-static int lastRightPosition;
-static int lastLeftPosition;
-static double targetLeftVelocity;
-static double targetRightVelocity;
-static uint8_t milliFlag;
-
 
 static uint32_t targetDistance;
 static uint32_t targetSpeed;
@@ -38,15 +27,6 @@ static int leftSpeedBuffer, rightSpeedBuffer;
 void initMotor(void) {
 	leftMotorSpeed  = 0;
 	rightMotorSpeed = 0;
-	countMinor = 0;
-	milliCount = 0;
-	targetLeftVelocity = 0;
-	targetRightVelocity = 0;
-	leftVelocity = 0;
-	rightVelocity = 0;
-	lastRightPosition = 0;
-	lastLeftPosition = 0;
-	milliFlag = 0;
 
 	//Data structure for GPIO configuration
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -142,25 +122,11 @@ void initMotor(void) {
 
 	setSpeed(LEFTMOTOR, 0);
 	setSpeed(RIGHTMOTOR, 0);
-	setVelocity(RIGHTMOTOR,0);
-	setVelocity(LEFTMOTOR,0);
 }
 
 void setBuzzer(int state) {
 	if (state) HAL_TIM_Base_Start_IT(&buzzerHandler);
 	else HAL_TIM_Base_Stop_IT(&buzzerHandler);
-}
-
-void setMilliFlag() {
-	milliFlag = 1;
-}
-
-void resetMilliFlag() {
-	milliFlag = 0;
-}
-
-uint8_t getMilliFlag() {
-	return milliFlag;
 }
 
 void setMilliTimer(int state) {
@@ -180,8 +146,8 @@ static void setDirection(Motor channel, Direction state) {
 }
 
 int currentSpeed(Motor channel) {
-	if (channel == LEFTMOTOR) return leftMotorSpeed;
-	else return rightMotorSpeed;
+	if (channel == LEFTMOTOR) return 1000 - leftMotorSpeed;
+	else return 1000 - rightMotorSpeed;
 }
 
 void setSpeed(Motor channel, int speed) {
@@ -228,11 +194,6 @@ void travelDistance(uint32_t distance, uint32_t maxSpeed, uint32_t dt)
 	HAL_TIM_Base_Start_IT(&countHandler);
 }
 
-void setVelocity(Motor channel, double targetVelocity) {
-	if(channel == RIGHTMOTOR) targetRightVelocity = targetVelocity;
-	else targetLeftVelocity = targetVelocity;
-}
-
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	//Buzzer interrupt
@@ -242,12 +203,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 
 	}
-	else if (htim->Instance == TIM5) //rightHandler
+	else if (htim->Instance == TIM5) //Millisecond Timer
 	{
-		milliCount++;
-		if(milliCount>=1000) {
-			toggleLED(WHITE);
-			milliCount = 0;
-		}
+
 	}
 }

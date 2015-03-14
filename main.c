@@ -40,12 +40,39 @@ void main(void) {
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
 	setMilliTimer(1);
-	int encoderR;
-	int encoderL;
+	int currentEncoderR;
+	int currentEncoderL;
+	int oldEncoderR = 0;
+	int oldEncoderL = 0;
+	int diffR, diffL;
+
+	int desired = 0;
+	int currRspeed;
+	int currLspeed;
+
+	setSpeed(RIGHTMOTOR,100);
+	setSpeed(LEFTMOTOR,100);
 
 	while (1) {
 		batteryFault();
 
+		currentEncoderR = readEncoder(RIGHTENCODER);
+		currentEncoderL = readEncoder(LEFTENCODER);
+
+		currRspeed = currentSpeed(RIGHTMOTOR);
+		currLspeed = currentSpeed(LEFTMOTOR);
+
+		diffR = currentEncoderR - oldEncoderR;
+		diffL = currentEncoderL - oldEncoderL;
+
+		printUSART(currRspeed);
+		printStringUSART(",");
+		printUSART(currLspeed);
+		printNL();
+
+		oldEncoderR = currentEncoderR;
+		oldEncoderL = currentEncoderL;
+		HAL_Delay(1000);
 	}
 
 	return;
