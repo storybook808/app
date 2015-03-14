@@ -50,9 +50,6 @@ void main(void) {
 	int currRspeed;
 	int currLspeed;
 
-	setSpeed(RIGHTMOTOR,100);
-	setSpeed(LEFTMOTOR,100);
-
 	while (1) {
 		batteryFault();
 
@@ -65,14 +62,17 @@ void main(void) {
 		diffR = currentEncoderR - oldEncoderR;
 		diffL = currentEncoderL - oldEncoderL;
 
-		printUSART(currRspeed);
-		printStringUSART(",");
-		printUSART(currLspeed);
-		printNL();
+		if (diffR > desired + 20) setSpeed(RIGHTMOTOR,currRspeed-1);
+		else if (diffR < desired - 20) setSpeed(RIGHTMOTOR,currRspeed+1);
+		else setSpeed(RIGHTMOTOR,currRspeed);
+
+		if (diffL > desired + 20) setSpeed(LEFTMOTOR,currLspeed-1);
+		else if (diffL > desired - 20) setSpeed(LEFTMOTOR,currLspeed+1);
+		else setSpeed(LEFTMOTOR,currLspeed);
 
 		oldEncoderR = currentEncoderR;
 		oldEncoderL = currentEncoderL;
-		HAL_Delay(1000);
+
 	}
 
 	return;
