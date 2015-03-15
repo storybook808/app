@@ -49,6 +49,8 @@ void main(void) {
 	int desired = 0;
 	int currRspeed;
 	int currLspeed;
+	int k = 50;
+	int thresh = 0;
 
 	while (1) {
 		batteryFault();
@@ -62,12 +64,12 @@ void main(void) {
 		diffR = currentEncoderR - oldEncoderR;
 		diffL = currentEncoderL - oldEncoderL;
 
-		if (diffR > desired + 20) setSpeed(RIGHTMOTOR,currRspeed-1);
-		else if (diffR < desired - 20) setSpeed(RIGHTMOTOR,currRspeed+1);
+		if (diffR > desired + thresh) setSpeed(RIGHTMOTOR,currRspeed-k);
+		else if (diffR < desired - thresh) setSpeed(RIGHTMOTOR,currRspeed+k);
 		else setSpeed(RIGHTMOTOR,currRspeed);
 
-		if (diffL > desired + 20) setSpeed(LEFTMOTOR,currLspeed-1);
-		else if (diffL > desired - 20) setSpeed(LEFTMOTOR,currLspeed+1);
+		if (diffL > desired + thresh) setSpeed(LEFTMOTOR,currLspeed-k);
+		else if (diffL < desired - thresh) setSpeed(LEFTMOTOR,currLspeed+k);
 		else setSpeed(LEFTMOTOR,currLspeed);
 
 		oldEncoderR = currentEncoderR;
