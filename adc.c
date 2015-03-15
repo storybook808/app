@@ -246,7 +246,7 @@ uint32_t readADC(int channel) {
             HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
             HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
             break;
-        case FLASH:
+        case FLASH_MEM:
             sConfig.Channel = ADC_CHANNEL_14;
             sConfig.Rank = 1;
             sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;

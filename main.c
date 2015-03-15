@@ -41,9 +41,6 @@ void main(void) {
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
 
-	setVelocity(100.0);
-
-	int i;
 	while (1) {
 		batteryFault();
 

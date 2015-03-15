@@ -13,7 +13,7 @@ static int idealLeftCenter, idealRightCenter;
 void waitForTop() {
 	uint8_t startFlag = 0;
 	do {
-		if (readADC(FLASH) < 50) {
+		if (readADC(FLASH_MEM) < 50) {
 			startFlag = 1;
 		}
 		toggleLED(WHITE);
