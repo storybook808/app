@@ -73,6 +73,8 @@ void main(void) {
 		oldEncoderR = currentEncoderR;
 		oldEncoderL = currentEncoderL;
 
+		HAL_Delay(1);
+
 	}
 
 	return;

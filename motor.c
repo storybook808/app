@@ -17,6 +17,7 @@ TIM_OC_InitTypeDef sConfig;
 
 static int leftMotorSpeed;
 static int rightMotorSpeed;
+static uint16_t counter;
 
 static uint32_t targetDistance;
 static uint32_t targetSpeed;
@@ -27,6 +28,7 @@ static int leftSpeedBuffer, rightSpeedBuffer;
 void initMotor(void) {
 	leftMotorSpeed  = 0;
 	rightMotorSpeed = 0;
+	counter = 0;
 
 	//Data structure for GPIO configuration
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -217,6 +219,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if (htim->Instance == TIM5) //Millisecond Timer
 	{
-
+		counter++;
+		if(counter>=1000) {
+			counter = 0;
+			toggleLED(WHITE);
+		}
 	}
 }
