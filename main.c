@@ -39,43 +39,9 @@ void main(void) {
 	printNL();
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
-	setMilliTimer(1);
-	int currentEncoderR;
-	int currentEncoderL;
-	int oldEncoderR = 0;
-	int oldEncoderL = 0;
-	int diffR, diffL;
-
-	int desired = 0;
-	int currRspeed;
-	int currLspeed;
-	int k = 50;
-	int thresh = 0;
 
 	while (1) {
 		batteryFault();
-
-		currentEncoderR = readEncoder(RIGHTENCODER);
-		currentEncoderL = readEncoder(LEFTENCODER);
-
-		currRspeed = currentSpeed(RIGHTMOTOR);
-		currLspeed = currentSpeed(LEFTMOTOR);
-
-		diffR = currentEncoderR - oldEncoderR;
-		diffL = currentEncoderL - oldEncoderL;
-
-		if (diffR > desired + thresh) setSpeed(RIGHTMOTOR,currRspeed-k);
-		else if (diffR < desired - thresh) setSpeed(RIGHTMOTOR,currRspeed+k);
-		else setSpeed(RIGHTMOTOR,currRspeed);
-
-		if (diffL > desired + thresh) setSpeed(LEFTMOTOR,currLspeed-k);
-		else if (diffL < desired - thresh) setSpeed(LEFTMOTOR,currLspeed+k);
-		else setSpeed(LEFTMOTOR,currLspeed);
-
-		oldEncoderR = currentEncoderR;
-		oldEncoderL = currentEncoderL;
-
-		HAL_Delay(1);
 
 	}
 
