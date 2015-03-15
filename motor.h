@@ -21,6 +21,8 @@ void travelDistance(uint32_t distance, uint32_t maxSpeed, uint32_t dt);
 void brake();
 void brakeCallBack();
 void setVelocity(double velocity);
+void setRightVelocity(double velocity);
+void setLeftVelocity(double velocity);
 void velocityCallBack();
 double getCurrentVelocity(Motor channel);
 double getTargetVelocity(Motor channel);

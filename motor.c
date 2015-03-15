@@ -181,6 +181,14 @@ void setVelocity(double velocity) {
 	HAL_TIM_Base_Start_IT(&htim2);
 }
 
+void setRightVelocity(double velocity) {
+	targetRightVelocity = velocity;
+}
+
+void setLeftVelocity(double velocity) {
+	targetLeftVelocity = velocity;
+}
+
 static void setDirection(Motor channel, Direction state) {
 	if (channel == LEFTMOTOR) {
 		if (state == FORWARD) HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);

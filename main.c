@@ -30,6 +30,7 @@ void main(void) {
 	initMotor();
 	initEncoder();
 	initADC();
+	calibrateSensors();
 
 	//LED start up sequence
 	testChaser(1, 250);
@@ -39,6 +40,8 @@ void main(void) {
 	printNL();
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
+
+	setVelocity(100.0);
 
 	int i;
 	while (1) {
