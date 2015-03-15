@@ -10,14 +10,30 @@
 
 //Data structure for TIM configuration
 TIM_HandleTypeDef buzzerHandler;
-TIM_HandleTypeDef countHandler;
-TIM_HandleTypeDef rightHandler;
+TIM_HandleTypeDef velocityHandler;
+TIM_HandleTypeDef brakeHandler;
 TIM_HandleTypeDef motorHandler;
 TIM_OC_InitTypeDef sConfig;
+
+#define BREAK_k	50				// Brake slow-down/speedup rate
+#define brakeThresh	100			// Brake time wait in milliseconds
+#define R_ENCODER_DIST	0.00411	// Right encoder tick per cm
+#define L_ENCODER_DIST	0.00410	// Left encoder tick per cm
+#define VELOCITY_k	10			// Velocity slow-down/speedup rate
 
 static int leftMotorSpeed;
 static int rightMotorSpeed;
 static uint16_t counter;
+
+static int oldEncoderR;
+static int oldEncoderL;
+static uint8_t thresh;
+
+
+static double targetRightVelocity;
+static double targetLeftVelocity;
+static double currentRightVelocity;
+static double currentLeftVelocity;
 
 static uint32_t targetDistance;
 static uint32_t targetSpeed;
@@ -28,7 +44,14 @@ static int leftSpeedBuffer, rightSpeedBuffer;
 void initMotor(void) {
 	leftMotorSpeed  = 0;
 	rightMotorSpeed = 0;
+	oldEncoderR = 0;
+	oldEncoderL = 0;
 	counter = 0;
+	thresh = 0;
+	targetRightVelocity = 0;
+	targetLeftVelocity = 0;
+	currentRightVelocity = 0;
+	currentLeftVelocity = 0;
 
 	//Data structure for GPIO configuration
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -100,40 +123,47 @@ void initMotor(void) {
 
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 
-	//Configure TIM for countLeft
-	countHandler.Instance = TIM2;
-	countHandler.Init.Period = 42000;
-	countHandler.Init.Prescaler = 0;
-	countHandler.Init.ClockDivision = 0;
-	countHandler.Init.CounterMode = TIM_COUNTERMODE_DOWN;
-
-	HAL_TIM_Base_Init(&countHandler);
-	HAL_TIM_Base_Stop_IT(&countHandler);
-
+	//Configure TIM for Millisecond Velocity System
+	velocityHandler.Instance = TIM2;
+	velocityHandler.Init.Period = 55999;
+	velocityHandler.Init.Prescaler = 2;
+	velocityHandler.Init.ClockDivision = 0;
+	velocityHandler.Init.CounterMode = TIM_COUNTERMODE_UP;
+	HAL_TIM_Base_Init(&velocityHandler);
+	HAL_TIM_Base_Stop_IT(&velocityHandler);
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
-	//Configure TIM for ms
-	rightHandler.Instance = TIM5;
-	rightHandler.Init.Period = 55999;
-	rightHandler.Init.Prescaler = 2;
-	rightHandler.Init.ClockDivision = 0;
-	rightHandler.Init.CounterMode = TIM_COUNTERMODE_UP;
-	HAL_TIM_Base_Init(&rightHandler);
-	HAL_TIM_Base_Stop_IT(&rightHandler);
+	//Configure TIM for Millisecond Brake System
+	brakeHandler.Instance = TIM5;
+	brakeHandler.Init.Period = 55999;
+	brakeHandler.Init.Prescaler = 2;
+	brakeHandler.Init.ClockDivision = 0;
+	brakeHandler.Init.CounterMode = TIM_COUNTERMODE_UP;
+	HAL_TIM_Base_Init(&brakeHandler);
+	HAL_TIM_Base_Stop_IT(&brakeHandler);
 	HAL_NVIC_EnableIRQ(TIM5_IRQn);
 
 	setSpeed(LEFTMOTOR, 0);
 	setSpeed(RIGHTMOTOR, 0);
+	return;
 }
 
 void setBuzzer(int state) {
 	if (state) HAL_TIM_Base_Start_IT(&buzzerHandler);
 	else HAL_TIM_Base_Stop_IT(&buzzerHandler);
+	return;
 }
 
-void setMilliTimer(int state) {
-	if (state) HAL_TIM_Base_Start_IT(&rightHandler);
-	else HAL_TIM_Base_Stop_IT(&rightHandler);
+void brake() {
+	HAL_TIM_Base_Start_IT(&brakeHandler);
+	return;
+}
+
+void setVelocity(int velocity) {
+	targetRightVelocity = velocity;
+	targetLeftVelocity = velocity;
+	HAL_TIM_Base_Start_IT(&velocityHandler);
+	return;
 }
 
 static void setDirection(Motor channel, Direction state) {
@@ -145,6 +175,7 @@ static void setDirection(Motor channel, Direction state) {
 		if (state == FORWARD) HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
 		else HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
 	}
+	return;
 }
 
 int currentSpeed(Motor channel) {
@@ -183,6 +214,7 @@ void setSpeed(Motor channel, int speed) {
 		}
 		__HAL_TIM_SetCompare(&motorHandler, TIM_CHANNEL_3, speed);
 	}
+	return;
 }
 
 /**
@@ -205,7 +237,79 @@ void travelDistance(uint32_t distance, uint32_t maxSpeed, uint32_t dt)
 	setSpeed(RIGHTMOTOR, 0);
 	leftSpeedBuffer = 0;
 	rightSpeedBuffer = 0;
-	HAL_TIM_Base_Start_IT(&countHandler);
+	HAL_TIM_Base_Start_IT(&velocityHandler);
+	return;
+}
+
+double getCurrentVelocity(Motor channel) {
+	if (channel == RIGHTMOTOR) return currentRightVelocity;
+	else return currentLeftVelocity;
+}
+
+
+void velocityCallBack() {
+	int currentEncoderR = readEncoder(RIGHTENCODER);
+	int currentEncoderL = readEncoder(LEFTENCODER);
+
+	int currRspeed = currentSpeed(RIGHTMOTOR);
+	int currLspeed = currentSpeed(LEFTMOTOR);
+
+	currentRightVelocity = (double)(currentEncoderR - oldEncoderR)*R_ENCODER_DIST/0.001;
+	currentLeftVelocity = (double)(currentEncoderL - oldEncoderL)*L_ENCODER_DIST/0.001;
+
+	if(currentRightVelocity == targetRightVelocity) setLED(WHITE);
+	else resetLED(WHITE);
+	if(currentLeftVelocity == targetLeftVelocity) setLED(BLUE);
+	else resetLED(BLUE);
+
+	if ( currentRightVelocity > targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed-VELOCITY_k);
+	else if ( currentRightVelocity < targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed+VELOCITY_k);
+	else setSpeed(RIGHTMOTOR,currRspeed);
+
+	if ( currentLeftVelocity > targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed-VELOCITY_k);
+	else if ( currentLeftVelocity < targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed+VELOCITY_k);
+	else setSpeed(LEFTMOTOR,currLspeed);
+
+	oldEncoderR = currentEncoderR;
+	oldEncoderL = currentEncoderL;
+	return;
+}
+
+void brakeCallBack() {
+	targetLeftVelocity = 0;
+	targetRightVelocity = 0;
+	int currentEncoderR = readEncoder(RIGHTENCODER);
+	int currentEncoderL = readEncoder(LEFTENCODER);
+
+	int currRspeed = currentSpeed(RIGHTMOTOR);
+	int currLspeed = currentSpeed(LEFTMOTOR);
+
+	int diffR = currentEncoderR - oldEncoderR;
+	int diffL = currentEncoderL - oldEncoderL;
+
+	if (diffR > 0) setSpeed(RIGHTMOTOR,currRspeed-BREAK_k);
+	else if (diffR < 0) setSpeed(RIGHTMOTOR,currRspeed+BREAK_k);
+	else setSpeed(RIGHTMOTOR,currRspeed);
+
+	if (diffL > 0) setSpeed(LEFTMOTOR,currLspeed-BREAK_k);
+	else if (diffL < 0) setSpeed(LEFTMOTOR,currLspeed+BREAK_k);
+	else setSpeed(LEFTMOTOR,currLspeed);
+
+	oldEncoderR = currentEncoderR;
+	oldEncoderL = currentEncoderL;
+
+	if (diffR >= thresh && diffL >= thresh) {
+		counter++;
+		if(counter >= brakeThresh) {
+			HAL_TIM_Base_Stop_IT(&brakeHandler);
+			counter = 0;
+			setSpeed(LEFTMOTOR,0);
+			setSpeed(RIGHTMOTOR,0);
+			currentRightVelocity = 0;
+			currentLeftVelocity = 0;
+		}
+	}
+	return;
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -215,14 +319,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	else if (htim->Instance == TIM2) //Counter interrupt
 	{
+		velocityCallBack();
 
 	}
 	else if (htim->Instance == TIM5) //Millisecond Timer
 	{
-		counter++;
-		if(counter>=1000) {
-			counter = 0;
-			toggleLED(WHITE);
-		}
+		HAL_TIM_Base_Stop_IT(&velocityHandler);
+		brakeCallBack();
 	}
 }
