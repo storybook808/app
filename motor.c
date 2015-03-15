@@ -14,6 +14,7 @@ TIM_HandleTypeDef velocityHandler;
 TIM_HandleTypeDef brakeHandler;
 TIM_HandleTypeDef motorHandler;
 TIM_OC_InitTypeDef sConfig;
+TIM_HandleTypeDef htim2;
 
 #define BREAK_k	50				// Brake slow-down/speedup rate
 #define brakeThresh	100			// Brake time wait in milliseconds
@@ -29,11 +30,11 @@ static int oldEncoderR;
 static int oldEncoderL;
 static uint8_t thresh;
 
-
 static double targetRightVelocity;
 static double targetLeftVelocity;
 static double currentRightVelocity;
 static double currentLeftVelocity;
+static void MX_TIM2_Init(void);
 
 static uint32_t targetDistance;
 static uint32_t targetSpeed;
@@ -59,11 +60,11 @@ void initMotor(void) {
 	//Enable GPIO clock for LED module (B)
 	__GPIOB_CLK_ENABLE();
 
-	//Enable TIM clock for PWM (2 & 3 & 4)
-	__TIM2_CLK_ENABLE(); //TIM for counter
+	//Enable TIM clock for PWM (2 & 3 & 4 & 5)
+	__TIM2_CLK_ENABLE();
 	__TIM3_CLK_ENABLE(); //TIM for buzzer
 	__TIM4_CLK_ENABLE(); //TIM for motors
-	__TIM5_CLK_ENABLE(); //TIM for countRight
+	__TIM5_CLK_ENABLE(); //TIM for brake system
 
 	//Configure data structure for GPIO output
 	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
@@ -123,16 +124,6 @@ void initMotor(void) {
 
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 
-	//Configure TIM for Millisecond Velocity System
-	velocityHandler.Instance = TIM2;
-	velocityHandler.Init.Period = 55999;
-	velocityHandler.Init.Prescaler = 2;
-	velocityHandler.Init.ClockDivision = 0;
-	velocityHandler.Init.CounterMode = TIM_COUNTERMODE_UP;
-	HAL_TIM_Base_Init(&velocityHandler);
-	HAL_TIM_Base_Stop_IT(&velocityHandler);
-	HAL_NVIC_EnableIRQ(TIM2_IRQn);
-
 	//Configure TIM for Millisecond Brake System
 	brakeHandler.Instance = TIM5;
 	brakeHandler.Init.Period = 55999;
@@ -143,27 +134,51 @@ void initMotor(void) {
 	HAL_TIM_Base_Stop_IT(&brakeHandler);
 	HAL_NVIC_EnableIRQ(TIM5_IRQn);
 
+	MX_TIM2_Init();
+
 	setSpeed(LEFTMOTOR, 0);
 	setSpeed(RIGHTMOTOR, 0);
-	return;
+}
+
+/* TIM2 init function */
+void MX_TIM2_Init(void)
+{
+
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 2;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 55999;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  HAL_TIM_Base_Init(&htim2);
+
+  HAL_NVIC_EnableIRQ(TIM2_IRQn);
+  HAL_TIM_Base_Stop(&htim2);
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig);
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
+
 }
 
 void setBuzzer(int state) {
 	if (state) HAL_TIM_Base_Start_IT(&buzzerHandler);
 	else HAL_TIM_Base_Stop_IT(&buzzerHandler);
-	return;
 }
 
 void brake() {
 	HAL_TIM_Base_Start_IT(&brakeHandler);
-	return;
 }
 
-void setVelocity(int velocity) {
+void setVelocity(double velocity) {
 	targetRightVelocity = velocity;
 	targetLeftVelocity = velocity;
-	HAL_TIM_Base_Start_IT(&velocityHandler);
-	return;
+	HAL_TIM_Base_Start_IT(&htim2);
 }
 
 static void setDirection(Motor channel, Direction state) {
@@ -175,7 +190,6 @@ static void setDirection(Motor channel, Direction state) {
 		if (state == FORWARD) HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
 		else HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
 	}
-	return;
 }
 
 int currentSpeed(Motor channel) {
@@ -214,7 +228,6 @@ void setSpeed(Motor channel, int speed) {
 		}
 		__HAL_TIM_SetCompare(&motorHandler, TIM_CHANNEL_3, speed);
 	}
-	return;
 }
 
 /**
@@ -238,12 +251,16 @@ void travelDistance(uint32_t distance, uint32_t maxSpeed, uint32_t dt)
 	leftSpeedBuffer = 0;
 	rightSpeedBuffer = 0;
 	HAL_TIM_Base_Start_IT(&velocityHandler);
-	return;
 }
 
 double getCurrentVelocity(Motor channel) {
 	if (channel == RIGHTMOTOR) return currentRightVelocity;
 	else return currentLeftVelocity;
+}
+
+double getTargetVelocity(Motor channel) {
+	if (channel == RIGHTMOTOR) return targetRightVelocity;
+	else return targetLeftVelocity;
 }
 
 
@@ -272,7 +289,6 @@ void velocityCallBack() {
 
 	oldEncoderR = currentEncoderR;
 	oldEncoderL = currentEncoderL;
-	return;
 }
 
 void brakeCallBack() {
@@ -309,7 +325,6 @@ void brakeCallBack() {
 			currentLeftVelocity = 0;
 		}
 	}
-	return;
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -317,10 +332,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	//Buzzer interrupt
 	if (htim->Instance == TIM3) HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
 
-	else if (htim->Instance == TIM2) //Counter interrupt
+	else if (htim->Instance == TIM2) //Velocity Timer
 	{
 		velocityCallBack();
-
 	}
 	else if (htim->Instance == TIM5) //Millisecond Timer
 	{

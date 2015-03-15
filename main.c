@@ -40,6 +40,7 @@ void main(void) {
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
 
+	int i;
 	while (1) {
 		batteryFault();
 
