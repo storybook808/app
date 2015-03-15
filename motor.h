@@ -14,7 +14,7 @@ typedef enum
 
 void initMotor(void);
 void setBuzzer(int state);
-void setDirection(Motor channel, Direction state);
+static void setDirection(Motor channel, Direction state);
 int currentSpeed(Motor channel);
 void setSpeed(Motor channel, int speed);
 void travelDistance(uint32_t distance, uint32_t maxSpeed, uint32_t dt);
