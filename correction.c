@@ -58,14 +58,17 @@ void correction() {
 				setRightVelocity(getTargetVelocity(RIGHTMOTOR) - errorL);
 			}
 		}
+		/* If there is only Right Wall */
 		else if (hasRightWall(currentRightSide) && !hasLeftWall(currentLeftSide)) {
 			brake();
 			setLED(RED);
 		}
+		/* If there is only Left Wall */
 		else if (!hasRightWall(currentRightSide) && hasLeftWall(currentLeftSide)) {
 			brake();
 			setLED(GREEN);
 		}
+		/* If there are no Walls */
 		else {
 			brake();
 			setLED(BLUE);
