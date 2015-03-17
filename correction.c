@@ -4,6 +4,7 @@
 #include "led.h"
 #include <math.h>
 #include "calibration.h"
+#include "tracking.h"
 
 /* Nice P values
  * PR = 0.01
@@ -29,69 +30,48 @@
 #define DL	.005
 #define BR	.0003
 #define BL	.0005
+#define PUSH_R_THRESH	0
+#define PUSH_L_THRESH	0
 
-double oldErrorP;
+double lastErrorR, lastErrorL;
 
 void correction() {
 
-	double errorP, errorD;
-	double totalErrorR;
-	double totalErrorL;
+	double errorR, errorL;
+	double currentRightSide = readRightCenterSensor();
+	double currentLeftSide = readLeftCenterSensor();
+	double currentFrontRight = readRightSensor();
+	double currentFrontLeft = readLeftSensor();
 
-	double rightCenterSensor = toLinear(readRightCenterSensor());
-	double leftCenterSensor = toLinear(readLeftCenterSensor());
-	double rightSensor = toLinear(readRightSensor());
-	double leftSensor = toLinear(readLeftSensor());
-
-	int currRvel = getCurrentVelocity(RIGHTMOTOR);
-	int currLvel = getCurrentVelocity(LEFTMOTOR);
-
-	double rightFactor = 1;
-	double leftFactor = 1;
-
-	double idealRight = toLinear(getIdealRightFront());
-	double idealLeft = toLinear(getIdealLeftFront());
-
-	/* Determine if brakes are needed */
-	if ((rightSensor < idealRight) && (leftSensor < idealLeft)) {
-		rightFactor = (idealRight - rightSensor)*BR;
-		leftFactor = (idealLeft - leftSensor)*BL;
-		totalErrorL = 0;
-		totalErrorR = 0;
-		setLED(BLUE);
+	if (hasFrontWall(currentFrontRight, currentFrontLeft)) {
+		brake();
 	}
 	else {
-		resetLED(BLUE);
-		/* Has both right & left walls */
-		if( (leftCenterSensor < toLinear(getLeftWall()) && (rightCenterSensor < toLinear(getRightWall())) ))
-		{
-			/* Take the difference between the distances of right & left walls minus the ideal offset from calibration */
-			errorP = rightCenterSensor - leftCenterSensor - (toLinear(getIdealRightCenter()) - toLinear(getIdealLeftCenter()));
-			errorD = errorP - oldErrorP;
+		/* If there are right & left walls */
+		if (hasRightWall(currentRightSide) && hasLeftWall(currentLeftSide)) {
+			if (getIdealRightCenter() > currentRightSide) {
+				errorR = getIdealRightCenter() - currentRightSide;
+				setRightVelocity(getTargetVelocity(RIGHTMOTOR) + errorR);
+			}
+			else if (getIdealLeftCenter() > currentLeftSide) {
+				errorL = getIdealLeftCenter() - currentLeftSide;
+				setRightVelocity(getTargetVelocity(RIGHTMOTOR) - errorL);
+			}
 		}
-		/* Has only left wall */
-		else if( (leftCenterSensor < toLinear(getLeftWall())) )
-		{
-			errorP = 2 * (leftCenterSensor - toLinear(getIdealLeftCenter()));
-			errorD = errorP - oldErrorP;
+		else if (hasRightWall(currentRightSide) && !hasLeftWall(currentLeftSide)) {
+			brake();
+			setLED(RED);
 		}
-		/* Has only right wall */
-		else if( (rightCenterSensor < toLinear(getRightWall())) )
-		{
-			errorP = 2 * (toLinear(getIdealRightCenter()) - rightCenterSensor);
-			errorD = errorP - oldErrorP;
+		else if (!hasRightWall(currentRightSide) && hasLeftWall(currentLeftSide)) {
+			brake();
+			setLED(GREEN);
 		}
-		/* Has no walls... good luck */
-		else if( (leftCenterSensor > toLinear(getLeftWall()) && rightCenterSensor > toLinear(getRightWall())) )
-		{
-			errorP = oldErrorP;//(leftEncoder – rightEncoder*1005/1000)*3;
-			errorD = 0;
+		else {
+			brake();
+			setLED(BLUE);
 		}
-		totalErrorL = PL * errorP + DL * errorD;
-		totalErrorR = PR * errorP + DR * errorD;
-		oldErrorP = errorP;
-	}
 
-	setRightVelocity(currRvel-totalErrorR);
-	setLeftVelocity(currLvel-totalErrorL);
+		lastErrorR = errorR;
+		lastErrorL = errorL;
+	}
 }

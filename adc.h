@@ -1,3 +1,4 @@
+#include <stdint.h>
 #define LEFT_DET      0
 #define LEFT_CEN_DET  1
 #define RIGHT_CEN_DET 2
@@ -43,16 +44,12 @@
 void initADC();
 uint32_t readADC(int channel);
 uint32_t readBattery(void);
-double rightSensorConversion(uint32_t reading);
-double leftSensorConversion(uint32_t reading);
-double rightCenterSensorConversion(uint32_t reading);
-double leftCenterSensorConversion(uint32_t reading);
 void sensorCalibrationPrint(int sensor, int distance);
 
-int readRightSensor();
-int readRightCenterSensor();
-int readLeftCenterSesnor();
-int readLeftSensor();
+double readRightSensor();
+double readRightCenterSensor();
+double readLeftCenterSensor();
+double readLeftSensor();
 
 double rightSensorDistance(int value);
 double leftSensorDistance(int value);

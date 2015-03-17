@@ -36,14 +36,15 @@ void main(void) {
 	testChaser(1, 250);
 
 	// Test USART Connection
-	printStringUSART("Hello world!");
+	printString("Hello world!");
 	printNL();
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
 
+	setVelocity(50.0);
+
 	while (1) {
 		batteryFault();
-
 	}
 
 	return;

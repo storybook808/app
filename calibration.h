@@ -1,22 +1,24 @@
 /*=Public Functions===========================================================*/
+#include <stdint.h>
+
 void calibrateSensors(void);
 void calibrateLeftWall(void);
 void calibrateRightWall(void);
 void calibrateFrontWall(void);
 void calibrateCenter(void);
-int getLeftWall(void);
-int getRightWall(void);
-int getIdealLeftFront(void);
-int getIdealRightFront(void);
-int getIdealLeftCenter(void);
-int getIdealRightCenter(void);
-double toLinear(int input);
+double getLeftWall(void);
+double getRightWall(void);
+double getIdealLeftFront(void);
+double getIdealRightFront(void);
+double getIdealLeftCenter(void);
+double getIdealRightCenter(void);
+double toLinear(uint16_t input);
 void waitForTop(void);
 
 /*=Private Functions==========================================================*/
-static void setLeftWall(int value);
-static void setRightWall(int value);
-static void setIdealLeftFront(int value);
-static void setIdealRightFront(int value);
-static void setIdealLeftCenter(int value);
-static void setIdealRightCenter(int value);
+static void setLeftWall(double value);
+static void setRightWall(double value);
+static void setIdealLeftFront(double value);
+static void setIdealRightFront(double value);
+static void setIdealLeftCenter(double value);
+static void setIdealRightCenter(double value);
