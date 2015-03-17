@@ -12,7 +12,6 @@ typedef enum
 	BACKWARD
 }Direction;
 
-void initMotor(void);
 void setBuzzer(int state);
 static void setDirection(Motor channel, Direction state);
 int currentSpeed(Motor channel);

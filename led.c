@@ -4,36 +4,6 @@
 
 #include "led.h"
 
-void initLED(void) {
-	//Data structure for GPIO configuration
-	GPIO_InitTypeDef GPIO_InitStructure;
-
-	//Enable GPIO clock for LED module (A & B)
-	__GPIOA_CLK_ENABLE();
-	__GPIOB_CLK_ENABLE();
-
-	//Configure data structure for GPIO output
-	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStructure.Pull = GPIO_NOPULL;
-	GPIO_InitStructure.Speed = GPIO_SPEED_MEDIUM;
-
-	//0 - Front LED
-	GPIO_InitStructure.Pin = GPIO_PIN_11;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-	//1 -
-	GPIO_InitStructure.Pin = GPIO_PIN_10;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-	//2 -
-	GPIO_InitStructure.Pin = GPIO_PIN_5;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-	//3 - Back LED
-	GPIO_InitStructure.Pin = GPIO_PIN_6;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
-}
-
 void setLED(Led color) {
 	switch (color) {
 	case WHITE:

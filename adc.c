@@ -7,8 +7,9 @@
 
 #include "adc.h"
 #include "led.h"
+#include "system.h"
 
-ADC_HandleTypeDef ADCHandle;
+extern ADC_HandleTypeDef ADCHandle;
 
 uint16_t uhADCxConvertedValue = 0;
 int convertedValue[6];
@@ -86,106 +87,106 @@ double leftCenterSensorDistance(int value) {
     return 20.0;
 }
 
-void initADC() {
-    currentTarget = 0;
-    convertedValue[0] = 0;
-    convertedValue[1] = 0;
-    convertedValue[2] = 0;
-    convertedValue[3] = 0;
-    convertedValue[4] = 0;
-    convertedValue[5] = 0;
+// void initADC() {
+//     currentTarget = 0;
+//     convertedValue[0] = 0;
+//     convertedValue[1] = 0;
+//     convertedValue[2] = 0;
+//     convertedValue[3] = 0;
+//     convertedValue[4] = 0;
+//     convertedValue[5] = 0;
     
-    //Data structure for GPIO configuration
-    GPIO_InitTypeDef GPIO_InitStructure;
+//     //Data structure for GPIO configuration
+//     GPIO_InitTypeDef GPIO_InitStructure;
     
-    ADC_ChannelConfTypeDef sConfig;
+//     ADC_ChannelConfTypeDef sConfig;
     
-    //Enable GPIO clock for LED module (C & H)
-    __GPIOA_CLK_ENABLE();
-    __GPIOB_CLK_ENABLE();
-    __GPIOC_CLK_ENABLE();
-    __GPIOH_CLK_ENABLE();
+//     //Enable GPIO clock for LED module (C & H)
+//     __GPIOA_CLK_ENABLE();
+//     __GPIOB_CLK_ENABLE();
+//     __GPIOC_CLK_ENABLE();
+//     __GPIOH_CLK_ENABLE();
     
-    //Enable ADC clock
-    __ADC1_CLK_ENABLE();
+//     //Enable ADC clock
+//     __ADC1_CLK_ENABLE();
     
-    //Configure data structure for GPIO output
-    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStructure.Pull = GPIO_NOPULL;
-    GPIO_InitStructure.Speed = GPIO_SPEED_MEDIUM;
+//     //Configure data structure for GPIO output
+//     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+//     GPIO_InitStructure.Pull = GPIO_NOPULL;
+//     GPIO_InitStructure.Speed = GPIO_SPEED_MEDIUM;
     
-    //Left emitter
-    GPIO_InitStructure.Pin = GPIO_PIN_1;
-    HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
+//     //Left emitter
+//     GPIO_InitStructure.Pin = GPIO_PIN_1;
+//     HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
     
-    //Left center emitter
-    GPIO_InitStructure.Pin = GPIO_PIN_15;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+//     //Left center emitter
+//     GPIO_InitStructure.Pin = GPIO_PIN_15;
+//     HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
     
-    //Right center emitter
-    GPIO_InitStructure.Pin = GPIO_PIN_0;
-    HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
+//     //Right center emitter
+//     GPIO_InitStructure.Pin = GPIO_PIN_0;
+//     HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
     
-    //Right emitter
-    GPIO_InitStructure.Pin = GPIO_PIN_14;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+//     //Right emitter
+//     GPIO_InitStructure.Pin = GPIO_PIN_14;
+//     HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
     
-    GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
+//     GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
+//     GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
     
-    //Left detector
-    GPIO_InitStructure.Pin = GPIO_PIN_0;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+//     //Left detector
+//     GPIO_InitStructure.Pin = GPIO_PIN_0;
+//     HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
     
-    //Left center detector
-    GPIO_InitStructure.Pin = GPIO_PIN_7;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+//     //Left center detector
+//     GPIO_InitStructure.Pin = GPIO_PIN_7;
+//     HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
     
-    //Right center detector
-    GPIO_InitStructure.Pin = GPIO_PIN_4;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+//     //Right center detector
+//     GPIO_InitStructure.Pin = GPIO_PIN_4;
+//     HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
     
-    //Right detector
-    GPIO_InitStructure.Pin = GPIO_PIN_5;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+//     //Right detector
+//     GPIO_InitStructure.Pin = GPIO_PIN_5;
+//     HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
     
-    //Voltage detector
-    GPIO_InitStructure.Pin = GPIO_PIN_1;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+//     //Voltage detector
+//     GPIO_InitStructure.Pin = GPIO_PIN_1;
+//     HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    //Flash detector
-    GPIO_InitStructure.Pin = GPIO_PIN_4;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+//     //Flash detector
+//     GPIO_InitStructure.Pin = GPIO_PIN_4;
+//     HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
     
-    //Gyroscope
+//     //Gyroscope
     
-    ADCHandle.Instance = ADC1;
+//     ADCHandle.Instance = ADC1;
     
-    ADCHandle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
-    ADCHandle.Init.Resolution = ADC_RESOLUTION12b;
-    ADCHandle.Init.ScanConvMode = ENABLE;
-    ADCHandle.Init.ContinuousConvMode = DISABLE;
-    ADCHandle.Init.NbrOfConversion = 1;
-    ADCHandle.Init.DiscontinuousConvMode = DISABLE;
-    ADCHandle.Init.NbrOfDiscConversion = 0;
-    ADCHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-    ADCHandle.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC1;
-    ADCHandle.Init.DMAContinuousRequests = DISABLE;
-    ADCHandle.Init.EOCSelection = DISABLE;
+//     ADCHandle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
+//     ADCHandle.Init.Resolution = ADC_RESOLUTION12b;
+//     ADCHandle.Init.ScanConvMode = ENABLE;
+//     ADCHandle.Init.ContinuousConvMode = DISABLE;
+//     ADCHandle.Init.NbrOfConversion = 1;
+//     ADCHandle.Init.DiscontinuousConvMode = DISABLE;
+//     ADCHandle.Init.NbrOfDiscConversion = 0;
+//     ADCHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+//     ADCHandle.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC1;
+//     ADCHandle.Init.DMAContinuousRequests = DISABLE;
+//     ADCHandle.Init.EOCSelection = DISABLE;
     
-    HAL_ADC_Init(&ADCHandle);
+//     HAL_ADC_Init(&ADCHandle);
     
-    //Left detector
-    sConfig.Channel = ADC_CHANNEL_8;
-    sConfig.Rank = 1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-    sConfig.Offset = 0;
-    HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+//     //Left detector
+//     sConfig.Channel = ADC_CHANNEL_8;
+//     sConfig.Rank = 1;
+//     sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+//     sConfig.Offset = 0;
+//     HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
     
-    //	HAL_NVIC_EnableIRQ(ADC_IRQn);
+//     //	HAL_NVIC_EnableIRQ(ADC_IRQn);
     
-    return;
-}
+//     return;
+// }
 
 uint32_t readBattery() {
     ADC_ChannelConfTypeDef sConfig;
