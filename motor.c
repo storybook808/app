@@ -23,6 +23,8 @@ static double currentLeftVelocity;
 
 /* Private Functions */
 static void setDirection(Motor channel, Direction state);
+static void velocityCallBack();
+static void brakeCallBack();
 
 /* TIM2 init function */
 void MX_TIM2_Init(void)
@@ -79,12 +81,12 @@ static void setDirection(Motor channel, Direction state) {
 	}
 }
 
-int currentSpeed(Motor channel) {
+static int currentSpeed(Motor channel) {
 	if (channel == LEFTMOTOR) return leftMotorSpeed;
 	else return rightMotorSpeed;
 }
 
-void setSpeed(Motor channel, int speed) {
+static void setSpeed(Motor channel, int speed) {
 	int neg = 1;
 	if (speed >= 0) {
 		setDirection(channel, FORWARD);
@@ -127,7 +129,7 @@ double getTargetVelocity(Motor channel) {
 	else return targetLeftVelocity;
 }
 
-void velocityCallBack() {
+static void velocityCallBack() {
 	int currentEncoderR = getEncoder(RIGHTENCODER);
 	int currentEncoderL = getEncoder(LEFTENCODER);
 
@@ -154,7 +156,7 @@ void velocityCallBack() {
 	oldEncoderL = currentEncoderL;
 }
 
-void brakeCallBack() {
+static void brakeCallBack() {
 	targetLeftVelocity = 0;
 	targetRightVelocity = 0;
 	int currentEncoderR = getEncoder(RIGHTENCODER);

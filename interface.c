@@ -92,3 +92,96 @@ void toggleLEDAll(void) {
 	toggleLED(GREEN);
 	toggleLED(RED);
 }
+
+void testChaser(int mode, int period) {
+ 	switch (mode) {
+ 	case 0:
+ 		setLED(WHITE);
+ 		HAL_Delay(period);
+ 		setLED(BLUE);
+ 		HAL_Delay(period);
+ 		setLED(GREEN);
+ 		HAL_Delay(period);
+ 		setLED(RED);
+ 		HAL_Delay(period);
+ 		break;
+ 	case 1:
+ 		setLED(WHITE);
+ 		HAL_Delay(period);
+ 		setLED(BLUE);
+ 		HAL_Delay(period);
+ 		setLED(GREEN);
+ 		HAL_Delay(period);
+ 		setLED(RED);
+ 		HAL_Delay(period);
+ 		toggleLEDAll();
+ 		HAL_Delay(period);
+ 		toggleLEDAll();
+ 		HAL_Delay(period);
+ 		toggleLEDAll();
+ 		HAL_Delay(period);
+ 		toggleLEDAll();
+ 		HAL_Delay(period);
+ 		toggleLEDAll();
+ 		break;
+ 	case 2:
+ 		setLED(WHITE);
+ 		HAL_Delay(period);
+ 		resetLED(WHITE);
+ 		setLED(BLUE);
+ 		HAL_Delay(period);
+ 		resetLED(BLUE);
+ 		setLED(GREEN);
+ 		HAL_Delay(period);
+ 		resetLED(GREEN);
+ 		setLED(RED);
+ 		HAL_Delay(period);
+ 		break;
+ 	}
+ }
+
+void testMenu(int channel) {
+	int count = getEncoder(channel);
+	if (count < 0) {
+		count = 0;
+	} else if (count >= 0 && count <= 800) {
+		setLED(RED);
+		resetLED(GREEN);
+	} else if (count > 800 && count <= (800*2)) {
+		resetLED(RED);
+		setLED(GREEN);
+		resetLED(BLUE);
+	} else if (count > (800*2) && count <= (800*3)) {
+		resetLED(GREEN);
+		setLED(BLUE);
+		resetLED(WHITE);
+	} else if (count > (800*3) && count <= (800*4)) {
+		resetLED(BLUE);
+		setLED(WHITE);
+	} else if (count > (800*4)) {
+		count = (800*4);
+	}
+}
+
+void batteryFault() {
+ 	//Take a reading from the voltage detector
+ 	uint32_t batteryLevel = readBattery();
+ 	//Check to see if voltage level is above 7V
+ 	//Voltage detector is a voltage divider where 7V is measured as 2.3333V
+ 	//2.3333V translate to roughly 2333 from the 12 bit ADC
+ 	if (batteryLevel < 2333) {
+ 		//Disable all motors
+ 		brake();
+ 		//Enable buzzer
+ 		setBuzzer(ON);
+ 		//Disable all LEDs
+ 		resetLEDAll();
+ 		//Flash red LED every half second.
+ 		while (1) {
+ 			//Invert the state of the red LED located closest to the STM
+ 			toggleLED(RED);
+ 			//Half second delay
+ 			HAL_Delay(500);
+ 		}
+ 	}
+ }

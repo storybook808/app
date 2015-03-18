@@ -6,9 +6,14 @@
 #include "defines.h"
 
 #include "adc.h"
+/*
+ * These functions are meant to allow communication with
+ * Alex? via USART.
+ */
 
+/* */
 void printInt(int value);
-void printString();
+void printString(char *c);
 void printNL();
 void printFloat(float value);
 void printComma();

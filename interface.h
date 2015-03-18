@@ -6,6 +6,7 @@
 #include "defines.h"
 
 #include "adc.h"
+#include "motor.h"
 
 void waitForTop(void);
 
@@ -17,5 +18,8 @@ void toggleLED(Led color);
 void toggleLEDAll(void);
 
 void setBuzzer(int state);
+void testChaser(int mode, int period);
+void testMenu(int channel);
+void batteryFault();
 
 #endif
