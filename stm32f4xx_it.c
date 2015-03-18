@@ -1,12 +1,13 @@
-#include "components/coocox-master/STM32F405xx_cmsisboot/source/Hal/stm32f4xx_hal.h"
-#include "components/coocox-master/STM32F405xx_cmsisboot/source/Hal/stm32f4xx_hal_adc.h"
-#include "components/coocox-master/STM32F405xx_cmsisboot/source/Hal/stm32f4xx_hal_gpio.h"
-#include "components/coocox-master/STM32F405xx_cmsisboot/source/Hal/stm32f4xx_hal_rcc.h"
+/* File Name: stm32fxx_it.c
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
 
 #include "stm32f4xx_it.h"
 
-#include "encoder.h"
-#include "led.h"
 
 extern TIM_HandleTypeDef buzzerHandler;
 extern TIM_HandleTypeDef brakeHandler;

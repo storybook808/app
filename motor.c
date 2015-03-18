@@ -1,3 +1,11 @@
+/* File Name: motor.c
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #include "motor.h"
 
 //Data structure for TIM configuration

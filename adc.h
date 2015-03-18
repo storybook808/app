@@ -1,3 +1,11 @@
+/* File Name: adc.h
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #ifndef adc_H
 #define adc_H
 

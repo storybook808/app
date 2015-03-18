@@ -1,3 +1,11 @@
+/* File Name: usart.h
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #ifndef usart_H
 #define usart_H
 

@@ -1,3 +1,11 @@
+/* File Name: adc.c
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #include "adc.h"
 
 extern ADC_HandleTypeDef ADCHandle;

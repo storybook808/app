@@ -1,3 +1,11 @@
+/* File Name: interface.c
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #include "interface.h"
 
 extern TIM_HandleTypeDef buzzerHandler;

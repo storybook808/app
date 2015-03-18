@@ -1,3 +1,11 @@
+/* File Name: encoder.h
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #ifndef encoder_H
 #define encdoer_H
 

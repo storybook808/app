@@ -1,3 +1,11 @@
+/* File Name: tracking.h
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #ifndef tracking_H
 #define tracking_H
 

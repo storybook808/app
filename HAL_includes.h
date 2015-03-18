@@ -1,3 +1,11 @@
+/* File Name: HAL_includes.h
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #ifndef HAL_includes_H
 #define HAL_includes_H
 

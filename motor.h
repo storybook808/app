@@ -1,3 +1,11 @@
+/* File Name: motor.h
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #ifndef motor_H
 #define motor_H
 

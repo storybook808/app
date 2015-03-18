@@ -1,3 +1,11 @@
+/* File Name: interface.h
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #ifndef interface_H
 #define interface_H
 

@@ -1,3 +1,11 @@
+/* File Name: system.c
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #include "system.h"
 
 // Data structure for TIM configuration

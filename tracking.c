@@ -1,4 +1,13 @@
+/* File Name: tracking.c
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #include "tracking.h"
+
 
 bool hasRightWall(double value) {
 	if (value < getFarRightWall()) return true;

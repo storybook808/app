@@ -1,3 +1,10 @@
+/* File Name: main.c
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
 #include "adc.h"
 #include "calibration.h"
 #include "correction.h"

@@ -1,3 +1,11 @@
+/* File Name: usart.c
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #include "usart.h"
 
 #define TRANS_DELAY 200

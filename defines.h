@@ -1,3 +1,11 @@
+/* File Name: defines.h
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #ifndef defines_H
 #define defines_H
 

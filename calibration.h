@@ -1,3 +1,11 @@
+/* File Name: calibration.h
+ * Project: EE 396
+ * Team: TSM
+ * Members: Mark Miw
+ *          Steven Chen
+ *          Joseph Felix Jr.
+ */
+
 #ifndef calibration_H
 #define calibration_H
 
