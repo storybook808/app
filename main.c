@@ -28,7 +28,6 @@ void SystemClock_Config(void);
 void main(void) {
 	HAL_Init();
 	SystemClock_Config();
-
 	initSystem();
 
 	while(1) {

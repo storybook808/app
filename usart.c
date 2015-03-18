@@ -97,7 +97,7 @@ void fullSensorUSART() {
     }
 }
 
-void printUSART(int value) {
+void printInt(int value) {
     int k;
     int digLen = 1;
     char dig = '0';
@@ -134,17 +134,24 @@ void printFloat(float value) {
     }
 
     if (negative == -1) HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *) "-", 1, 1000);
-	printUSART(x);
-	printStringUSART(".");
-	printUSART(y);
+	printInt(x);
+	printString(".");
+	printInt(y);
 }
 
-void printStringUSART(char *c) {
+void printString(char *c) {
     int length;
     length = strlen(c);
     
     HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *)c, length, 1000);
     HAL_Delay(TRANS_DELAY);
+}
+
+void printComma() {
+	char c = ',';
+
+	HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *)&c, 1, 1000);
+	HAL_Delay(TRANS_DELAY);
 }
 
 void printNL() {

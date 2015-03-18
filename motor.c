@@ -347,6 +347,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if (htim->Instance == TIM2) //Velocity Timer
 	{
 		velocityCallBack();
+		correction();
 	}
 	else if (htim->Instance == TIM5) //Millisecond Timer
 	{

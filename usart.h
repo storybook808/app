@@ -7,7 +7,8 @@
 void initUSART();
 void sensorUSART(int sensor);
 void fullSensorUSART();
-void printUSART(int value);
-void printStringUSART();
+void printInt(int value);
+void printString();
 void printNL();
 void printFloat(float value);
+void printComma();

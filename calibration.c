@@ -5,15 +5,15 @@
 #include "calibration.h"
 #include "led.h"
 
-static int leftWall, rightWall;
-static int idealLeftFront, idealRightFront;
-static int idealLeftCenter, idealRightCenter;
+static double leftWall, rightWall;
+static double idealLeftFront, idealRightFront;
+static double idealLeftCenter, idealRightCenter;
 
 /*=Public Functions===========================================================*/
 void waitForTop() {
 	uint8_t startFlag = 0;
 	do {
-		if (readADC(FLASH) < 50) {
+		if (readADC(FLASH_MEM) < 50) {
 			startFlag = 1;
 		}
 		toggleLED(WHITE);
@@ -70,55 +70,55 @@ void calibrateCenter(void) {
 	setIdealRightCenter(readRightCenterSensor());
 }
 
-int getLeftWall(void) {
+double getLeftWall(void) {
 	return leftWall;
 }
 
-int getRightWall(void) {
+double getRightWall(void) {
 	return rightWall;
 }
 
-int getIdealLeftFront(void) {
+double getIdealLeftFront(void) {
 	return idealLeftFront;
 }
 
-int getIdealRightFront(void) {
+double getIdealRightFront(void) {
 	return idealRightFront;
 }
 
-int getIdealLeftCenter(void) {
+double getIdealLeftCenter(void) {
 	return idealLeftCenter;
 }
 
-int getIdealRightCenter(void) {
+double getIdealRightCenter(void) {
 	return idealRightCenter;
 }
 
-double toLinear(int input) {
+double toLinear(uint16_t input) {
 	return (double)5000/log((double)input);
 }
 
 /*=Private Functions==========================================================*/
-static void setLeftWall(int value) {
+static void setLeftWall(double value) {
 	leftWall  = value;
 }
 
-static void setRightWall(int value) {
+static void setRightWall(double value) {
 	rightWall = value;
 }
 
-static void setIdealLeftFront(int value) {
+static void setIdealLeftFront(double value) {
 	idealLeftFront = value;
 }
 
-static void setIdealRightFront(int value) {
+static void setIdealRightFront(double value) {
 	idealRightFront = value;
 }
 
-static void setIdealLeftCenter(int value) {
+static void setIdealLeftCenter(double value) {
 	idealLeftCenter = value;
 }
 
-static void setIdealRightCenter(int value) {
+static void setIdealRightCenter(double value) {
 	idealRightCenter = value;
 }
