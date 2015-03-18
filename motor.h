@@ -10,7 +10,6 @@
 #include "interface.h"
 #include "correction.h"
 
-static void setDirection(Motor channel, Direction state);
 int currentSpeed(Motor channel);
 void setSpeed(Motor channel, int speed);
 

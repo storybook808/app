@@ -25,12 +25,4 @@ double getIdealLeftCenter(void);
 double getIdealRightCenter(void);
 double toLinear(uint16_t input);
 
-/*=Private Functions==========================================================*/
-static void setFarLeftWall(double value);
-static void setFarRightWall(double value);
-static void setIdealLeftFront(double value);
-static void setIdealRightFront(double value);
-static void setIdealLeftCenter(double value);
-static void setIdealRightCenter(double value);
-
 #endif

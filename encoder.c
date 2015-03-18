@@ -1,5 +1,9 @@
 #include "encoder.h"
 
+/* Private Functions */
+static void incrementEncoder(Encoder channel);
+static void decrementEncoder(Encoder channel);
+
 static int leftCount, rightCount;
 
 int getEncoder(Encoder channel)

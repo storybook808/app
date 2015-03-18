@@ -4,6 +4,14 @@ static double farLeftWall, farRightWall;
 static double idealLeftFront, idealRightFront;
 static double idealLeftCenter, idealRightCenter;
 
+/*=Private Functions==========================================================*/
+static void setFarLeftWall(double value);
+static void setFarRightWall(double value);
+static void setIdealLeftFront(double value);
+static void setIdealRightFront(double value);
+static void setIdealLeftCenter(double value);
+static void setIdealRightCenter(double value);
+
 /*=Public Functions===========================================================*/
 
 void calibrateSensors(void) {

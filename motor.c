@@ -21,6 +21,9 @@ static double targetLeftVelocity;
 static double currentRightVelocity;
 static double currentLeftVelocity;
 
+/* Private Functions */
+static void setDirection(Motor channel, Direction state);
+
 /* TIM2 init function */
 void MX_TIM2_Init(void)
 {
