@@ -19,18 +19,10 @@
 /*=Public Functions===========================================================*/
 
 void calibrateSensors(void);
-void calibrateLeftWall(void);
-void calibrateRightWall(void);
-void calibrateFrontWall(void);
-void calibrateCenter(void);
+void calibrateWall(Wall wall);
 
 /* Rename getFarWall functions */
-double getFarLeftWall(void);
-double getFarRightWall(void);
-double getIdealLeftFront(void);
-double getIdealRightFront(void);
-double getIdealLeftCenter(void);
-double getIdealRightCenter(void);
+double getWall(Wall wall);
 double toLinear(uint16_t input);
 
 #endif

@@ -41,6 +41,19 @@ typedef enum
 	FLASH_MEM
 }ADC_Channel;
 
+typedef enum {
+    LEFT,
+    RIGHT,
+    CENTER,
+    FRONT,
+    FARLEFTWALL,
+    FARRIGHTWALL,
+    IDEALLEFTFRONT,
+    IDEALRIGHTFRONT,
+    IDEALLEFTCENTER,
+    IDEALRIGHTCENTER
+}Wall;
+
 /* Enumeration Variable for Encoder Channels */
 typedef enum
 {

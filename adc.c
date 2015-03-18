@@ -99,20 +99,8 @@ uint32_t readADC(int channel) {
     return HAL_ADC_GetValue(&ADCHandle);
 }
 
-double readLeftSensor() {
-	return toLinear(ADC_getSampleAvgNDeleteX(30,10,LEFT_DET));
-}
-
-double readRightSensor() {
-	return toLinear(ADC_getSampleAvgNDeleteX(30,10,RIGHT_DET));
-}
-
-double readLeftCenterSensor() {
-	return toLinear(ADC_getSampleAvgNDeleteX(30,10,LEFT_CEN_DET));
-}
-
-double readRightCenterSensor() {
-	return toLinear(ADC_getSampleAvgNDeleteX(30,10,RIGHT_CEN_DET));
+double readSensor(ADC_Channel channel) {
+    return toLinear(ADC_getSampleAvgNDeleteX(30,10,channel));
 }
 
 uint16_t ADC_getSampleAvgNDeleteX(uint8_t N, uint8_t X, int channel) {

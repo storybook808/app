@@ -13,85 +13,86 @@ static double idealLeftFront, idealRightFront;
 static double idealLeftCenter, idealRightCenter;
 
 /*=Private Functions==========================================================*/
-static void setFarLeftWall(double value);
-static void setFarRightWall(double value);
-static void setIdealLeftFront(double value);
-static void setIdealRightFront(double value);
-static void setIdealLeftCenter(double value);
-static void setIdealRightCenter(double value);
+static void setWall(Wall wall,double value);
 
 /*=Public Functions===========================================================*/
 
 void calibrateSensors(void) {
 	setLED(BLUE);
 	waitForTop();
-	calibrateLeftWall();
+	calibrateWall(LEFT);
 	resetLED(BLUE);
 	resetLED(WHITE);
 	HAL_Delay(1000);
 
 	setLED(GREEN);
 	waitForTop();
-	calibrateRightWall();
+	calibrateWall(RIGHT);
 	resetLED(GREEN);
 	resetLED(WHITE);
 	HAL_Delay(1000);
 
 	setLED(RED);
 	waitForTop();
-	calibrateCenter();
+	calibrateWall(CENTER);
 	resetLED(RED);
 	resetLED(WHITE);
 	HAL_Delay(1000);
 
 	setLEDAll();
 	waitForTop();
-	calibrateFrontWall();
+	calibrateWall(FRONT);
 	resetLEDAll();
 
 	HAL_Delay(1000);
 }
 
-void calibrateLeftWall(void) {
-	setFarLeftWall(readLeftCenterSensor());
+void calibrateWall(Wall wall) {
+    switch (wall) {
+        case LEFT:
+            setFarLeftWall(readLeftCenterSensor());
+            break;
+        case RIGHT:
+            setFarRightWall(readRightCenterSensor());
+            break;
+        case CENTER:
+            setIdealLeftCenter(readLeftCenterSensor());
+            setIdealRightCenter(readRightCenterSensor());
+            break;
+        case FRONT:
+            setIdealLeftFront(readLeftSensor());
+            setIdealRightFront(readRightSensor());
+            break;
+            
+        default:
+            break;
+    }
 }
 
-void calibrateRightWall(void) {
-	setFarRightWall(readRightCenterSensor());
-}
-
-void calibrateFrontWall(void) {
-	setIdealLeftFront(readLeftSensor());
-	setIdealRightFront(readRightSensor());
-}
-
-void calibrateCenter(void) {
-	setIdealLeftCenter(readLeftCenterSensor());
-	setIdealRightCenter(readRightCenterSensor());
-}
-
-double getFarLeftWall(void) {
-	return farLeftWall;
-}
-
-double getFarRightWall(void) {
-	return farRightWall;
-}
-
-double getIdealLeftFront(void) {
-	return idealLeftFront;
-}
-
-double getIdealRightFront(void) {
-	return idealRightFront;
-}
-
-double getIdealLeftCenter(void) {
-	return idealLeftCenter;
-}
-
-double getIdealRightCenter(void) {
-	return idealRightCenter;
+double getWall(Wall wall) {
+    switch (wall) {
+        case FARLEFTWALL:
+            return farLeftWall;
+            break;
+        case FARRIGHTWALL:
+            return farRightWall;
+            break;
+        case IDEALLEFTFRONT:
+            return idealLeftFront;
+            break;
+        case IDEALRIGHTFRONT:
+            return idealRightFront;
+            break;
+        case IDEALLEFTCENTER:
+            return idealLeftCenter;
+            break;
+        case IDEALRIGHTCENTER:
+            return idealRightCenter;
+            break;
+            
+        default:
+            break;
+    }
 }
 
 double toLinear(uint16_t input) {
@@ -99,26 +100,28 @@ double toLinear(uint16_t input) {
 }
 
 /*=Private Functions==========================================================*/
-static void setFarLeftWall(double value) {
-	farLeftWall  = value;
-}
-
-static void setFarRightWall(double value) {
-	farRightWall = value;
-}
-
-static void setIdealLeftFront(double value) {
-	idealLeftFront = value;
-}
-
-static void setIdealRightFront(double value) {
-	idealRightFront = value;
-}
-
-static void setIdealLeftCenter(double value) {
-	idealLeftCenter = value;
-}
-
-static void setIdealRightCenter(double value) {
-	idealRightCenter = value;
+static void setWall(Wall wall, double value) {
+    switch (wall) {
+        case FARLEFTWALL:
+            farLeftWall = value;
+            break;
+        case FARRIGHTWALL:
+            farRightWall = value;
+            break;
+        case IDEALLEFTFRONT:
+            idealLeftFront = value;
+            break;
+        case IDEALRIGHTFRONT:
+            idealRightFront = value;
+            break;
+        case IDEALLEFTCENTER:
+            idealLeftCenter = value;
+            break;
+        case IDEALRIGHTCENTER:
+            idealRightCenter = value;
+            break;
+            
+        default:
+            break;
+    }
 }
