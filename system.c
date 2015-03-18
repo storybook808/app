@@ -13,6 +13,7 @@ TIM_HandleTypeDef buzzerHandler;
 TIM_HandleTypeDef countHandler;
 TIM_HandleTypeDef rightHandler;
 TIM_HandleTypeDef motorHandler;
+TIM_HandleTypeDef htim2;
 
 // Data structure for ADC configuration
 ADC_HandleTypeDef ADCHandle;
