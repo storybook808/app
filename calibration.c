@@ -13,7 +13,7 @@ static double idealLeftFront, idealRightFront;
 static double idealLeftCenter, idealRightCenter;
 
 /*=Private Functions==========================================================*/
-static void setWall(Wall wall,double value);
+static void setWall(Wall wall, double value);
 
 /*=Public Functions===========================================================*/
 
@@ -50,18 +50,18 @@ void calibrateSensors(void) {
 void calibrateWall(Wall wall) {
     switch (wall) {
         case LEFT:
-            setFarLeftWall(readLeftCenterSensor());
+            setWall(FARLEFTWALL, readSensor(LEFT_CEN_DET));
             break;
         case RIGHT:
-            setFarRightWall(readRightCenterSensor());
+            setWall(FARRIGHTWALL, readSensor(RIGHT_CEN_DET));
             break;
         case CENTER:
-            setIdealLeftCenter(readLeftCenterSensor());
-            setIdealRightCenter(readRightCenterSensor());
+            setWall(IDEALLEFTCENTER, readSensor(LEFT_CEN_DET));
+            setWall(IDEALRIGHTCENTER, readSensor(RIGHT_CEN_DET));
             break;
         case FRONT:
-            setIdealLeftFront(readLeftSensor());
-            setIdealRightFront(readRightSensor());
+            setWall(IDEALLEFTFRONT, readSensor(LEFT_DET));
+            setWall(IDEALRIGHTFRONT, readSensor(RIGHT_DET));
             break;
             
         default:
@@ -91,7 +91,7 @@ double getWall(Wall wall) {
             break;
             
         default:
-            break;
+            return 0.0;
     }
 }
 

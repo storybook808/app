@@ -26,11 +26,13 @@ void main(void) {
 	initSystem();
 
 	//LED start up sequence
-	 testChaser(1, 250);
+	testChaser(1, 250);
 
 	 // Test USART Connection
 	 printString("Hello world!");
 	 printNL();
+
+	 setVelocity(50);
 
 	while(1) {
 		batteryFault();
