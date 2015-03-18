@@ -25,9 +25,10 @@
 
 #define BREAK_k	50				// Brake slow-down/speedup rate
 #define brakeThresh	100			// Brake time wait in milliseconds
-#define R_ENCODER_DIST	0.002003	// Right encoder tick per cm
+#define R_ENCODER_DIST	0.0020003	// Right encoder tick per cm 0.0020000 is left bias, do 0.0020001 next time
 #define L_ENCODER_DIST	0.00205	// Left encoder tick per cm
-#define VELOCITY_k	10			// Velocity slow-down/speedup rate
+#define VELOCITY_k_R	10			// Velocity slow-down/speedup rate right motor
+#define VELOCITY_k_L	10			// Velocity slow-down/speedup rate left motor
 
 /* Enumeration Variable for ADC Channels */
 typedef enum
