@@ -1,9 +1,15 @@
-#include <stdint.h>
-#define TRUE	1
-#define FALSE	0
+#ifndef tracking_H
+#define tracking_H
 
-uint8_t hasRightWall(double value);
+#include "global_libs.h"
+#include "HAL_includes.h"
+#include "defines.h"
+#include "calibration.h"
 
-uint8_t hasLeftWall(double value);
+bool hasRightWall(double value);
 
-uint8_t hasFrontWall(double valueRight, double valueLeft);
+bool hasLeftWall(double value);
+
+bool hasFrontWall(double valueRight, double valueLeft);
+
+#endif

@@ -1,14 +1,14 @@
-#define SENSOR 4
-#define LEFT_DET      0
-#define LEFT_CEN_DET  1
-#define RIGHT_CEN_DET 2
-#define RIGHT_DET     3
+#ifndef usart_H
+#define usart_H
 
-void initUSART();
-void sensorUSART(int sensor);
-void fullSensorUSART();
+#include "global_libs.h"
+#include "HAL_includes.h"
+#include "defines.h"
+
 void printInt(int value);
 void printString();
 void printNL();
 void printFloat(float value);
 void printComma();
+
+#endif

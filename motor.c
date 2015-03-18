@@ -43,8 +43,6 @@ static uint32_t targetTimeDifference;
 
 static int leftSpeedBuffer, rightSpeedBuffer;
 
-<<<<<<< HEAD
-=======
 void initMotor(void) {
 	leftMotorSpeed  = 0;
 	rightMotorSpeed = 0;
@@ -169,7 +167,6 @@ void MX_TIM2_Init(void)
 
 }
 
->>>>>>> origin/encoder-motor_upgrade
 void setBuzzer(int state) {
 	if (state) HAL_TIM_Base_Start_IT(&buzzerHandler);
 	else HAL_TIM_Base_Stop_IT(&buzzerHandler);
@@ -274,7 +271,6 @@ double getTargetVelocity(Motor channel) {
 	if (channel == RIGHTMOTOR) return targetRightVelocity;
 	else return targetLeftVelocity;
 }
-
 
 void velocityCallBack() {
 	int currentEncoderR = readEncoder(RIGHTENCODER);

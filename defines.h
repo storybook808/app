@@ -1,3 +1,6 @@
+#ifndef defines_H
+#define defines_H
+
 #define PR	.01		// P constant for correction on right motor
 #define PL	.01		// P constant for correction on left motor
 #define DR	.005	// D constant for correction on right motor
@@ -12,10 +15,46 @@
 
 #define TRANS_DELAY 200	// Delay between USART transmissions
 
-#define LEFT_DET      0	// ADC Left Sensor
-#define LEFT_CEN_DET  1	// ADC Center Left Sensor
-#define RIGHT_CEN_DET 2	// ADC Center Right Sensor
-#define RIGHT_DET     3	// ADC Right Sensor
-#define VOLT_DET      4	// ADC Volt-meter of battery
-#define GYRO          5	// ADC Gyroscope
-#define FLASH		  6	// ADC Flash Memory
+/* Enumeration Variable for ADC Channels */
+typedef enum
+{
+	LEFT_DET,
+	LEFT_CEN_DET,
+	RIGHT_CEN_DET,
+	RIGHT_DET,
+	VOLT_DET,
+	GYRO,
+	FLASH_MEM
+}ADC_Channel;
+
+/* Enumeration Variable for Encoder Channels */
+typedef enum
+{
+	LEFTENCODER,
+	RIGHTENCODER
+}Encoder;
+
+/* Enumeration for Motor Channels */
+typedef enum
+{
+	LEFTMOTOR,
+	RIGHTMOTOR
+}Motor;
+
+/* Enumeration for LEDs */
+typedef enum
+{
+	WHITE,
+	BLUE,
+	GREEN,
+	RED
+}Led;
+
+/* Enumeration for Motor Direction */
+typedef enum
+{
+	FORWARD,
+	BACKWARD
+}Direction;
+
+#endif

@@ -1,19 +1,16 @@
-#include "adc.h"
-#include "calibration.h"
 #include "tracking.h"
-#include <stdint.h>
 
-uint8_t hasRightWall(double value) {
-	if (value < getRightWall()) return TRUE;
-	else return FALSE;
+bool hasRightWall(double value) {
+	if (value < getRightWall()) return true;
+	else return false;
 }
 
-uint8_t hasLeftWall(double value) {
-	if (value < getLeftWall()) return TRUE;
-	else return FALSE;
+bool hasLeftWall(double value) {
+	if (value < getLeftWall()) return true;
+	else return false;
 }
 
-uint8_t hasFrontWall(double valueRight, double valueLeft) {
-	if (valueRight < getIdealRightFront() && valueLeft < getIdealLeftFront()) return TRUE;
-	else return FALSE;
+bool hasFrontWall(double valueRight, double valueLeft) {
+	if (valueRight < getIdealRightFront() && valueLeft < getIdealLeftFront()) return true;
+	else return false;
 }
