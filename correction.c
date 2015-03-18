@@ -31,10 +31,10 @@ double lastErrorR, lastErrorL;
 void correction() {
 
 	double errorR, errorL;
-	double currentRightSide = readRightCenterSensor();
-	double currentLeftSide = readLeftCenterSensor();
-	double currentFrontRight = readRightSensor();
-	double currentFrontLeft = readLeftSensor();
+	double currentRightSide = readSensor(RIGHT_CEN_DET);
+	double currentLeftSide = readSensor(LEFT_CEN_DET);
+	double currentFrontRight = readSensor(RIGHT_DET);
+	double currentFrontLeft = readSensor(LEFT_DET);
 
 	if (hasFrontWall(currentFrontRight, currentFrontLeft)) {
 		brake();
