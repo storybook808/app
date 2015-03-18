@@ -121,12 +121,12 @@ static void velocityCallBack() {
 	currentRightVelocity = (double)(currentEncoderR - oldEncoderR)*R_ENCODER_DIST/0.001;
 	currentLeftVelocity = (double)(currentEncoderL - oldEncoderL)*L_ENCODER_DIST/0.001;
 
-	if ( currentRightVelocity > targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed-VELOCITY_k);
-	else if ( currentRightVelocity < targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed+VELOCITY_k);
+	if ( currentRightVelocity > targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed-VELOCITY_k_R);
+	else if ( currentRightVelocity < targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed+VELOCITY_k_R);
 	else setSpeed(RIGHTMOTOR,currRspeed);
 
-	if ( currentLeftVelocity > targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed-VELOCITY_k);
-	else if ( currentLeftVelocity < targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed+VELOCITY_k);
+	if ( currentLeftVelocity > targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed-VELOCITY_k_L);
+	else if ( currentLeftVelocity < targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed+VELOCITY_k_L);
 	else setSpeed(LEFTMOTOR,currLspeed);
 
 	oldEncoderR = currentEncoderR;
