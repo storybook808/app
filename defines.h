@@ -23,12 +23,12 @@
 
 #define TRANS_DELAY 200	// Delay between USART transmissions
 
-#define BREAK_k	50				// Brake slow-down/speedup rate
-#define brakeThresh	100			// Brake time wait in milliseconds
-#define R_ENCODER_DIST	0.0020003	// Right encoder tick per cm 0.0020000 is left bias, do 0.0020001 next time
-#define L_ENCODER_DIST	0.00205	// Left encoder tick per cm
-#define VELOCITY_k_R	10			// Velocity slow-down/speedup rate right motor
-#define VELOCITY_k_L	10			// Velocity slow-down/speedup rate left motor
+#define BREAK_k	50					// Brake slow-down/speedup rate
+#define brakeThresh	100				// Brake time wait in milliseconds
+#define R_ENCODER_DIST	0.00200001	// Right encoder tick per cm 0.0020000 is left bias
+#define L_ENCODER_DIST	0.00205		// Left encoder tick per cm
+#define VELOCITY_k_R	3			// Velocity slow-down/speedup rate right motor
+#define VELOCITY_k_L	3			// Velocity slow-down/speedup rate left motor
 
 /* Enumeration Variable for ADC Channels */
 typedef enum
