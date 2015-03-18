@@ -20,6 +20,8 @@ ADC_HandleTypeDef ADCHandle;
 //Data structure for USART configuration
 USART_HandleTypeDef USART_HandleStructure;
 
+static void MX_TIM2_Init(void);
+
 void initSystem(void) {
 	initGPIO();
 	initTIM();
@@ -228,15 +230,7 @@ void initTIM(void) {
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 
 	// Configure TIM for countLeft
-	countHandler.Instance = TIM2;
-	countHandler.Init.Period = 42000;
-	countHandler.Init.Prescaler = 0;
-	countHandler.Init.ClockDivision = 0;
-	countHandler.Init.CounterMode = TIM_COUNTERMODE_DOWN;
-
-	HAL_TIM_Base_Init(&countHandler);
-	HAL_TIM_Base_Stop_IT(&countHandler);
-
+    MX_TIM2_Init();
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
 	// Configure TIM for ms
@@ -248,6 +242,32 @@ void initTIM(void) {
 	HAL_TIM_Base_Init(&rightHandler);
 	HAL_TIM_Base_Stop_IT(&rightHandler);
 	HAL_NVIC_EnableIRQ(TIM5_IRQn);
+}
+
+/* TIM2 init function */
+void MX_TIM2_Init(void)
+{
+    
+    TIM_ClockConfigTypeDef sClockSourceConfig;
+    TIM_MasterConfigTypeDef sMasterConfig;
+    
+    htim2.Instance = TIM2;
+    htim2.Init.Prescaler = 2;
+    htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+    htim2.Init.Period = 55999;
+    htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    HAL_TIM_Base_Init(&htim2);
+    
+    HAL_NVIC_EnableIRQ(TIM2_IRQn);
+    HAL_TIM_Base_Stop(&htim2);
+    
+    sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+    HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig);
+    
+    sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+    sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+    HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
+    
 }
 
 void initADC(void) {

@@ -25,6 +25,4 @@ void setLeftVelocity(double velocity);
 double getCurrentVelocity(Motor channel);
 double getTargetVelocity(Motor channel);
 
-void MX_TIM2_Init(void);
-
 #endif

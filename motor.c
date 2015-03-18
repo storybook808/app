@@ -34,32 +34,6 @@ static void setDirection(Motor channel, Direction state);
 static void velocityCallBack();
 static void brakeCallBack();
 
-/* TIM2 init function */
-void MX_TIM2_Init(void)
-{
-
-  TIM_ClockConfigTypeDef sClockSourceConfig;
-  TIM_MasterConfigTypeDef sMasterConfig;
-
-  htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 2;
-  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 55999;
-  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  HAL_TIM_Base_Init(&htim2);
-
-  HAL_NVIC_EnableIRQ(TIM2_IRQn);
-  HAL_TIM_Base_Stop(&htim2);
-
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig);
-
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
-
-}
-
 void brake() {
 	HAL_TIM_Base_Start_IT(&brakeHandler);
 }
@@ -146,11 +120,6 @@ static void velocityCallBack() {
 
 	currentRightVelocity = (double)(currentEncoderR - oldEncoderR)*R_ENCODER_DIST/0.001;
 	currentLeftVelocity = (double)(currentEncoderL - oldEncoderL)*L_ENCODER_DIST/0.001;
-
-	if(currentRightVelocity == targetRightVelocity) setLED(WHITE);
-	else resetLED(WHITE);
-	if(currentLeftVelocity == targetLeftVelocity) setLED(BLUE);
-	else resetLED(BLUE);
 
 	if ( currentRightVelocity > targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed-VELOCITY_k);
 	else if ( currentRightVelocity < targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed+VELOCITY_k);

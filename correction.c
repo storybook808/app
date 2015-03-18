@@ -42,12 +42,12 @@ void correction() {
 	else {
 		/* If there are right & left walls */
 		if (hasRightWall(currentRightSide) && hasLeftWall(currentLeftSide)) {
-			if (getIdealRightCenter() > currentRightSide) {
-				errorR = getIdealRightCenter() - currentRightSide;
+			if (getWall(IDEALRIGHTCENTER) > currentRightSide) {
+				errorR = getWall(IDEALRIGHTCENTER) - currentRightSide;
 				setRightVelocity(getTargetVelocity(RIGHTMOTOR) + errorR);
 			}
-			else if (getIdealLeftCenter() > currentLeftSide) {
-				errorL = getIdealLeftCenter() - currentLeftSide;
+			else if (getWall(IDEALLEFTCENTER) > currentLeftSide) {
+				errorL = getWall(IDEALLEFTCENTER) - currentLeftSide;
 				setRightVelocity(getTargetVelocity(RIGHTMOTOR) - errorL);
 			}
 		}
