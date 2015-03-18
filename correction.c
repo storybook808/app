@@ -1,10 +1,4 @@
-#include <stdint.h>
-#include "adc.h"
-#include "motor.h"
-#include "led.h"
-#include <math.h>
-#include "calibration.h"
-#include "tracking.h"
+#include "correction.h"
 
 /* Nice P values
  * PR = 0.01
@@ -23,15 +17,6 @@
  * Decent
  * .007
  */
-
-#define PR	.01
-#define PL	.01
-#define DR	.005
-#define DL	.005
-#define BR	.0003
-#define BL	.0005
-#define PUSH_R_THRESH	0
-#define PUSH_L_THRESH	0
 
 double lastErrorR, lastErrorL;
 

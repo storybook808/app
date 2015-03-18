@@ -5,6 +5,9 @@
 #include "HAL_includes.h"
 #include "defines.h"
 
+#include "tracking.h"
+#include "motor.h"
+
 void correction();
 
 #endif

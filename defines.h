@@ -15,6 +15,12 @@
 
 #define TRANS_DELAY 200	// Delay between USART transmissions
 
+#define BREAK_k	50				// Brake slow-down/speedup rate
+#define brakeThresh	100			// Brake time wait in milliseconds
+#define R_ENCODER_DIST	0.00411	// Right encoder tick per cm
+#define L_ENCODER_DIST	0.00410	// Left encoder tick per cm
+#define VELOCITY_k	10			// Velocity slow-down/speedup rate
+
 /* Enumeration Variable for ADC Channels */
 typedef enum
 {

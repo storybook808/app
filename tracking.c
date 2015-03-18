@@ -1,12 +1,12 @@
 #include "tracking.h"
 
 bool hasRightWall(double value) {
-	if (value < getRightWall()) return true;
+	if (value < getFarRightWall()) return true;
 	else return false;
 }
 
 bool hasLeftWall(double value) {
-	if (value < getLeftWall()) return true;
+	if (value < getFarLeftWall()) return true;
 	else return false;
 }
 

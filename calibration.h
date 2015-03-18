@@ -5,6 +5,9 @@
 #include "HAL_includes.h"
 #include "defines.h"
 
+#include "adc.h"
+#include "interface.h"
+
 /*=Public Functions===========================================================*/
 
 void calibrateSensors(void);

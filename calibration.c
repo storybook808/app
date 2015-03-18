@@ -1,26 +1,10 @@
-#include <stdint.h>
-#include <math.h>
-
-#include "adc.h"
 #include "calibration.h"
-#include "led.h"
 
-static double leftWall, rightWall;
+static double farLeftWall, farRightWall;
 static double idealLeftFront, idealRightFront;
 static double idealLeftCenter, idealRightCenter;
 
 /*=Public Functions===========================================================*/
-void waitForTop() {
-	uint8_t startFlag = 0;
-	do {
-		if (readADC(FLASH_MEM) < 50) {
-			startFlag = 1;
-		}
-		toggleLED(WHITE);
-		HAL_Delay(500);
-	} while (!startFlag);
-	setLED(WHITE);
-}
 
 void calibrateSensors(void) {
 	setLED(BLUE);
@@ -53,11 +37,11 @@ void calibrateSensors(void) {
 }
 
 void calibrateLeftWall(void) {
-	setLeftWall(readLeftCenterSensor());
+	setFarLeftWall(readLeftCenterSensor());
 }
 
 void calibrateRightWall(void) {
-	setRightWall(readRightCenterSensor());
+	setFarRightWall(readRightCenterSensor());
 }
 
 void calibrateFrontWall(void) {
@@ -70,12 +54,12 @@ void calibrateCenter(void) {
 	setIdealRightCenter(readRightCenterSensor());
 }
 
-double getLeftWall(void) {
-	return leftWall;
+double getFarLeftWall(void) {
+	return farLeftWall;
 }
 
-double getRightWall(void) {
-	return rightWall;
+double getFarRightWall(void) {
+	return farRightWall;
 }
 
 double getIdealLeftFront(void) {
@@ -99,12 +83,12 @@ double toLinear(uint16_t input) {
 }
 
 /*=Private Functions==========================================================*/
-static void setLeftWall(double value) {
-	leftWall  = value;
+static void setFarLeftWall(double value) {
+	farLeftWall  = value;
 }
 
-static void setRightWall(double value) {
-	rightWall = value;
+static void setFarRightWall(double value) {
+	farRightWall = value;
 }
 
 static void setIdealLeftFront(double value) {

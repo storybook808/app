@@ -5,6 +5,8 @@
 #include "HAL_includes.h"
 #include "defines.h"
 
+#include "adc.h"
+
 void waitForTop(void);
 
 void setLED(Led color);
