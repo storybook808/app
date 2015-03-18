@@ -10,16 +10,16 @@
 
 
 bool hasRightWall(double value) {
-	if (value < getFarRightWall()) return true;
+	if (value < getWall(FARRIGHTWALL)) return true;
 	else return false;
 }
 
 bool hasLeftWall(double value) {
-	if (value < getFarLeftWall()) return true;
+	if (value < getWall(FARLEFTWALL)) return true;
 	else return false;
 }
 
 bool hasFrontWall(double valueRight, double valueLeft) {
-	if (valueRight < getIdealRightFront() && valueLeft < getIdealLeftFront()) return true;
+	if (valueRight < getWall(IDEALRIGHTFRONT) && valueLeft < getWall(IDEALLEFTCENTER)) return true;
 	else return false;
 }
