@@ -32,7 +32,7 @@
 
 double oldErrorP;
 
-void PID(int leftBaseSpeed, int rightBaseSpeed) {
+void correction() {
 
 	double errorP, errorD;
 	double totalErrorR;
@@ -42,6 +42,9 @@ void PID(int leftBaseSpeed, int rightBaseSpeed) {
 	double leftCenterSensor = toLinear(readLeftCenterSensor());
 	double rightSensor = toLinear(readRightSensor());
 	double leftSensor = toLinear(readLeftSensor());
+
+	int currRvel = getCurrentVelocity(RIGHTMOTOR);
+	int currLvel = getCurrentVelocity(LEFTMOTOR);
 
 	double rightFactor = 1;
 	double leftFactor = 1;
@@ -88,6 +91,7 @@ void PID(int leftBaseSpeed, int rightBaseSpeed) {
 		totalErrorR = PR * errorP + DR * errorD;
 		oldErrorP = errorP;
 	}
-	setSpeed(LEFTMOTOR, (int)((leftBaseSpeed - totalErrorL)*leftFactor));
-	setSpeed(RIGHTMOTOR, (int)((rightBaseSpeed + totalErrorR)*rightFactor));
+
+	setRightVelocity(currRvel-totalErrorR);
+	setLeftVelocity(currLvel-totalErrorL);
 }
