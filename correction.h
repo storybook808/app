@@ -16,6 +16,7 @@
 #include "tracking.h"
 #include "motor.h"
 
+void frontCorrection();
 void correction();
 
 #endif
