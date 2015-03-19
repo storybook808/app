@@ -19,7 +19,9 @@
 #include "correction.h"
 
 void brake();
-void manualBrake();
+void brakeLeft();
+void brakeRight();
+void setSpeed(Motor channel, int speed);
 void setVelocity(double velocity);
 void setRightVelocity(double velocity);
 void setLeftVelocity(double velocity);

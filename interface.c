@@ -184,6 +184,10 @@ void batteryFault() {
  		setBuzzer(ON);
  		//Disable all LEDs
  		resetLEDAll();
+ 		//Disable Motors
+ 		HAL_TIM_Base_Stop_IT(&htim2);
+ 		setSpeed(RIGHTMOTOR,0);
+ 		setSpeed(LEFTMOTOR,0);
  		//Flash red LED every half second.
  		while (1) {
  			//Invert the state of the red LED located closest to the STM

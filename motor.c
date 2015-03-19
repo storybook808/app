@@ -30,15 +30,24 @@ static double currentLeftVelocity;
 /* Private Functions */
 static void setDirection(Motor channel, Direction state);
 static void velocityCallBack();
-static void brakeCallBack();
 
 void brake() {
 	thresh = 0;
 	counter = 0;
 	oldEncoderR = 0;
 	oldEncoderL = 0;
-	HAL_TIM_Base_Start_IT(&brakeHandler);
+	setVelocity(0);
+//	HAL_TIM_Base_Start_IT(&brakeHandler);
 }
+
+void brakeRight() {
+	setRightVelocity(0);
+}
+
+void brakeLeft() {
+	setLeftVelocity(0);
+}
+
 
 void setVelocity(double velocity) {
 	targetRightVelocity = velocity;
@@ -70,7 +79,7 @@ static int currentSpeed(Motor channel) {
 	else return rightMotorSpeed;
 }
 
-static void setSpeed(Motor channel, int speed) {
+void setSpeed(Motor channel, int speed) {
 	int neg = 1;
 	if (speed >= 0) {
 		setDirection(channel, FORWARD);
@@ -133,78 +142,7 @@ static void velocityCallBack() {
 
 	oldEncoderR = currentEncoderR;
 	oldEncoderL = currentEncoderL;
-}
 
-void manualBrake() {
-	targetLeftVelocity = 0;
-	targetRightVelocity = 0;
-	int currentEncoderR = getEncoder(RIGHTENCODER);
-	int currentEncoderL = getEncoder(LEFTENCODER);
-
-	int currRspeed = currentSpeed(RIGHTMOTOR);
-	int currLspeed = currentSpeed(LEFTMOTOR);
-
-	int diffR = currentEncoderR - oldEncoderR;
-	int diffL = currentEncoderL - oldEncoderL;
-
-	if (diffR > 0) setSpeed(RIGHTMOTOR,currRspeed-BREAK_k);
-	else if (diffR < 0) setSpeed(RIGHTMOTOR,currRspeed+BREAK_k);
-	else setSpeed(RIGHTMOTOR,currRspeed);
-
-	if (diffL > 0) setSpeed(LEFTMOTOR,currLspeed-BREAK_k);
-	else if (diffL < 0) setSpeed(LEFTMOTOR,currLspeed+BREAK_k);
-	else setSpeed(LEFTMOTOR,currLspeed);
-
-	oldEncoderR = currentEncoderR;
-	oldEncoderL = currentEncoderL;
-
-	if (diffR >= thresh && diffL >= thresh) {
-		counter++;
-		if(counter >= brakeThresh) {
-			HAL_TIM_Base_Stop_IT(&brakeHandler);
-			counter = 0;
-			setSpeed(LEFTMOTOR,0);
-			setSpeed(RIGHTMOTOR,0);
-			currentRightVelocity = 0;
-			currentLeftVelocity = 0;
-		}
-	}
-}
-
-static void brakeCallBack() {
-	targetLeftVelocity = 0;
-	targetRightVelocity = 0;
-	int currentEncoderR = getEncoder(RIGHTENCODER);
-	int currentEncoderL = getEncoder(LEFTENCODER);
-
-	int currRspeed = currentSpeed(RIGHTMOTOR);
-	int currLspeed = currentSpeed(LEFTMOTOR);
-
-	int diffR = currentEncoderR - oldEncoderR;
-	int diffL = currentEncoderL - oldEncoderL;
-
-	if (diffR > 0) setSpeed(RIGHTMOTOR,currRspeed-BREAK_k);
-	else if (diffR < 0) setSpeed(RIGHTMOTOR,currRspeed+BREAK_k);
-	else setSpeed(RIGHTMOTOR,currRspeed);
-
-	if (diffL > 0) setSpeed(LEFTMOTOR,currLspeed-BREAK_k);
-	else if (diffL < 0) setSpeed(LEFTMOTOR,currLspeed+BREAK_k);
-	else setSpeed(LEFTMOTOR,currLspeed);
-
-	oldEncoderR = currentEncoderR;
-	oldEncoderL = currentEncoderL;
-
-	if (diffR >= thresh && diffL >= thresh) {
-		counter++;
-		if(counter >= brakeThresh) {
-			HAL_TIM_Base_Stop_IT(&brakeHandler);
-			counter = 0;
-			setSpeed(LEFTMOTOR,0);
-			setSpeed(RIGHTMOTOR,0);
-			currentRightVelocity = 0;
-			currentLeftVelocity = 0;
-		}
-	}
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -218,7 +156,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if (htim->Instance == TIM5) //Millisecond Timer
 	{
-		HAL_TIM_Base_Stop_IT(&htim2);
-		brakeCallBack();
+
 	}
 }

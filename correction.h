@@ -15,6 +15,8 @@
 
 #include "tracking.h"
 #include "motor.h"
+#include "usart.h"
+#include "interface.h"
 
 void frontCorrection();
 void correction();

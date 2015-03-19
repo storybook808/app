@@ -40,13 +40,18 @@ void frontCorrection() {
 
 	if (abs(errorR) < 30) {
 		errorR = 0;
+		brakeRight();
+	}
+	else {
+		setRightVelocity(errorR*k);
 	}
 	if (abs(errorL) < 30) {
 		errorL = 0;
+		brakeLeft();
 	}
-
-	setLeftVelocity(errorL*k);
-	setRightVelocity(errorR*k);
+	else {
+		setLeftVelocity(errorL*k);
+	}
 }
 
 void correction() {

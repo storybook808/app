@@ -41,13 +41,16 @@ void printInt(int value) {
 
 void printFloat(float value) {
 	int x = value;
-	int y = (value-x)*1000;
+	int y;
     int negative = 1;
 
     if (value < 0) {
     	negative = -1;
+    	x*=negative;
     	value*=negative;
     }
+
+    y = (value-x)*1000;
 
     if (negative == -1) HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *) "-", 1, TIMEOUT);
 	printInt(x);
