@@ -32,12 +32,11 @@ void main(void) {
 	 // Test USART Connection
 	 printString("Hello world!");
 	 printNL();
-	 setVelocity(50);
-	 HAL_Delay(200);
-	 brake();
+	 setVelocity(0);
 
 	while(1) {
 		batteryFault();
 
+		frontCorrection();
 	}
 }

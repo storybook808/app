@@ -10,7 +10,6 @@
 
 //Data structure for TIM configuration
 extern TIM_HandleTypeDef buzzerHandler;
-extern TIM_HandleTypeDef velocityHandler;
 extern TIM_HandleTypeDef brakeHandler;
 extern TIM_HandleTypeDef motorHandler;
 extern TIM_HandleTypeDef htim2;
