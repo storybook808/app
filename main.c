@@ -31,10 +31,23 @@ void main(void) {
 	 // Test USART Connection
 	 printString("Hello world!");
 	 printNL();
+	 printInt(21);
 
-	 setVelocity(50);
+	 double reading1;
+	 double reading2;
 
 	while(1) {
 		batteryFault();
+
+		setLED(WHITE);
+
+		reading1 = readSensor(LEFT_CEN_DET);
+		reading2 = readSensor(RIGHT_CEN_DET);
+
+		printFloat(reading1);
+		printComma();
+		printFloat(reading2);
+		printNL();
+
 	}
 }

@@ -16,6 +16,8 @@
 #define BR	.0003	// B constant for brake system on right motor
 #define BL	.0005	// B constant for brake system on left motor
 
+#define TIMEOUT 100
+
 #define ON  1		// Used for on/off states
 #define OFF 0		// Used for on/off states
 

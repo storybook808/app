@@ -13,13 +13,15 @@
 #include "HAL_includes.h"
 #include "defines.h"
 
-#include "adc.h"
+#include "system.h"
+
 /*
  * These functions are meant to allow communication with
  * Alex? via USART.
  */
 
 /* */
+void initUSART(void);
 void printInt(int value);
 void printString(char *c);
 void printNL();

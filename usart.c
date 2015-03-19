@@ -34,8 +34,8 @@ void printInt(int value) {
         value/=10;
     }
 
-    if (negative == -1) HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *) "-", 1, 1000);
-    HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *)&digit, digLen, 1000);
+    if (negative == -1) HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *) "-", 1, TIMEOUT);
+    HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *)&digit, digLen, TIMEOUT);
     HAL_Delay(TRANS_DELAY);
 }
 
@@ -49,7 +49,7 @@ void printFloat(float value) {
     	value*=negative;
     }
 
-    if (negative == -1) HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *) "-", 1, 1000);
+    if (negative == -1) HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *) "-", 1, TIMEOUT);
 	printInt(x);
 	printString(".");
 	printInt(y);
@@ -59,20 +59,20 @@ void printString(char *c) {
     int length;
     length = strlen(c);
     
-    HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *)c, length, 1000);
+    HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *)c, length, TIMEOUT);
     HAL_Delay(TRANS_DELAY);
 }
 
 void printComma() {
 	char c = ',';
 
-	HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *)&c, 1, 1000);
+	HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *)&c, 1, TIMEOUT);
 	HAL_Delay(TRANS_DELAY);
 }
 
 void printNL() {
     char c = 0x0d;
     
-    HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *)&c, 1, 1000);
+    HAL_USART_Transmit(&USART_HandleStructure, (uint8_t *)&c, 1, TIMEOUT);
     HAL_Delay(TRANS_DELAY);
 }
