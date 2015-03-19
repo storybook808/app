@@ -288,6 +288,8 @@ void initADC(void) {
 }
 
 void initUSART(void) {
+	__USART1_CLK_ENABLE();
+
 	USART_HandleStructure.Instance = USART1;
 
 	USART_HandleStructure.Init.BaudRate = 115200;
