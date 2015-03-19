@@ -27,6 +27,7 @@
 
 #define BREAK_k	50					// Brake slow-down/speedup rate
 #define brakeThresh	100				// Brake time wait in milliseconds
+#define CORRECTION_FRONT_THRESH	10	// Threshold for stopping infront of walls
 #define R_ENCODER_DIST	0.00200001	// Right encoder tick per cm 0.0020000 is left bias
 #define L_ENCODER_DIST	0.00205		// Left encoder tick per cm
 #define VELOCITY_k_R	3			// Velocity slow-down/speedup rate right motor

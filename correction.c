@@ -38,14 +38,14 @@ void frontCorrection() {
 	double errorR = currentFrontRight - getWall(IDEALRIGHTFRONT);
 	double errorL = currentFrontLeft - getWall(IDEALLEFTFRONT);
 
-	if (abs(errorR) < 30) {
+	if (abs(errorR) < CORRECTION_FRONT_THRESH) {
 		errorR = 0;
 		brakeRight();
 	}
 	else {
 		setRightVelocity(errorR*k);
 	}
-	if (abs(errorL) < 30) {
+	if (abs(errorL) < CORRECTION_FRONT_THRESH) {
 		errorL = 0;
 		brakeLeft();
 	}
