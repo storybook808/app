@@ -8,19 +8,6 @@
 
 #include "system.h"
 
-// Data structure for TIM configuration
-TIM_HandleTypeDef buzzerHandler;
-TIM_HandleTypeDef countHandler;
-TIM_HandleTypeDef rightHandler;
-TIM_HandleTypeDef motorHandler;
-TIM_HandleTypeDef htim2;
-
-// Data structure for ADC configuration
-ADC_HandleTypeDef ADCHandle;
-
-//Data structure for USART configuration
-USART_HandleTypeDef USART_HandleStructure;
-
 static void MX_TIM2_Init(void);
 
 void initSystem(void) {
@@ -30,7 +17,7 @@ void initSystem(void) {
 	initUSART();
 
 	resetEncoder(RIGHTENCODER);
-	 resetEncoder(LEFTENCODER);
+	resetEncoder(LEFTENCODER);
 }
 
 void initGPIO(void) {
@@ -303,7 +290,7 @@ void initADC(void) {
 void initUSART(void) {
 	USART_HandleStructure.Instance = USART1;
 
-	USART_HandleStructure.Init.BaudRate = 9600;
+	USART_HandleStructure.Init.BaudRate = 115200;
 	USART_HandleStructure.Init.WordLength = USART_WORDLENGTH_8B;
 	USART_HandleStructure.Init.StopBits = USART_STOPBITS_1;
 	USART_HandleStructure.Init.Parity = USART_PARITY_NONE;
@@ -312,5 +299,8 @@ void initUSART(void) {
 	USART_HandleStructure.Init.CLKPhase = USART_PHASE_1EDGE;
 	USART_HandleStructure.Init.CLKLastBit = USART_LASTBIT_ENABLE;
 
-	HAL_USART_Init(&USART_HandleStructure);	
+	if (HAL_USART_Init(&USART_HandleStructure) != HAL_OK) {
+		      setLED(RED); // this LED never comes on so I presume UART init is ok
+		      while(1) { }
+		  }
 }

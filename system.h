@@ -14,6 +14,20 @@
 #include "defines.h"
 
 #include "encoder.h"
+#include "interface.h"
+
+// Data structure for TIM configuration
+TIM_HandleTypeDef buzzerHandler;
+TIM_HandleTypeDef countHandler;
+TIM_HandleTypeDef rightHandler;
+TIM_HandleTypeDef motorHandler;
+TIM_HandleTypeDef htim2;
+
+//Data structure for USART configuration
+USART_HandleTypeDef USART_HandleStructure;
+
+// Data structure for ADC configuration
+ADC_HandleTypeDef ADCHandle;
 
 void initSystem(void);
 void initGPIO(void);
