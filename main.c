@@ -24,6 +24,7 @@ void main(void) {
 	HAL_Init();
 	SystemClock_Config();
 	initSystem();
+	calibrateWall(FRONT);
 
 	//LED start up sequence
 	testChaser(1, 250);
@@ -31,23 +32,12 @@ void main(void) {
 	 // Test USART Connection
 	 printString("Hello world!");
 	 printNL();
-	 printInt(21);
-
-	 double reading1;
-	 double reading2;
+	 setVelocity(50);
+	 HAL_Delay(200);
+	 brake();
 
 	while(1) {
 		batteryFault();
-
-		setLED(WHITE);
-
-		reading1 = readSensor(LEFT_CEN_DET);
-		reading2 = readSensor(RIGHT_CEN_DET);
-
-		printFloat(reading1);
-		printComma();
-		printFloat(reading2);
-		printNL();
 
 	}
 }

@@ -39,5 +39,5 @@ void TIM3_IRQHandler(void) {
 }
 
 void TIM5_IRQHandler(void) {
-	HAL_TIM_IRQHandler(&velocityHandler);
+	HAL_TIM_IRQHandler(&brakeHandler);
 }

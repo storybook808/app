@@ -19,6 +19,7 @@
 #include "correction.h"
 
 void brake();
+void manualBrake();
 void setVelocity(double velocity);
 void setRightVelocity(double velocity);
 void setLeftVelocity(double velocity);

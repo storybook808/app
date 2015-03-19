@@ -9,12 +9,11 @@
 #include "motor.h"
 
 //Data structure for TIM configuration
-TIM_HandleTypeDef buzzerHandler;
-TIM_HandleTypeDef velocityHandler;
-TIM_HandleTypeDef brakeHandler;
-TIM_HandleTypeDef motorHandler;
-TIM_OC_InitTypeDef sConfig;
-TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef buzzerHandler;
+extern TIM_HandleTypeDef velocityHandler;
+extern TIM_HandleTypeDef brakeHandler;
+extern TIM_HandleTypeDef motorHandler;
+extern TIM_HandleTypeDef htim2;
 
 static int leftMotorSpeed;
 static int rightMotorSpeed;
@@ -35,6 +34,10 @@ static void velocityCallBack();
 static void brakeCallBack();
 
 void brake() {
+	thresh = 0;
+	counter = 0;
+	oldEncoderR = 0;
+	oldEncoderL = 0;
 	HAL_TIM_Base_Start_IT(&brakeHandler);
 }
 
@@ -133,6 +136,42 @@ static void velocityCallBack() {
 	oldEncoderL = currentEncoderL;
 }
 
+void manualBrake() {
+	targetLeftVelocity = 0;
+	targetRightVelocity = 0;
+	int currentEncoderR = getEncoder(RIGHTENCODER);
+	int currentEncoderL = getEncoder(LEFTENCODER);
+
+	int currRspeed = currentSpeed(RIGHTMOTOR);
+	int currLspeed = currentSpeed(LEFTMOTOR);
+
+	int diffR = currentEncoderR - oldEncoderR;
+	int diffL = currentEncoderL - oldEncoderL;
+
+	if (diffR > 0) setSpeed(RIGHTMOTOR,currRspeed-BREAK_k);
+	else if (diffR < 0) setSpeed(RIGHTMOTOR,currRspeed+BREAK_k);
+	else setSpeed(RIGHTMOTOR,currRspeed);
+
+	if (diffL > 0) setSpeed(LEFTMOTOR,currLspeed-BREAK_k);
+	else if (diffL < 0) setSpeed(LEFTMOTOR,currLspeed+BREAK_k);
+	else setSpeed(LEFTMOTOR,currLspeed);
+
+	oldEncoderR = currentEncoderR;
+	oldEncoderL = currentEncoderL;
+
+	if (diffR >= thresh && diffL >= thresh) {
+		counter++;
+		if(counter >= brakeThresh) {
+			HAL_TIM_Base_Stop_IT(&brakeHandler);
+			counter = 0;
+			setSpeed(LEFTMOTOR,0);
+			setSpeed(RIGHTMOTOR,0);
+			currentRightVelocity = 0;
+			currentLeftVelocity = 0;
+		}
+	}
+}
+
 static void brakeCallBack() {
 	targetLeftVelocity = 0;
 	targetRightVelocity = 0;
@@ -180,7 +219,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if (htim->Instance == TIM5) //Millisecond Timer
 	{
-		HAL_TIM_Base_Stop_IT(&velocityHandler);
+		HAL_TIM_Base_Stop_IT(&htim2);
 		brakeCallBack();
 	}
 }

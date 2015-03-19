@@ -30,6 +30,23 @@ double lastErrorR, lastErrorL;
 
 void frontCorrection() {
 
+	double k = 0.5;
+
+	double currentFrontRight = readSensor(RIGHT_DET);
+	double currentFrontLeft = readSensor(LEFT_DET);
+
+	double errorR = currentFrontRight - getWall(IDEALRIGHTFRONT);
+	double errorL = currentFrontLeft - getWall(IDEALLEFTFRONT);
+
+	if (abs(errorR) < 30) {
+		errorR = 0;
+	}
+	if (abs(errorL) < 30) {
+		errorL = 0;
+	}
+
+	setLeftVelocity(errorL*k);
+	setRightVelocity(errorR*k);
 }
 
 void correction() {

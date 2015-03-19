@@ -222,13 +222,13 @@ void initTIM(void) {
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
 	// Configure TIM for ms
-	rightHandler.Instance = TIM5;
-	rightHandler.Init.Period = 55999;
-	rightHandler.Init.Prescaler = 2;
-	rightHandler.Init.ClockDivision = 0;
-	rightHandler.Init.CounterMode = TIM_COUNTERMODE_UP;
-	HAL_TIM_Base_Init(&rightHandler);
-	HAL_TIM_Base_Stop_IT(&rightHandler);
+	brakeHandler.Instance = TIM5;
+	brakeHandler.Init.Period = 55999;
+	brakeHandler.Init.Prescaler = 2;
+	brakeHandler.Init.ClockDivision = 0;
+	brakeHandler.Init.CounterMode = TIM_COUNTERMODE_UP;
+	HAL_TIM_Base_Init(&brakeHandler);
+	HAL_TIM_Base_Stop_IT(&brakeHandler);
 	HAL_NVIC_EnableIRQ(TIM5_IRQn);
 }
 

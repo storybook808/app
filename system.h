@@ -22,6 +22,7 @@ TIM_HandleTypeDef countHandler;
 TIM_HandleTypeDef rightHandler;
 TIM_HandleTypeDef motorHandler;
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef brakeHandler;
 
 //Data structure for USART configuration
 USART_HandleTypeDef USART_HandleStructure;
