@@ -28,6 +28,10 @@
 
 double lastErrorR, lastErrorL;
 
+void frontCorrection() {
+
+}
+
 void correction() {
 
 	double errorR, errorL;
