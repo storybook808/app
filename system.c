@@ -136,7 +136,7 @@ void initGPIO(void) {
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
-	//TX
+	// TX
 	initGPIOStructure.Mode = GPIO_MODE_AF_PP;
 	initGPIOStructure.Pull = GPIO_NOPULL;
 	initGPIOStructure.Speed = GPIO_SPEED_FAST;
@@ -144,9 +144,16 @@ void initGPIO(void) {
 	initGPIOStructure.Pin = GPIO_PIN_9;
 	HAL_GPIO_Init(GPIOA, &initGPIOStructure);
 
-	//RX
+	// RX
 	initGPIOStructure.Pin = GPIO_PIN_10;
 	HAL_GPIO_Init(GPIOA, &initGPIOStructure);
+
+	// Mode button
+	initGPIOStructure.Mode = GPIO_MODE_INPUT;
+	initGPIOStructure.Pull = GPIO_NOPULL;
+	initGPIOStructure.Speed = GPIO_SPEED_MEDIUM;
+	initGPIOStructure.Pin = GPIO_PIN_13;
+	HAL_GPIO_Init(GPIOC, &initGPIOStructure);
 }
 
 void SystemClock_Config(void)

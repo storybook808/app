@@ -30,4 +30,6 @@ void testChaser(int mode, int period);
 void testMenu(int channel);
 void batteryFault();
 
+bool getButton(void);
+
 #endif
