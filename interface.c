@@ -193,3 +193,8 @@ void batteryFault() {
  		}
  	}
  }
+
+bool getButton(void) {
+	if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_SET) return true;
+	else return false;
+}
