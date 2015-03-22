@@ -19,28 +19,32 @@ static void setWall(Wall wall, double value);
 
 void calibrateSensors(void) {
 	setLED(BLUE);
-	waitForTop();
+//	waitForTop();
+	while(!getButton());
 	calibrateWall(LEFT);
 	resetLED(BLUE);
 	resetLED(WHITE);
 	HAL_Delay(1000);
 
 	setLED(GREEN);
-	waitForTop();
+//	waitForTop();
+	while(!getButton());
 	calibrateWall(RIGHT);
 	resetLED(GREEN);
 	resetLED(WHITE);
 	HAL_Delay(1000);
 
 	setLED(RED);
-	waitForTop();
+//	waitForTop();
+	while(!getButton());
 	calibrateWall(CENTER);
 	resetLED(RED);
 	resetLED(WHITE);
 	HAL_Delay(1000);
 
 	setLEDAll();
-	waitForTop();
+//	waitForTop();
+	while(!getButton());
 	calibrateWall(FRONT);
 	resetLEDAll();
 

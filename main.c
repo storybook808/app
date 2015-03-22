@@ -25,9 +25,6 @@ void main(void) {
 	SystemClock_Config();
 	initSystem();
 
-
-//	while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) != GPIO_PIN_SET);
-
 	//LED start up sequence
 	testChaser(1, 250);
 
@@ -47,7 +44,8 @@ void main(void) {
 		right_front_sensor = readSensor(RIGHT_DET);
 
 		left_side_sensor = readSensor(LEFT_CEN_DET);
-		right_side_sensor = readADC(RIGHT_CEN_DET);
+		right_side_sensor = readSensor(RIGHT_CEN_DET);
+
 
 		if (left_front_sensor <= getWall(IDEALLEFTFRONT)) {
 			setLED(WHITE);
@@ -73,7 +71,7 @@ void main(void) {
 			resetLED(GREEN);
 		}
 
-		if (right_side_sensor <= getWall (IDEALRIGHTCENTER)) {
+		if (right_side_sensor <= getWall(IDEALRIGHTCENTER)) {
 			setLED(RED);
 		}
 
