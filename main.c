@@ -54,7 +54,7 @@ void main(void) {
 	const int forward_distance = 3500;
 
 	const int left_turn = 1200;
-	const int right_turn = 1150;
+	const int right_turn = 1100;
 
 //	setVelocity(0);
 	setLeftVelocity(0);
