@@ -5,6 +5,7 @@
  *          Steven Chen
  *          Joseph Felix Jr.
  */
+
 #include "adc.h"
 #include "calibration.h"
 #include "correction.h"
@@ -56,7 +57,6 @@ void main(void) {
 	const int left_turn = 1200;
 	const int right_turn = 1100;
 
-//	setVelocity(0);
 	setLeftVelocity(0);
 	setRightVelocity(0);
 
@@ -74,7 +74,6 @@ void main(void) {
 		if (right_side_sensor >= getWall(FARRIGHTWALL)) {
 			// Move forward, brake, turn right, and move forward
 			setLED(BLUE);
-//			setVelocity(base_speed);
 			setSpeed(LEFTMOTOR, base_speed);
 			setSpeed(RIGHTMOTOR, base_speed);
 			start_encoder = getEncoder(RIGHTENCODER);
@@ -82,27 +81,17 @@ void main(void) {
 			setSpeed(LEFTMOTOR, 0);
 			setSpeed(RIGHTMOTOR, 0);
 			HAL_TIM_Base_Start_IT(&htim2);
-//			brakeLeft();
-//			brakeRight();
 			HAL_Delay(500);
 			HAL_TIM_Base_Stop_IT(&htim2);
 			setSpeed(LEFTMOTOR, 200);
 			setSpeed(RIGHTMOTOR, -200);
-//			setLeftVelocity(base_speed);
-//			setRightVelocity(-base_speed);
 			start_encoder = getEncoder(LEFTENCODER);
 			while (getEncoder(LEFTENCODER) < (start_encoder + right_turn));
 			setSpeed(LEFTMOTOR, 0);
 			setSpeed(RIGHTMOTOR, 0);
 			HAL_TIM_Base_Start_IT(&htim2);
-//			brakeLeft();
-//			brakeRight();
 			HAL_Delay(500);
 			HAL_TIM_Base_Stop_IT(&htim2);
-//			while(1) {
-//				batteryFault();
-//				if (getButton()) break;
-//			}
 		}
 
 
@@ -111,40 +100,30 @@ void main(void) {
 			if (left_front_sensor <= getWall(IDEALLEFTFRONT) && right_front_sensor <= getWall(IDEALRIGHTFRONT)) {
 				// Brake & turn left
 				setLED(WHITE);
-//				brakeLeft();
-//				brakeRight();
 				setSpeed(LEFTMOTOR, 0);
 				setSpeed(RIGHTMOTOR, 0);
 				HAL_TIM_Base_Start_IT(&htim2);
 				HAL_Delay(500);
 				HAL_TIM_Base_Stop_IT(&htim2);
+
+				//
+
 				setSpeed(LEFTMOTOR, -200);
 				setSpeed(RIGHTMOTOR, 200);
-//				setLeftVelocity(-base_speed);
-//				setRightVelocity(base_speed);
 				start_encoder = getEncoder(RIGHTENCODER);
 				while (getEncoder(RIGHTENCODER) < (start_encoder + left_turn));
-//				brakeLeft();
-//				brakeRight();
 				setSpeed(LEFTMOTOR, 0);
 				setSpeed(RIGHTMOTOR, 0);
 				HAL_TIM_Base_Start_IT(&htim2);
 				HAL_Delay(500);
 				HAL_TIM_Base_Stop_IT(&htim2);
-//				while(1) {
-//					batteryFault();
-//					if (getButton()) break;
-//				}
 			}
 
 			else {
 				// Move forward correcting off the right wall
 				error = getWall(IDEALRIGHTCENTER) - right_side_sensor;
-
 				setSpeed(LEFTMOTOR, (int)(base_speed - (error * kP)));
 				setSpeed(RIGHTMOTOR, (int)(base_speed + (error * kP)));
-//				setLeftVelocity(base_speed - (error * kP));
-//				setRightVelocity(base_speed + (error * kP));
 
 			}
 		}
