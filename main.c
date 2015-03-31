@@ -57,6 +57,12 @@ void main(void) {
 	const int left_turn = 1200;
 	const int right_turn = 1100;
 
+	uint32_t start_tick;
+//	while (1) {
+//		batteryFault();
+//		setSpeed(LEFTMOTOR, 500);
+//		setSpeed(RIGHTMOTOR, 500);
+//	}
 	setLeftVelocity(0);
 	setRightVelocity(0);
 
@@ -97,7 +103,7 @@ void main(void) {
 
 		else {
 
-			if (left_front_sensor <= getWall(IDEALLEFTFRONT) && right_front_sensor <= getWall(IDEALRIGHTFRONT)) {
+			if (left_front_sensor <= getWall(IDEALLEFTFRONT) || right_front_sensor <= getWall(IDEALRIGHTFRONT)) {
 				// Brake & turn left
 				setLED(WHITE);
 				setSpeed(LEFTMOTOR, 0);
@@ -106,7 +112,38 @@ void main(void) {
 				HAL_Delay(500);
 				HAL_TIM_Base_Stop_IT(&htim2);
 
-				//
+//				start_tick = HAL_GetTick();
+//				while(HAL_GetTick() < (start_tick + 1000)) {
+//					if (left_front_sensor > getWall(IDEALLEFTFRONT)) {
+//						setSpeed(LEFTMOTOR, base_speed);
+//					}
+//
+//					else if (left_front_sensor < getWall(IDEALLEFTFRONT)) {
+//						setSpeed(LEFTMOTOR, -base_speed);
+//					}
+//
+//					else {
+//						setSpeed(LEFTMOTOR, 0);
+//					}
+//
+//					if (right_front_sensor > getWall(IDEALRIGHTFRONT)) {
+//						setSpeed(RIGHTMOTOR, base_speed);
+//					}
+//
+//					else if (right_front_sensor < getWall(IDEALRIGHTFRONT)) {
+//						setSpeed(RIGHTMOTOR, -base_speed);
+//					}
+//
+//					else {
+//						setSpeed(RIGHTMOTOR, 0);
+//					}
+//				}
+//				resetLED(RED);
+
+				setLED(RED);
+				frontCorrection();
+				resetLED(RED);
+
 
 				setSpeed(LEFTMOTOR, -200);
 				setSpeed(RIGHTMOTOR, 200);

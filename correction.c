@@ -28,30 +28,47 @@
 
 double lastErrorR, lastErrorL;
 
+extern TIM_HandleTypeDef htim2;
+
 void frontCorrection() {
 
-	double k = 0.5;
+	double k = 0.1;
+	setVelocity(0);
+	bool right = false;
+	bool left = false;
 
-	double currentFrontRight = readSensor(RIGHT_DET);
-	double currentFrontLeft = readSensor(LEFT_DET);
+	double currentFrontRight;
+	double currentFrontLeft;
 
-	double errorR = currentFrontRight - getWall(IDEALRIGHTFRONT);
-	double errorL = currentFrontLeft - getWall(IDEALLEFTFRONT);
+	double errorR;
+	double errorL;
 
-	if (abs(errorR) < CORRECTION_FRONT_THRESH) {
-		errorR = 0;
-		brakeRight();
+	while(!right || !left)
+	{
+		currentFrontRight = readSensor(RIGHT_DET);
+		currentFrontLeft = readSensor(LEFT_DET);
+
+		errorR = currentFrontRight - getWall(CENTERRIGHTFRONT);
+		errorL = currentFrontLeft - getWall(CENTERLEFTFRONT);
+
+		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
+			errorR = 0;
+			brakeRight();
+			right = true;
+		}
+		else {
+			setRightVelocity(errorR*k);
+		}
+		if (abs(errorL) < CORRECTION_FRONT_THRESH && !left) {
+			errorL = 0;
+			brakeLeft();
+			left = true;
+		}
+		else {
+			setLeftVelocity(errorL*k);
+		}
 	}
-	else {
-		setRightVelocity(errorR*k);
-	}
-	if (abs(errorL) < CORRECTION_FRONT_THRESH) {
-		errorL = 0;
-		brakeLeft();
-	}
-	else {
-		setLeftVelocity(errorL*k);
-	}
+	HAL_TIM_Base_Stop_IT(&htim2);
 }
 
 void correction() {

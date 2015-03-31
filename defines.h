@@ -50,12 +50,15 @@ typedef enum {
     RIGHT,
     CENTER,
     FRONT,
+    FRONTCENTER,
     FARLEFTWALL,
     FARRIGHTWALL,
     IDEALLEFTFRONT,
     IDEALRIGHTFRONT,
     IDEALLEFTCENTER,
-    IDEALRIGHTCENTER
+    IDEALRIGHTCENTER,
+    CENTERRIGHTFRONT,
+    CENTERLEFTFRONT
 }Wall;
 
 /* Enumeration Variable for Encoder Channels */
