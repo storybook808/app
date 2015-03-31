@@ -48,7 +48,7 @@ void main(void) {
 
 	const double kP = 1;
 
-	double base_speed = 50;
+	double base_speed = 130;
 
 	int start_encoder;
 
@@ -103,7 +103,7 @@ void main(void) {
 
 		else {
 
-			if (left_front_sensor <= getWall(IDEALLEFTFRONT) || right_front_sensor <= getWall(IDEALRIGHTFRONT)) {
+			if (left_front_sensor <= getWall(IDEALLEFTFRONT) && right_front_sensor <= getWall(IDEALRIGHTFRONT)) {
 				// Brake & turn left
 				setLED(WHITE);
 				setSpeed(LEFTMOTOR, 0);
