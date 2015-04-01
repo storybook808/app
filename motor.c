@@ -53,8 +53,6 @@ void brake() {
 }
 
 void hardBrake() {
-	int right = getEncoder(RIGHTENCODER);
-	int left = getEncoder(LEFTENCODER);
 	thresh = 0;
 	counter = 0;
 	oldEncoderR = 0;
@@ -161,9 +159,6 @@ static void velocityCallBack() {
 
 	currentRightVelocity = (double)(currentEncoderR - oldEncoderR)*R_ENCODER_DIST/0.001;
 	currentLeftVelocity = (double)(currentEncoderL - oldEncoderL)*L_ENCODER_DIST/0.001;
-
-	double errorR = targetRightVelocity - currentRightVelocity;
-	double errorL = targetLeftVelocity - currentLeftVelocity;
 
 	if ( currentRightVelocity > targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed-vel_k_R);
 	else if ( currentRightVelocity < targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed+vel_k_R);

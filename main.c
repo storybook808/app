@@ -41,49 +41,16 @@ void main(void) {
 
 	testChaser(1,250);
 
-	double left_front_sensor, right_front_sensor;
-	double left_side_sensor, right_side_sensor;
-
-	double base_speed = 50;
+	double base_speed = 100;
 
 	setVelocity(0);
 
-	int x;
-	int startL, startR;
 	resetEncoder(LEFTENCODER);
 	resetEncoder(RIGHTENCODER);
+
 	while(1) {
 		batteryFault();
-
-
-//		left_side_sensor = readSensor(LEFT_CEN_DET);
-//		right_side_sensor = readSensor(RIGHT_CEN_DET);
-
-		for (x = 0; x < 14; x++) {
-
-			startL = getEncoder(LEFTENCODER);
-			startR = getEncoder(RIGHTENCODER);
-			resetLEDAll();
-
-			while(1) {
-				left_front_sensor = readSensor(LEFT_DET);
-				right_front_sensor = readSensor(RIGHT_DET);
-
-				if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
-					setLED(WHITE);
-					brake();
-					frontCorrection();
-					break;
-				}
-
-				correction(0, base_speed);
-
-				if (getEncoder(LEFTENCODER) > startL + 4100) {
-					brake();
-					break;
-				}
-			}
-		}
+		moveCells(10, base_speed);
 		while(!getButton());
 		HAL_Delay(500);
 	}

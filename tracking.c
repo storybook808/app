@@ -24,11 +24,13 @@ bool hasFrontWall(double valueRight, double valueLeft) {
 	else return false;
 }
 
-void moveForward(int cells, Wall_Correction wall) {
+void moveForward(int cells, Wall_Correction wall, double base_speed) {
+	int x;
 	for (x = 0; x < cells; x++) {
 
-		startL = getEncoder(LEFTENCODER);
-		startR = getEncoder(RIGHTENCODER);
+		int startL = getEncoder(LEFTENCODER);
+		double left_front_sensor;
+		double right_front_sensor;
 		resetLEDAll();
 
 		while(1) {
@@ -43,10 +45,45 @@ void moveForward(int cells, Wall_Correction wall) {
 
 			correction(wall, base_speed);
 
-			if (getEncoder(LEFTENCODER) > startL + 4100) {
+			if (getEncoder(LEFTENCODER) > startL + CELL_L) {
 				brake();
 				break;
 			}
 		}
+	}
+}
+
+void moveCells(int num, double base_speed) {
+
+	double left_front_sensor;
+	double right_front_sensor;
+	int location;
+	double speed = base_speed;
+	int startL = getEncoder(LEFTENCODER);
+	int distance = startL + CELL_L*(num);
+	setLED(GREEN);
+
+	while(1) {
+		left_front_sensor = readSensor(LEFT_DET);
+		right_front_sensor = readSensor(RIGHT_DET);
+		location = getEncoder(LEFTENCODER);
+
+		if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
+			setLED(RED);
+			resetLED(GREEN);
+			hardBrake();
+			frontCorrection();
+			break;
+		}
+
+		if (location > distance) {
+			setLED(BLUE);
+			resetLED(GREEN);
+//			speed = base_speed*(distance-location)/CELL_L;
+			brake();
+			break;
+		}
+
+		correction(0, speed);
 	}
 }

@@ -51,9 +51,9 @@ typedef enum
 
 typedef enum
 {
-	RIGHT,
-	LEFT,
-	NONE
+	RIGHTWALL,
+	LEFTWALL,
+	NOWALL
 }Wall_Correction;
 
 typedef enum {
