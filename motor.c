@@ -52,6 +52,24 @@ void brake() {
 	vel_k_L = VELOCITY_k_L;
 }
 
+void hardBrake() {
+	int right = getEncoder(RIGHTENCODER);
+	int left = getEncoder(LEFTENCODER);
+	thresh = 0;
+	counter = 0;
+	oldEncoderR = 0;
+	oldEncoderL = 0;
+	vel_k_R = BRAKE_k_R;
+	vel_k_L = BRAKE_k_L;
+	setVelocity(0);
+	while(getCurrentVelocity(RIGHTMOTOR) != 0 && getCurrentVelocity(LEFTMOTOR) != 0);
+	HAL_TIM_Base_Stop_IT(&htim2);
+	setSpeed(RIGHTMOTOR,0);
+	setSpeed(LEFTMOTOR,0);
+	vel_k_R = VELOCITY_k_R;
+	vel_k_L = VELOCITY_k_L;
+}
+
 void brakeRight() {
 	setRightVelocity(0);
 }

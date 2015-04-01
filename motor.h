@@ -19,6 +19,7 @@
 #include "correction.h"
 
 void brake();
+void hardBrake();
 void brakeLeft();
 void brakeRight();
 void setSpeed(Motor channel, int speed);
