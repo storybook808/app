@@ -30,14 +30,24 @@ static double currentLeftVelocity;
 /* Private Functions */
 static void setDirection(Motor channel, Direction state);
 static void velocityCallBack();
+extern uint16_t vel_k_R;
+extern uint16_t vel_k_L;
 
 void brake() {
 	thresh = 0;
 	counter = 0;
 	oldEncoderR = 0;
 	oldEncoderL = 0;
+	vel_k_R = BRAKE_k_R;
+	vel_k_L = BRAKE_k_L;
 	setVelocity(0);
-//	HAL_TIM_Base_Start_IT(&brakeHandler);
+	while(getCurrentVelocity(RIGHTMOTOR) != 0 && getCurrentVelocity(LEFTMOTOR) != 0);
+	HAL_Delay(100);
+	HAL_TIM_Base_Stop_IT(&htim2);
+	setSpeed(RIGHTMOTOR,0);
+	setSpeed(LEFTMOTOR,0);
+	vel_k_R = VELOCITY_k_R;
+	vel_k_L = VELOCITY_k_L;
 }
 
 void brakeRight() {
@@ -132,17 +142,19 @@ static void velocityCallBack() {
 	currentRightVelocity = (double)(currentEncoderR - oldEncoderR)*R_ENCODER_DIST/0.001;
 	currentLeftVelocity = (double)(currentEncoderL - oldEncoderL)*L_ENCODER_DIST/0.001;
 
-	if ( currentRightVelocity > targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed-VELOCITY_k_R);
-	else if ( currentRightVelocity < targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed+VELOCITY_k_R);
+	double errorR = targetRightVelocity - currentRightVelocity;
+	double errorL = targetLeftVelocity - currentLeftVelocity;
+
+	if ( currentRightVelocity > targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed-vel_k_R);
+	else if ( currentRightVelocity < targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed+vel_k_R);
 	else setSpeed(RIGHTMOTOR,currRspeed);
 
-	if ( currentLeftVelocity > targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed-VELOCITY_k_L);
-	else if ( currentLeftVelocity < targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed+VELOCITY_k_L);
+	if ( currentLeftVelocity > targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed-vel_k_L);
+	else if ( currentLeftVelocity < targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed+vel_k_L);
 	else setSpeed(LEFTMOTOR,currLspeed);
 
 	oldEncoderR = currentEncoderR;
 	oldEncoderL = currentEncoderL;
-
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)

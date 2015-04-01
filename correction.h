@@ -19,6 +19,8 @@
 #include "interface.h"
 
 void frontCorrection();
-void correction();
+void correction(uint8_t wall, double base_speed);
+
+double lastErrorRight, lastErrorLeft;
 
 #endif

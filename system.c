@@ -9,12 +9,19 @@
 #include "system.h"
 
 static void MX_TIM2_Init(void);
+uint16_t vel_k_R;
+uint16_t vel_k_L;
 
 void initSystem(void) {
 	initGPIO();
 	initTIM();
 	initADC();
 	initUSART();
+
+	vel_k_R = VELOCITY_k_R;
+	vel_k_L = VELOCITY_k_L;
+	lastErrorLeft = 0;
+	lastErrorRight = 0;
 
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);

@@ -32,6 +32,10 @@
 #define L_ENCODER_DIST	0.00205		// Left encoder tick per cm
 #define VELOCITY_k_R	25			// Velocity slow-down/speedup rate right motor
 #define VELOCITY_k_L	25			// Velocity slow-down/speedup rate left motor
+#define BRAKE_k_R		50
+#define BRAKE_k_L		50
+#define CELL_R			8780
+#define CELL_L			9000
 
 /* Enumeration Variable for ADC Channels */
 typedef enum
