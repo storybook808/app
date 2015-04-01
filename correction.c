@@ -32,7 +32,7 @@ extern TIM_HandleTypeDef htim2;
 
 void frontCorrection() {
 
-	double k = 0.1;
+	double k = 0.3;
 	setVelocity(0);
 	bool right = false;
 	bool left = false;
