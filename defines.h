@@ -49,6 +49,13 @@ typedef enum
 	FLASH_MEM
 }ADC_Channel;
 
+typedef enum
+{
+	RIGHT,
+	LEFT,
+	NONE
+}Wall_Correction;
+
 typedef enum {
     LEFT,
     RIGHT,

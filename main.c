@@ -72,26 +72,16 @@ void main(void) {
 				if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
 					setLED(WHITE);
 					brake();
+					frontCorrection();
 					break;
 				}
 
 				correction(0, base_speed);
 
-//				if (getEncoder(LEFTENCODER) > startL + 4100) {
-//					brake();
-//					break;
-//				}
-
-				if (getEncoder(RIGHTENCODER) > startR + 4200) {
+				if (getEncoder(LEFTENCODER) > startL + 4100) {
 					brake();
 					break;
 				}
-
-//				if (flagL && flagR) {
-//					setLED(RED);
-//					brake();
-//					break;
-//				}
 			}
 		}
 		while(!getButton());
