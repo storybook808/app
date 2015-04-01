@@ -44,128 +44,73 @@ void main(void) {
 	double left_front_sensor, right_front_sensor;
 	double left_side_sensor, right_side_sensor;
 
-	double error;
-
-	const double kP = 1;
-
-	double base_speed = 130;
+	double base_speed = 50;
 
 	int start_encoder;
 
 	const int forward_distance = 3500;
 
-	const int left_turn = 1200;
+	const int left_turn = 1400;
 	const int right_turn = 1100;
 
 	uint32_t start_tick;
-//	while (1) {
-//		batteryFault();
-//		setSpeed(LEFTMOTOR, 500);
-//		setSpeed(RIGHTMOTOR, 500);
-//	}
-	setLeftVelocity(0);
-	setRightVelocity(0);
+	uint8_t wall;
+
+	setVelocity(0);
+
+	int x;
+	int startL, startR;
+	bool flagL, flagR;
 
 	while(1) {
 		batteryFault();
 
-		left_front_sensor = readSensor(LEFT_DET);
-		right_front_sensor = readSensor(RIGHT_DET);
 
-		left_side_sensor = readSensor(LEFT_CEN_DET);
-		right_side_sensor = readSensor(RIGHT_CEN_DET);
+//		left_side_sensor = readSensor(LEFT_CEN_DET);
+//		right_side_sensor = readSensor(RIGHT_CEN_DET);
 
-		resetLEDAll();
+		for (x = 0; x < 14; x++) {
 
-		if (right_side_sensor >= getWall(FARRIGHTWALL)) {
-			// Move forward, brake, turn right, and move forward
-			setLED(BLUE);
-			setSpeed(LEFTMOTOR, base_speed);
-			setSpeed(RIGHTMOTOR, base_speed);
-			start_encoder = getEncoder(RIGHTENCODER);
-			while (getEncoder(RIGHTENCODER) < (start_encoder + forward_distance));
-			setSpeed(LEFTMOTOR, 0);
-			setSpeed(RIGHTMOTOR, 0);
-			HAL_TIM_Base_Start_IT(&htim2);
-			HAL_Delay(500);
-			HAL_TIM_Base_Stop_IT(&htim2);
-			setSpeed(LEFTMOTOR, 200);
-			setSpeed(RIGHTMOTOR, -200);
-			start_encoder = getEncoder(LEFTENCODER);
-			while (getEncoder(LEFTENCODER) < (start_encoder + right_turn));
-			setSpeed(LEFTMOTOR, 0);
-			setSpeed(RIGHTMOTOR, 0);
-			HAL_TIM_Base_Start_IT(&htim2);
-			HAL_Delay(500);
-			HAL_TIM_Base_Stop_IT(&htim2);
-		}
+			startL = getEncoder(LEFTENCODER);
+			startR = getEncoder(RIGHTENCODER);
+			flagL = false;
+			flagR = false;
+			resetLEDAll();
 
+			while(1) {
+				left_front_sensor = readSensor(LEFT_DET);
+				right_front_sensor = readSensor(RIGHT_DET);
 
-		else {
+				if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
+					setLED(WHITE);
+					brake();
+					break;
+				}
 
-			if (left_front_sensor <= getWall(IDEALLEFTFRONT) && right_front_sensor <= getWall(IDEALRIGHTFRONT)) {
-				// Brake & turn left
-				setLED(WHITE);
-				setSpeed(LEFTMOTOR, 0);
-				setSpeed(RIGHTMOTOR, 0);
-				HAL_TIM_Base_Start_IT(&htim2);
-				HAL_Delay(500);
-				HAL_TIM_Base_Stop_IT(&htim2);
+				correction(0, 50);
 
-//				start_tick = HAL_GetTick();
-//				while(HAL_GetTick() < (start_tick + 1000)) {
-//					if (left_front_sensor > getWall(IDEALLEFTFRONT)) {
-//						setSpeed(LEFTMOTOR, base_speed);
-//					}
-//
-//					else if (left_front_sensor < getWall(IDEALLEFTFRONT)) {
-//						setSpeed(LEFTMOTOR, -base_speed);
-//					}
-//
-//					else {
-//						setSpeed(LEFTMOTOR, 0);
-//					}
-//
-//					if (right_front_sensor > getWall(IDEALRIGHTFRONT)) {
-//						setSpeed(RIGHTMOTOR, base_speed);
-//					}
-//
-//					else if (right_front_sensor < getWall(IDEALRIGHTFRONT)) {
-//						setSpeed(RIGHTMOTOR, -base_speed);
-//					}
-//
-//					else {
-//						setSpeed(RIGHTMOTOR, 0);
-//					}
+				if (getEncoder(LEFTENCODER) > startL + 4057) {
+//					setLED(BLUE);
+//					brakeLeft();
+//					flagL = true;
+					brake();
+					break;
+				}
+
+//				if (getEncoder(RIGHTENCODER) > startR + 4100) {
+//					setLED(GREEN);
+//					brakeRight();
+//					flagR = true;
 //				}
-//				resetLED(RED);
 
-				setLED(RED);
-				frontCorrection();
-				resetLED(RED);
-
-
-				setSpeed(LEFTMOTOR, -200);
-				setSpeed(RIGHTMOTOR, 200);
-				start_encoder = getEncoder(RIGHTENCODER);
-				while (getEncoder(RIGHTENCODER) < (start_encoder + left_turn));
-				setSpeed(LEFTMOTOR, 0);
-				setSpeed(RIGHTMOTOR, 0);
-				HAL_TIM_Base_Start_IT(&htim2);
-				HAL_Delay(500);
-				HAL_TIM_Base_Stop_IT(&htim2);
-			}
-
-			else {
-				// Move forward correcting off the right wall
-				error = getWall(IDEALRIGHTCENTER) - right_side_sensor;
-				setSpeed(LEFTMOTOR, (int)(base_speed - (error * kP)));
-				setSpeed(RIGHTMOTOR, (int)(base_speed + (error * kP)));
-
+//				if (flagL && flagR) {
+//					setLED(RED);
+//					brake();
+//					break;
+//				}
 			}
 		}
-
-
-
+		while(!getButton());
+		HAL_Delay(500);
 	}
 }
