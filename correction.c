@@ -66,6 +66,45 @@ void frontCorrection() {
 			setLeftVelocity(errorL*k);
 		}
 	}
+}
+
+void brakeCorrection(int startL, int startR) {
+	double k = 0.1;
+	bool right = false;
+	bool left = false;
+
+	int currentFrontRight;
+	int currentFrontLeft;
+
+	double errorR;
+	double errorL;
+
+	while(!right || !left)
+	{
+		currentFrontRight = getEncoder(RIGHTENCODER);
+		currentFrontLeft = getEncoder(LEFTENCODER);
+
+		errorR = startR - currentFrontRight;
+		errorL = startL - currentFrontLeft;
+
+		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
+			errorR = 0;
+			brakeRight();
+			right = true;
+		}
+		else {
+			setRightVelocity(errorR*k);
+		}
+		if (abs(errorL) < CORRECTION_FRONT_THRESH && !left) {
+			errorL = 0;
+			brakeLeft();
+			left = true;
+		}
+		else {
+			setLeftVelocity(errorL*k);
+		}
+	}
+	HAL_Delay(100);
 	HAL_TIM_Base_Stop_IT(&htim2);
 }
 

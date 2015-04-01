@@ -46,22 +46,12 @@ void main(void) {
 
 	double base_speed = 50;
 
-	int start_encoder;
-
-	const int forward_distance = 3500;
-
-	const int left_turn = 1400;
-	const int right_turn = 1100;
-
-	uint32_t start_tick;
-	uint8_t wall;
-
 	setVelocity(0);
 
 	int x;
 	int startL, startR;
-	bool flagL, flagR;
-
+	resetEncoder(LEFTENCODER);
+	resetEncoder(RIGHTENCODER);
 	while(1) {
 		batteryFault();
 
@@ -73,8 +63,6 @@ void main(void) {
 
 			startL = getEncoder(LEFTENCODER);
 			startR = getEncoder(RIGHTENCODER);
-			flagL = false;
-			flagR = false;
 			resetLEDAll();
 
 			while(1) {
@@ -87,21 +75,17 @@ void main(void) {
 					break;
 				}
 
-				correction(0, 50);
+				correction(0, base_speed);
 
-				if (getEncoder(LEFTENCODER) > startL + 4057) {
-//					setLED(BLUE);
-//					brakeLeft();
-//					flagL = true;
+//				if (getEncoder(LEFTENCODER) > startL + 4100) {
+//					brake();
+//					break;
+//				}
+
+				if (getEncoder(RIGHTENCODER) > startR + 4200) {
 					brake();
 					break;
 				}
-
-//				if (getEncoder(RIGHTENCODER) > startR + 4100) {
-//					setLED(GREEN);
-//					brakeRight();
-//					flagR = true;
-//				}
 
 //				if (flagL && flagR) {
 //					setLED(RED);

@@ -34,8 +34,8 @@
 #define VELOCITY_k_L	25			// Velocity slow-down/speedup rate left motor
 #define BRAKE_k_R		50
 #define BRAKE_k_L		50
-#define CELL_R			8780
-#define CELL_L			9000
+#define CELL_R			4200
+#define CELL_L			4100
 
 /* Enumeration Variable for ADC Channels */
 typedef enum

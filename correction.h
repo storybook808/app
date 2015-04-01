@@ -19,6 +19,7 @@
 #include "interface.h"
 
 void frontCorrection();
+void brakeCorrection(int startL, int startR);
 void correction(uint8_t wall, double base_speed);
 
 double lastErrorRight, lastErrorLeft;

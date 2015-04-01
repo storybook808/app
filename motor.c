@@ -34,6 +34,8 @@ extern uint16_t vel_k_R;
 extern uint16_t vel_k_L;
 
 void brake() {
+	int right = getEncoder(RIGHTENCODER);
+	int left = getEncoder(LEFTENCODER);
 	thresh = 0;
 	counter = 0;
 	oldEncoderR = 0;
@@ -42,7 +44,7 @@ void brake() {
 	vel_k_L = BRAKE_k_L;
 	setVelocity(0);
 	while(getCurrentVelocity(RIGHTMOTOR) != 0 && getCurrentVelocity(LEFTMOTOR) != 0);
-	HAL_Delay(100);
+	brakeCorrection(left,right);
 	HAL_TIM_Base_Stop_IT(&htim2);
 	setSpeed(RIGHTMOTOR,0);
 	setSpeed(LEFTMOTOR,0);
