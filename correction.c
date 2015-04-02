@@ -66,6 +66,11 @@ void frontCorrection() {
 			setLeftVelocity(errorL*k);
 		}
 	}
+
+	HAL_Delay(100);
+	HAL_TIM_Base_Stop_IT(&htim2);
+	setSpeed(RIGHTMOTOR,0);
+	setSpeed(LEFTMOTOR,0);
 }
 
 void brakeCorrection(int startL, int startR) {

@@ -27,11 +27,11 @@ void main(void) {
 	SystemClock_Config();
 	initSystem();
 
-	calibrateSensors();
-
 	// Test USART Connection
 	printString("Hello world!");
 	printNL();
+
+	calibrateSensors();
 
 	while(!getButton()) {
 		toggleLED(WHITE);
@@ -48,9 +48,16 @@ void main(void) {
 	resetEncoder(LEFTENCODER);
 	resetEncoder(RIGHTENCODER);
 
+	double right;
+	double left;
+	int rightEncoder = 0;
+	int leftEncoder = 0;
+	int startL = getEncoder(LEFTENCODER);
+	int startR = getEncoder(RIGHTENCODER);
+
 	while(1) {
 		batteryFault();
-		moveCells(10, base_speed);
+		moveCells(8,base_speed);
 		while(!getButton());
 		HAL_Delay(500);
 	}
