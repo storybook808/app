@@ -52,13 +52,78 @@ void main(void) {
 	double left;
 	int rightEncoder = 0;
 	int leftEncoder = 0;
-	int startL = getEncoder(LEFTENCODER);
-	int startR = getEncoder(RIGHTENCODER);
+
+	int startL[5];
+	startL[0] = getEncoder(LEFTENCODER);
+	int startR[5];
+	startR[0] = getEncoder(RIGHTENCODER);
+
+	int endL[5];
+	int endR[10];
+
+	float averageL = 0.0;
+	float averageR = 0.0;
+
+	double left_front_sensor;
+	double right_front_sensor;
+
+	int x = 0;
 
 	while(1) {
 		batteryFault();
-		moveCells(8,base_speed);
-		while(!getButton());
-		HAL_Delay(500);
+
+		left_front_sensor = readSensor(LEFT_DET);
+		right_front_sensor = readSensor(RIGHT_DET);
+
+		if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
+			setLED(WHITE);
+			brake();
+			frontCorrection();
+
+			endL[x] = getEncoder(LEFTENCODER);
+			endR [x]= getEncoder(RIGHTENCODER);
+
+			x++;
+
+			while(!getButton());
+
+			if (x == 5) {
+				for (x = 0; x < 5; x++) {
+					averageL += endL[x] - startL[x];
+					averageR += endR[x] - startR[x];
+				}
+
+				averageL /= 5;
+				averageR /= 5;
+
+				setLED(RED);
+
+				while(!getButton());
+				HAL_Delay(100);
+				while(!getButton());
+				HAL_Delay(100);
+				while(!getButton());
+
+				printFloat(averageL);
+				printComma();
+				printFloat(averageR);
+				printNL();
+
+				setLED(GREEN);
+
+				while(1) batteryFault();
+
+			}
+
+			HAL_Delay(500);
+
+			resetEncoder(LEFTENCODER);
+			resetEncoder(RIGHTENCODER);
+
+			startL[x] = getEncoder(LEFTENCODER);
+			startR[x] = getEncoder(RIGHTENCODER);
+		}
+
+		correction(0, base_speed);
 	}
 }
