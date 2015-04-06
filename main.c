@@ -41,24 +41,16 @@ void main(void) {
 
 	testChaser(1,250);
 
-	double base_speed = 100;
-
-	setVelocity(0);
+	double base_speed = 50;
 
 	resetEncoder(LEFTENCODER);
 	resetEncoder(RIGHTENCODER);
 
-	double right;
-	double left;
-	int rightEncoder = 0;
-	int leftEncoder = 0;
-	int startL = getEncoder(LEFTENCODER);
-	int startR = getEncoder(RIGHTENCODER);
+	double left_front_sensor, right_front_sensor;
 
 	while(1) {
 		batteryFault();
-		moveCells(8,base_speed);
-		while(!getButton());
-		HAL_Delay(500);
+
+		moveCells(9,base_speed);
 	}
 }

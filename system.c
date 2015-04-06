@@ -20,8 +20,7 @@ void initSystem(void) {
 
 	vel_k_R = VELOCITY_k_R;
 	vel_k_L = VELOCITY_k_L;
-	lastErrorLeft = 0;
-	lastErrorRight = 0;
+	last_errorP = 0;
 
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
@@ -254,9 +253,9 @@ void MX_TIM2_Init(void)
     TIM_MasterConfigTypeDef sMasterConfig;
     
     htim2.Instance = TIM2;
-    htim2.Init.Prescaler = 2;
+    htim2.Init.Prescaler = 0;
     htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim2.Init.Period = 55999;
+    htim2.Init.Period = 16799;
     htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     HAL_TIM_Base_Init(&htim2);
     
