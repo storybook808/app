@@ -31,7 +31,7 @@ uint32_t readBattery() {
     return HAL_ADC_GetValue(&ADCHandle);
 }
 
-uint32_t readADC(int channel) {
+uint32_t readADC(ADC_Channel channel) {
     ADC_ChannelConfTypeDef sConfig;
     int x = 14444;
     int i = x;
@@ -74,12 +74,21 @@ uint32_t readADC(int channel) {
             HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
             break;
         case FLASH_MEM:
+        	//Flash Memory
             sConfig.Channel = ADC_CHANNEL_14;
             sConfig.Rank = 1;
             sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
             sConfig.Offset = 0;
             HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
             break;
+        case GYRO:
+        	//Gyrometer
+        	sConfig.Channel = ADC_CHANNEL_3;
+        	sConfig.Rank = 1;
+        	sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+        	sConfig.Offset = 0;
+        	HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+        	break;
     }
     // Wait 8us
     while(i--);

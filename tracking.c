@@ -104,9 +104,8 @@ void turnRight() {
 	double right_front_sensor = readSensor(RIGHT_DET);
 
 	if (right_front_sensor <= (getWall(IDEALRIGHTFRONT)+20) && left_front_sensor <= (getWall(IDEALLEFTFRONT)+20)) {
-		hardBrake();
 		frontCorrection();
-		HAL_Delay(100);
+		HAL_Delay(500);
 	}
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
@@ -165,9 +164,8 @@ void turnLeft() {
 	double right_front_sensor = readSensor(RIGHT_DET);
 
 	if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
-		hardBrake();
 		frontCorrection();
-		HAL_Delay(100);
+		HAL_Delay(500);
 	}
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
