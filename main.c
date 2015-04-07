@@ -50,7 +50,21 @@ void main(void) {
 
 	while(1) {
 		batteryFault();
+		left_front_sensor  = readSensor(LEFT_DET);
+		right_front_sensor = readSensor(RIGHT_DET);
+		// Detect front wall stop.
+		if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
+			hardBrake();
+			frontCorrection();
+			while(!getButton()) {
+				batteryFault();
+				toggleLED(RED);
+				HAL_Delay(100);
+			}
+			resetLED(RED);
+			HAL_Delay(500);
+		}
+		correction2(50);
 
-		moveCells(9,base_speed);
 	}
 }

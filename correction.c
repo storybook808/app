@@ -73,13 +73,15 @@ void frontCorrection() {
 	setSpeed(LEFTMOTOR,0);
 }
 
-void brakeCorrection(int startL, int startR) {
+void brakeCorrection() {
 	double k = 0.1;
 	bool right = false;
 	bool left = false;
 
 	int currentFrontRight;
 	int currentFrontLeft;
+	int startL = getEncoder(LEFTENCODER);
+	int startR = getEncoder(RIGHTENCODER);
 
 	double errorR;
 	double errorL;
@@ -111,6 +113,8 @@ void brakeCorrection(int startL, int startR) {
 	}
 	HAL_Delay(100);
 	HAL_TIM_Base_Stop_IT(&htim2);
+	setSpeed(LEFTMOTOR,0);
+	setSpeed(RIGHTMOTOR,0);
 }
 
 void correction(uint8_t wall, double base_speed) {
@@ -149,38 +153,38 @@ void correction(uint8_t wall, double base_speed) {
 	last_errorP = errorP;
 }
 
-void correction2(uint8_t wall, double base_speed) {
+void correction2(double base_speed) {
 
-	double errorP;
-	double errorD;
-	double error_total;
+	double errorLeftP,errorRightP;
+	double errorLeftD,errorRightD;
+	double error_left_total,error_right_total;
 
-	const double kP = .2;
-	const double kD = 0;
+	const double kP = .1;
+	const double kD = .1;
 
 	double left_side_sensor = readSensor(LEFT_CEN_DET);
 	double right_side_sensor = readSensor(RIGHT_CEN_DET);
 
 	HAL_TIM_Base_Start_IT(&htim2);
 
-	if (wall == 0 || wall == 1) {
-		errorP = getWall(IDEALRIGHTCENTER) - right_side_sensor;
-		errorD = errorP - last_errorP;
-		error_total = errorP * kP + errorD * kD;
+	errorLeftP = getWall(IDEALLEFTCENTER) - left_side_sensor;
+	errorRightP = getWall(IDEALRIGHTCENTER) - right_side_sensor;
+	errorRightD = errorRightP - last_rightErrorP;
+	errorLeftD = errorLeftP - last_leftErrorP;
 
-		setLeftVelocity(base_speed - error_total);
-//		setRightVelocity(base_speed + error_total);
-	}
-	if (wall == 0 || wall == 2) {
-		errorP = getWall(IDEALLEFTCENTER) - left_side_sensor;
-		errorD = errorP - last_errorP;
-		error_total = errorP * kP + errorD * kD;
+	error_right_total = errorRightP*kP + errorRightD*kD;
+	error_left_total = errorLeftP*kP + errorLeftD*kD;
 
-//		setLeftVelocity(base_speed + error_total);
-		setRightVelocity(base_speed - error_total);
+	if (errorLeftP < 0) {
+		error_left_total = 0;
 	}
-	if (wall == 3) {
-		setVelocity(base_speed);
+	if (errorRightP < 0) {
+		error_right_total = 0;
 	}
-	last_errorP = errorP;
+
+	setRightVelocity(base_speed - error_left_total);
+	setLeftVelocity(base_speed - error_right_total);
+
+	last_leftErrorP = errorLeftP;
+	last_rightErrorP = errorRightP;
 }

@@ -157,8 +157,8 @@ static void velocityCallBack() {
 	int currRspeed = currentSpeed(RIGHTMOTOR);
 	int currLspeed = currentSpeed(LEFTMOTOR);
 
-	currentRightVelocity = (double)(currentEncoderR - oldEncoderR)*R_ENCODER_DIST/0.0001;
-	currentLeftVelocity = (double)(currentEncoderL - oldEncoderL)*L_ENCODER_DIST/0.0001;
+	currentRightVelocity = (double)(currentEncoderR - oldEncoderR)*R_ENCODER_DIST/0.001;
+	currentLeftVelocity = (double)(currentEncoderL - oldEncoderL)*L_ENCODER_DIST/0.001;
 
 	if ( currentRightVelocity > targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed-vel_k_R);
 	else if ( currentRightVelocity < targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed+vel_k_R);

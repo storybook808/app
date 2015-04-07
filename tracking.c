@@ -170,7 +170,6 @@ void turnLeft() {
 void moveCells(int num, double base_speed) {
 
 	int location;
-	int correction_state = 0;
 	int startL = getEncoder(LEFTENCODER);
 	int distance = startL + CELL_L*(num);
 	setLED(GREEN);
@@ -178,6 +177,8 @@ void moveCells(int num, double base_speed) {
 	double left_side_sensor, right_side_sensor;
 	bool is_left_wall  = true;
 	bool is_right_wall = true;
+	double speed = base_speed;
+	bool slowDown = false;
 
 	while(1) {
 		left_front_sensor  = readSensor(LEFT_DET);
@@ -195,11 +196,14 @@ void moveCells(int num, double base_speed) {
 			break;
 		}
 
+		if (location > distance-CELL_L && !slowDown) {
+			speed = 50;
+			slowDown = true;
+		}
+
 		// Stop after moving number of cells
 		if (location > distance) {
-			setLED(BLUE);
-			resetLED(GREEN);
-			brake();
+			brakeCorrection();
 			break;
 		}
 
@@ -210,7 +214,6 @@ void moveCells(int num, double base_speed) {
 		else {
 			is_left_wall = false;
 		}
-
 		// Check for right wall
 		if (right_side_sensor <= getWall(FARRIGHTWALL)) {
 			is_right_wall = true;
@@ -225,25 +228,7 @@ void moveCells(int num, double base_speed) {
 		if (is_right_wall) setLED(BLUE);
 		else resetLED(BLUE);
 
-		// Convert wall states to correction.
-		// Both walls
-		if (is_left_wall && is_right_wall) {
-			correction_state = 0;
-		}
-		// Right wall
-		else if (!is_left_wall && is_right_wall) {
-			correction_state = 1;
-		}
-		// Left wall
-		else if (is_left_wall && !is_right_wall) {
-			correction_state = 2;
-		}
-		// No walls
-		else {
-			correction_state = 3;
-		}
-
-		correction(correction_state, base_speed);
+		correction2(speed);
 
 	}
 }
