@@ -13,6 +13,7 @@
 #include "HAL_includes.h"
 #include "defines.h"
 #include "calibration.h"
+#include "correction.h"
 
 bool hasRightWall(double value);
 

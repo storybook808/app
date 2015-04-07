@@ -159,16 +159,16 @@ void correction2(double base_speed) {
 	double errorLeftD,errorRightD;
 	double error_left_total,error_right_total;
 
-	const double kP = .1;
-	const double kD = .1;
+	const double kP = .5;//.5 speed 50
+	const double kD = .06;//.06 speed 50
 
 	double left_side_sensor = readSensor(LEFT_CEN_DET);
 	double right_side_sensor = readSensor(RIGHT_CEN_DET);
 
 	HAL_TIM_Base_Start_IT(&htim2);
 
-	errorLeftP = getWall(IDEALLEFTCENTER) - left_side_sensor;
-	errorRightP = getWall(IDEALRIGHTCENTER) - right_side_sensor;
+	errorLeftP = getWall(IDEALLEFTCENTER)-10 - left_side_sensor;
+	errorRightP = getWall(IDEALRIGHTCENTER)-10 - right_side_sensor;
 	errorRightD = errorRightP - last_rightErrorP;
 	errorLeftD = errorLeftP - last_leftErrorP;
 

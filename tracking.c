@@ -63,8 +63,8 @@ void turnRight() {
 	int currentFrontRight;
 	int currentFrontLeft;
 
-	int endR = getEncoder(RIGHTENCODER) - 1240;
-	int endL = getEncoder(LEFTENCODER) + 1350;
+	int endR = getEncoder(RIGHTENCODER) - TURN_R;
+	int endL = getEncoder(LEFTENCODER) + TURN_L;
 
 	double errorR;
 	double errorL;
@@ -108,6 +108,10 @@ void turnRight() {
 		frontCorrection();
 		HAL_Delay(100);
 	}
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
+	last_leftErrorP = 0;
+	last_rightErrorP = 0;
 }
 
 void turnLeft() {
@@ -120,8 +124,8 @@ void turnLeft() {
 	int currentFrontRight;
 	int currentFrontLeft;
 
-	int endR = getEncoder(RIGHTENCODER) + 1240;
-	int endL = getEncoder(LEFTENCODER) - 1350;
+	int endR = getEncoder(RIGHTENCODER) + TURN_R;
+	int endL = getEncoder(LEFTENCODER) - TURN_L;
 
 	double errorR;
 	double errorL;
@@ -165,6 +169,10 @@ void turnLeft() {
 		frontCorrection();
 		HAL_Delay(100);
 	}
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
+	last_leftErrorP = 0;
+	last_rightErrorP = 0;
 }
 
 void moveCells(int num, double base_speed) {

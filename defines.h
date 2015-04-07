@@ -36,6 +36,8 @@
 #define BRAKE_k_L		50
 #define CELL_R			4356
 #define CELL_L			4315
+#define TURN_R			1330
+#define TURN_L			1430
 
 /* Enumeration Variable for ADC Channels */
 typedef enum
