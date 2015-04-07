@@ -26,7 +26,11 @@ void moveForward(int cells, Wall_Correction wall, double base_speed);
 void moveCells(int num, double base_speed);
 
 void turnLeft();
+void turnLeft2();
+void turnLeft3();
 
 void turnRight();
+void turnRight2();
+void turnRight3();
 
 #endif

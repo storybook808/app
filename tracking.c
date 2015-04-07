@@ -113,6 +113,88 @@ void turnRight() {
 	last_rightErrorP = 0;
 }
 
+void turnRight2() {
+
+	double k = 0.05;
+	setVelocity(0);
+	bool right = false;
+
+	int currentFrontRight;
+
+	int endR = getEncoder(RIGHTENCODER) - 2*TURN_R;
+
+	double errorR;
+
+	brakeLeft();
+
+	while(!right)
+	{
+		currentFrontRight = getEncoder(RIGHTENCODER);
+		currentFrontLeft = getEncoder(LEFTENCODER);
+
+		errorR = endR - currentFrontRight;
+		errorL = endL - currentFrontLeft;
+
+		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
+			errorR = 0;
+			brakeRight();
+			right = true;
+		}
+		else {
+			setRightVelocity(errorR*k);
+		}
+	}
+
+	HAL_Delay(100);
+	HAL_TIM_Base_Stop_IT(&htim2);
+	setSpeed(RIGHTMOTOR,0);
+	setSpeed(LEFTMOTOR,0);
+
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
+	last_leftErrorP = 0;
+	last_rightErrorP = 0;
+}
+
+void turnRight3() {
+
+	double k = 0.05;
+	setVelocity(0);
+	bool left = false;
+
+	int currentFrontLeft;
+
+	int endL = getEncoder(LEFTENCODER) + 2*TURN_L;
+
+	double errorL;
+	brakeRight();
+
+	while(!left)
+	{
+		currentFrontLeft = getEncoder(LEFTENCODER);
+
+		errorL = endL - currentFrontLeft;
+		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
+			errorL = 0;
+			brakeLeft();
+			left = true;
+		}
+		else {
+			setLeftVelocity(errorL*k);
+		}
+	}
+
+	HAL_Delay(100);
+	HAL_TIM_Base_Stop_IT(&htim2);
+	setSpeed(RIGHTMOTOR,0);
+	setSpeed(LEFTMOTOR,0);
+
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
+	last_leftErrorP = 0;
+	last_rightErrorP = 0;
+}
+
 void turnLeft() {
 
 	double k = 0.05;
@@ -167,6 +249,88 @@ void turnLeft() {
 		frontCorrection();
 		HAL_Delay(500);
 	}
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
+	last_leftErrorP = 0;
+	last_rightErrorP = 0;
+}
+
+void turnLeft2() {
+
+	double k = 0.05;
+	setVelocity(0);
+	bool right = false;
+
+	int currentFrontRight;
+
+	int endR = getEncoder(RIGHTENCODER) + 2*TURN_R;
+
+	double errorR;
+
+	brakeLeft();
+
+	while(!right)
+	{
+		currentFrontRight = getEncoder(RIGHTENCODER);
+		currentFrontLeft = getEncoder(LEFTENCODER);
+
+		errorR = endR - currentFrontRight;
+		errorL = endL - currentFrontLeft;
+
+		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
+			errorR = 0;
+			brakeRight();
+			right = true;
+		}
+		else {
+			setRightVelocity(errorR*k);
+		}
+	}
+
+	HAL_Delay(100);
+	HAL_TIM_Base_Stop_IT(&htim2);
+	setSpeed(RIGHTMOTOR,0);
+	setSpeed(LEFTMOTOR,0);
+
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
+	last_leftErrorP = 0;
+	last_rightErrorP = 0;
+}
+
+void turnLeft3() {
+
+	double k = 0.05;
+	setVelocity(0);
+	bool left = false;
+
+	int currentFrontLeft;
+
+	int endL = getEncoder(LEFTENCODER) - 2*TURN_L;
+
+	double errorL;
+	brakeRight();
+
+	while(!left)
+	{
+		currentFrontLeft = getEncoder(LEFTENCODER);
+
+		errorL = endL - currentFrontLeft;
+		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
+			errorL = 0;
+			brakeLeft();
+			left = true;
+		}
+		else {
+			setLeftVelocity(errorL*k);
+		}
+	}
+
+	HAL_Delay(100);
+	HAL_TIM_Base_Stop_IT(&htim2);
+	setSpeed(RIGHTMOTOR,0);
+	setSpeed(LEFTMOTOR,0);
+
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
 	last_leftErrorP = 0;
