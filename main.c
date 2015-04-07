@@ -62,15 +62,14 @@ void main(void) {
 	bool is_left_wall  = true;
 	bool is_right_wall = true;
 
-//	int correction_state = 0;
-
 	// Sensor information variables.
 	double left_front_sensor, right_front_sensor;
 	double left_side_sensor, right_side_sensor;
 
 	// Controller variables.
 	const double kP = 1.0;
-	double error;
+//	double error;
+	double left_error, right_error;
 
 	// Initial sensor readings
 	left_front_sensor  = readSensor(LEFT_DET);
@@ -126,43 +125,45 @@ void main(void) {
 		if (is_right_wall) setLED(BLUE);
 		else resetLED(BLUE);
 
-		// Both walls are present.
-		if (is_left_wall && is_right_wall) {
-			// Right wall tracking.
-//			correction_state = 0;
+//		// Both walls are present.
+//		if (is_left_wall && is_right_wall) {
+//			// Right wall tracking.
+//			error = getWall(IDEALRIGHTCENTER) - right_side_sensor;
+//			setSpeed(LEFTMOTOR, (int)(base_speed - (error * kP)));
+//			setSpeed(RIGHTMOTOR, (int)(base_speed + (error * kP)));
+//		}
+//
+//		// Only the right wall is present.
+//		else if (!is_left_wall && is_right_wall) {
+//			// Right wall tracking.
+//			error = getWall(IDEALRIGHTCENTER) - right_side_sensor;
+//			setSpeed(LEFTMOTOR, (int)(base_speed - (error * kP)));
+//			setSpeed(RIGHTMOTOR, (int)(base_speed + (error * kP)));
+//		}
+//
+//		// Only the left wall is present.
+//		else if (is_left_wall && !is_right_wall) {
+//			// Left wall tracking.
+//			error = getWall(IDEALLEFTCENTER) - left_side_sensor;
+//			setSpeed(LEFTMOTOR, (int)(base_speed + (error * kP)));
+//			setSpeed(RIGHTMOTOR, (int)(base_speed) - (error * kP));
+//		}
+//
+//		// No walls are present.
+//		else {
+//			// No wall tracking.
+//			setSpeed(LEFTMOTOR, base_speed);
+//			setSpeed(RIGHTMOTOR, base_speed);
+//		}
 
-			error = getWall(IDEALRIGHTCENTER) - right_side_sensor;
-			setSpeed(LEFTMOTOR, (int)(base_speed - (error * kP)));
-			setSpeed(RIGHTMOTOR, (int)(base_speed + (error * kP)));
-		}
+		left_error  = getWall(IDEALLEFTCENTER) - left_side_sensor;
+		right_error = getWall(IDEALRIGHTCENTER) - right_side_sensor;
 
-		// Only the right wall is present.
-		else if (!is_left_wall && is_right_wall) {
-			// Right wall tracking.
-//			correction_state = 0;
+		if (left_error < 0) left_error = 0;
+		if (right_error < 0) right_error = 0;
 
-			error = getWall(IDEALRIGHTCENTER) - right_side_sensor;
-			setSpeed(LEFTMOTOR, (int)(base_speed - (error * kP)));
-			setSpeed(RIGHTMOTOR, (int)(base_speed + (error * kP)));
-		}
+		setSpeed(LEFTMOTOR, base_speed - right_error * kP);
+		setSpeed(RIGHTMOTOR, base_speed - left_error * kP);
 
-		// Only the left wall is present.
-		else if (is_left_wall && !is_right_wall) {
-			// Left wall tracking.
-//			correction_state = 1;
-
-			error = getWall(IDEALLEFTCENTER) - left_side_sensor;
-			setSpeed(LEFTMOTOR, (int)(base_speed + (error * kP)));
-			setSpeed(RIGHTMOTOR, (int)(base_speed) - (error * kP));
-		}
-
-		// No walls are present.
-		else {
-			// No wall tracking.
-//			correction_state = 2;
-
-			setSpeed(LEFTMOTOR, base_speed);
-			setSpeed(RIGHTMOTOR, base_speed);
-		}
 	}
 }
