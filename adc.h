@@ -16,7 +16,7 @@
 #include "interface.h"
 #include "calibration.h"
 
-uint32_t readADC(int channel);
+uint32_t readADC(ADC_Channel channel);
 uint32_t readBattery(void);
 
 double readSensor(ADC_Channel channel);

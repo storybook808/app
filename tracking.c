@@ -55,7 +55,7 @@ void moveForward(int cells, Wall_Correction wall, double base_speed) {
 
 void turnRight() {
 
-	double k = 0.05;
+	double k = 0.03;
 	setVelocity(0);
 	bool right = false;
 	bool left = false;
@@ -100,22 +100,17 @@ void turnRight() {
 	setSpeed(RIGHTMOTOR,0);
 	setSpeed(LEFTMOTOR,0);
 
-	double left_front_sensor  = readSensor(LEFT_DET);
-	double right_front_sensor = readSensor(RIGHT_DET);
-
-	if (right_front_sensor <= (getWall(IDEALRIGHTFRONT)+20) && left_front_sensor <= (getWall(IDEALLEFTFRONT)+20)) {
-		frontCorrection();
-		HAL_Delay(500);
-	}
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
 	last_leftErrorP = 0;
 	last_rightErrorP = 0;
+	setLeftVelocity(0);
+	setRightVelocity(0);
 }
 
 void turnRight2() {
 
-	double k = 0.05;
+	double k = 0.03;
 	setVelocity(0);
 	bool right = false;
 
@@ -125,19 +120,15 @@ void turnRight2() {
 
 	double errorR;
 
-	brakeLeft();
-
 	while(!right)
 	{
+		brakeLeft();
 		currentFrontRight = getEncoder(RIGHTENCODER);
-		currentFrontLeft = getEncoder(LEFTENCODER);
 
 		errorR = endR - currentFrontRight;
-		errorL = endL - currentFrontLeft;
 
 		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
-			errorR = 0;
-			brakeRight();
+			brakeCorrection();
 			right = true;
 		}
 		else {
@@ -154,11 +145,13 @@ void turnRight2() {
 	resetEncoder(LEFTENCODER);
 	last_leftErrorP = 0;
 	last_rightErrorP = 0;
+	setLeftVelocity(0);
+	setRightVelocity(0);
 }
 
 void turnRight3() {
 
-	double k = 0.05;
+	double k = 0.03;
 	setVelocity(0);
 	bool left = false;
 
@@ -167,16 +160,16 @@ void turnRight3() {
 	int endL = getEncoder(LEFTENCODER) + 2*TURN_L;
 
 	double errorL;
-	brakeRight();
 
 	while(!left)
 	{
+		brakeRight();
 		currentFrontLeft = getEncoder(LEFTENCODER);
 
 		errorL = endL - currentFrontLeft;
+
 		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
-			errorL = 0;
-			brakeLeft();
+			brakeCorrection();
 			left = true;
 		}
 		else {
@@ -193,11 +186,13 @@ void turnRight3() {
 	resetEncoder(LEFTENCODER);
 	last_leftErrorP = 0;
 	last_rightErrorP = 0;
+	setLeftVelocity(0);
+	setRightVelocity(0);
 }
 
 void turnLeft() {
 
-	double k = 0.05;
+	double k = 0.03;
 	setVelocity(0);
 	bool right = false;
 	bool left = false;
@@ -242,22 +237,17 @@ void turnLeft() {
 	setSpeed(RIGHTMOTOR,0);
 	setSpeed(LEFTMOTOR,0);
 
-	double left_front_sensor  = readSensor(LEFT_DET);
-	double right_front_sensor = readSensor(RIGHT_DET);
-
-	if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
-		frontCorrection();
-		HAL_Delay(500);
-	}
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
 	last_leftErrorP = 0;
 	last_rightErrorP = 0;
+	setLeftVelocity(0);
+	setRightVelocity(0);
 }
 
 void turnLeft2() {
 
-	double k = 0.05;
+	double k = 0.03;
 	setVelocity(0);
 	bool right = false;
 
@@ -267,19 +257,15 @@ void turnLeft2() {
 
 	double errorR;
 
-	brakeLeft();
-
 	while(!right)
 	{
+		brakeLeft();
 		currentFrontRight = getEncoder(RIGHTENCODER);
-		currentFrontLeft = getEncoder(LEFTENCODER);
 
 		errorR = endR - currentFrontRight;
-		errorL = endL - currentFrontLeft;
 
 		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
-			errorR = 0;
-			brakeRight();
+			brakeCorrection();
 			right = true;
 		}
 		else {
@@ -296,11 +282,13 @@ void turnLeft2() {
 	resetEncoder(LEFTENCODER);
 	last_leftErrorP = 0;
 	last_rightErrorP = 0;
+	setLeftVelocity(0);
+	setRightVelocity(0);
 }
 
 void turnLeft3() {
 
-	double k = 0.05;
+	double k = 0.03;
 	setVelocity(0);
 	bool left = false;
 
@@ -309,16 +297,15 @@ void turnLeft3() {
 	int endL = getEncoder(LEFTENCODER) - 2*TURN_L;
 
 	double errorL;
-	brakeRight();
 
 	while(!left)
 	{
+		brakeRight();
 		currentFrontLeft = getEncoder(LEFTENCODER);
 
 		errorL = endL - currentFrontLeft;
 		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
-			errorL = 0;
-			brakeLeft();
+			brakeCorrection();
 			left = true;
 		}
 		else {
@@ -335,6 +322,8 @@ void turnLeft3() {
 	resetEncoder(LEFTENCODER);
 	last_leftErrorP = 0;
 	last_rightErrorP = 0;
+	setLeftVelocity(0);
+	setRightVelocity(0);
 }
 
 void moveCells(int num, double base_speed) {

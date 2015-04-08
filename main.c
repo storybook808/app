@@ -56,60 +56,58 @@ void main(void) {
 	int startR = getEncoder(RIGHTENCODER);
 	int i;
 	int gyro;
-	while(1) {
-		batteryFault();
-		gyro = readADC(GYRO);
-		printInt(gyro);
-		printNL();
-	}
 
 // Right wall follower
-//	while(1) {
-//		batteryFault();
-//		left_front_sensor  = readSensor(LEFT_DET);
-//		right_front_sensor = readSensor(RIGHT_DET);
-//		left_side_sensor   = readSensor(LEFT_CEN_DET);
-//		right_side_sensor  = readSensor(RIGHT_CEN_DET);
-//
-//		// Detect front wall stop.
-//		if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
-//			hardBrake();
-//			frontCorrection();
-//			turnLeft();
-//			HAL_Delay(500);
-//		}
-//		// Update wall states.
-//		if (left_side_sensor <= getWall(FARLEFTWALL)) {
-//			is_left_wall = true;
-//		}
-//		else {
-//			is_left_wall = false;
-//		}
-//		if (right_side_sensor <= getWall(FARRIGHTWALL)) {
-//			is_right_wall = true;
-//		}
-//		else {
-//			is_right_wall = false;
-//		}
-//		// Output the state via LED.
-//		if (is_left_wall) setLED(WHITE);
-//		else resetLED(WHITE);
-//
-//		if (is_right_wall) setLED(BLUE);
-//		else resetLED(BLUE);
-//
-//		if (!is_right_wall && !detect) {
-//			detect = true;
-//			wall_start = getEncoder(RIGHTENCODER);
-//		}
-//		if (detect) {
-//			if (getEncoder(RIGHTENCODER) >= wall_start + CELL_R-300) {
-//				detect = false;
-//				brakeCorrection();
-//				turnRight();
-//			}
-//		}
-//
-//		correction2(50);
-//	}
+	while(1) {
+		batteryFault();
+		left_front_sensor  = readSensor(LEFT_DET);
+		right_front_sensor = readSensor(RIGHT_DET);
+		left_side_sensor   = readSensor(LEFT_CEN_DET);
+		right_side_sensor  = readSensor(RIGHT_CEN_DET);
+
+		// Update wall states.
+		if (left_side_sensor <= getWall(FARLEFTWALL)) {
+			is_left_wall = true;
+		}
+		else {
+			is_left_wall = false;
+		}
+		if (right_side_sensor <= getWall(FARRIGHTWALL)) {
+			is_right_wall = true;
+		}
+		else {
+			is_right_wall = false;
+		}
+		// Output the state via LED.
+		if (is_left_wall) setLED(WHITE);
+		else resetLED(WHITE);
+
+		if (is_right_wall) setLED(BLUE);
+		else resetLED(BLUE);
+
+		if (!is_right_wall && !detect) {
+			detect = true;
+			wall_start = getEncoder(RIGHTENCODER);
+		}
+
+		// Detect front wall stop.
+		if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
+			hardBrake();
+			frontCorrection();
+			turnLeft();
+			hardBrake();
+			HAL_Delay(500);
+		}
+
+		if (detect) {
+			if (getEncoder(RIGHTENCODER) >= wall_start + CELL_R-300) {
+				detect = false;
+				brakeCorrection();
+				turnRight();
+				hardBrake();
+			}
+		}
+
+		correction2(50);
+	}
 }

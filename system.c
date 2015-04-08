@@ -119,6 +119,14 @@ void initGPIO(void) {
     initGPIOStructure.Pin = GPIO_PIN_4;
     HAL_GPIO_Init(GPIOC, &initGPIOStructure);
 
+//     Gyro Output
+    initGPIOStructure.Pin = GPIO_PIN_2;
+    HAL_GPIO_Init(GPIOA, &initGPIOStructure);
+
+//	 Gyro REF
+	initGPIOStructure.Pin = GPIO_PIN_3;
+	HAL_GPIO_Init(GPIOA, &initGPIOStructure);
+
 	// Left encoder channel 2
 	initGPIOStructure.Mode = GPIO_MODE_INPUT;
 	initGPIOStructure.Pull = GPIO_PULLUP;
