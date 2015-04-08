@@ -34,6 +34,7 @@ void main(void) {
 	calibrateSensors();
 
 	while(!getButton()) {
+		batteryFault();
 		toggleLED(WHITE);
 	}
 
@@ -46,68 +47,37 @@ void main(void) {
 	resetEncoder(LEFTENCODER);
 	resetEncoder(RIGHTENCODER);
 
-	double left_front_sensor, right_front_sensor;
-	double left_side_sensor, right_side_sensor;
-
-	bool is_left_wall  = true;
-	bool is_right_wall = true;
-	bool detect = false;
-	int wall_start = 0;
-	int startR = getEncoder(RIGHTENCODER);
+	double frontRight, frontLeft;
+	double centerRight, centerLeft;
+	bool rightWall, leftWall, frontWall;
 	int i;
-	int gyro;
 
-// Right wall follower
 	while(1) {
 		batteryFault();
-		left_front_sensor  = readSensor(LEFT_DET);
-		right_front_sensor = readSensor(RIGHT_DET);
-		left_side_sensor   = readSensor(LEFT_CEN_DET);
-		right_side_sensor  = readSensor(RIGHT_CEN_DET);
 
-		// Update wall states.
-		if (left_side_sensor <= getWall(FARLEFTWALL)) {
-			is_left_wall = true;
-		}
-		else {
-			is_left_wall = false;
-		}
-		if (right_side_sensor <= getWall(FARRIGHTWALL)) {
-			is_right_wall = true;
-		}
-		else {
-			is_right_wall = false;
-		}
-		// Output the state via LED.
-		if (is_left_wall) setLED(WHITE);
-		else resetLED(WHITE);
+		frontRight = readSensor(RIGHT_DET);
+		frontLeft = readSensor(LEFT_DET);
+		centerRight = readSensor(RIGHT_CEN_DET);
+		centerLeft = readSensor(LEFT_CEN_DET);
 
-		if (is_right_wall) setLED(BLUE);
-		else resetLED(BLUE);
+		rightWall = hasRightWall(centerRight);
+		leftWall = hasLeftWall(centerLeft);
+		frontWall = hasFrontWall(frontRight, frontLeft);
 
-		if (!is_right_wall && !detect) {
-			detect = true;
-			wall_start = getEncoder(RIGHTENCODER);
-		}
+		turnLeft();
+		frontCorrection();
+		turnLeft();
+		frontCorrection();
+		turnLeft();
+		frontCorrection();
+		turnLeft();
+		HAL_Delay(500);
 
-		// Detect front wall stop.
-		if (right_front_sensor <= getWall(IDEALRIGHTFRONT) && left_front_sensor <= getWall(IDEALLEFTFRONT)) {
-			hardBrake();
-			frontCorrection();
-			turnLeft();
-			hardBrake();
-			HAL_Delay(500);
-		}
-
-		if (detect) {
-			if (getEncoder(RIGHTENCODER) >= wall_start + CELL_R-300) {
-				detect = false;
-				brakeCorrection();
-				turnRight();
-				hardBrake();
-			}
-		}
-
-		correction2(50);
+		moveCells(1,30);
+		while (!getButton()) batteryFault();
+		HAL_Delay(500);
+		for(i = 0; i < 10; i++)	moveCells(1,30);
+		while (!getButton()) batteryFault();
+		HAL_Delay(500);
 	}
 }

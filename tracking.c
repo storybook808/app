@@ -10,17 +10,17 @@
 
 
 bool hasRightWall(double value) {
-	if (value < getWall(FARRIGHTWALL)+20) return true;
+	if (value < getWall(FARRIGHTWALL)) return true;
 	else return false;
 }
 
 bool hasLeftWall(double value) {
-	if (value < getWall(FARLEFTWALL)+20) return true;
+	if (value < getWall(FARLEFTWALL)) return true;
 	else return false;
 }
 
 bool hasFrontWall(double valueRight, double valueLeft) {
-	if ((valueRight < getWall(IDEALRIGHTFRONT)+20) && (valueLeft < getWall(IDEALLEFTCENTER)+20)) return true;
+	if ((valueRight < getWall(IDEALRIGHTFRONT)) && (valueLeft < getWall(IDEALLEFTFRONT))) return true;
 	else return false;
 }
 
@@ -128,7 +128,7 @@ void turnRight2() {
 		errorR = endR - currentFrontRight;
 
 		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
-			brakeCorrection();
+			brakeRight();
 			right = true;
 		}
 		else {
@@ -169,7 +169,7 @@ void turnRight3() {
 		errorL = endL - currentFrontLeft;
 
 		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
-			brakeCorrection();
+			brakeLeft();
 			left = true;
 		}
 		else {
@@ -265,7 +265,7 @@ void turnLeft2() {
 		errorR = endR - currentFrontRight;
 
 		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
-			brakeCorrection();
+			brakeRight();
 			right = true;
 		}
 		else {
@@ -305,7 +305,7 @@ void turnLeft3() {
 
 		errorL = endL - currentFrontLeft;
 		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
-			brakeCorrection();
+			brakeLeft();
 			left = true;
 		}
 		else {
@@ -330,7 +330,9 @@ void moveCells(int num, double base_speed) {
 
 	int location;
 	int startL = getEncoder(LEFTENCODER);
-	int distance = startL + CELL_L*(num);
+	int startR = getEncoder(RIGHTENCODER);
+	int distanceL = startL + CELL_L*(num);
+	int distanceR = startR + CELL_R*(num);
 	setLED(GREEN);
 	double left_front_sensor, right_front_sensor;
 	double left_side_sensor, right_side_sensor;
@@ -355,14 +357,14 @@ void moveCells(int num, double base_speed) {
 			break;
 		}
 
-		if (location > distance-CELL_L && !slowDown) {
-			speed = 50;
+		if (location > distanceL-CELL_L && !slowDown) {
+			speed = 15;
 			slowDown = true;
 		}
 
 		// Stop after moving number of cells
-		if (location > distance) {
-			brakeCorrection();
+		if (location > distanceL) {
+			brakeCorrection(distanceR, distanceL);
 			break;
 		}
 

@@ -177,7 +177,7 @@ void batteryFault() {
  	//Check to see if voltage level is above 7V
  	//Voltage detector is a voltage divider where 7V is measured as 2.3333V
  	//2.3333V translate to roughly 2333 from the 12 bit ADC
- 	if (batteryLevel < 2333) {
+ 	if (batteryLevel < 2666) {
  		//Disable all motors
  		brake();
  		//Enable buzzer

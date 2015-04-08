@@ -73,15 +73,13 @@ void frontCorrection() {
 	setSpeed(LEFTMOTOR,0);
 }
 
-void brakeCorrection() {
-	double k = 0.1;
+void brakeCorrection(int startR, int startL) {
+	double k = 0.03;
 	bool right = false;
 	bool left = false;
 
 	int currentFrontRight;
 	int currentFrontLeft;
-	int startL = getEncoder(LEFTENCODER);
-	int startR = getEncoder(RIGHTENCODER);
 
 	double errorR;
 	double errorL;
@@ -115,6 +113,8 @@ void brakeCorrection() {
 	HAL_TIM_Base_Stop_IT(&htim2);
 	setSpeed(LEFTMOTOR,0);
 	setSpeed(RIGHTMOTOR,0);
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
 }
 
 void correction(uint8_t wall, double base_speed) {
