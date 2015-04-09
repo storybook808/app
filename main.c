@@ -50,19 +50,15 @@ void main(void) {
 	double frontRight, frontLeft;
 	double centerRight, centerLeft;
 	bool rightWall, leftWall, frontWall;
-	int i;
 
 	while(1) {
 		batteryFault();
-
-		frontRight = readSensor(RIGHT_DET);
-		frontLeft = readSensor(LEFT_DET);
-		centerRight = readSensor(RIGHT_CEN_DET);
-		centerLeft = readSensor(LEFT_CEN_DET);
-
-		rightWall = hasRightWall(centerRight);
-		leftWall = hasLeftWall(centerLeft);
-		frontWall = hasFrontWall(frontRight, frontLeft);
-
+		move(15,100);
+		while(!getButton()) {
+			batteryFault();
+			toggleLED(WHITE);
+			HAL_Delay(100);
+		}
+		HAL_Delay(500);
 	}
 }

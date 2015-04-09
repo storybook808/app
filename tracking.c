@@ -393,3 +393,86 @@ void moveCells(int num, double base_speed) {
 
 	}
 }
+
+void move(int cells, double base_speed) {
+
+	int endL = getEncoder(LEFTENCODER) + cells*CELL_L;
+	int endR = getEncoder(RIGHTENCODER) + cells*CELL_R;
+	bool done = false;
+
+	int currentLeft;
+
+	double errorL;
+	double errorPercent, dePercent;
+	double frontLeft,frontRight;
+	double speed;
+	double dt;
+	double diff;
+	int temp;
+	int endTick = HAL_GetTick()+1000;
+	bool dtFlag = false;
+
+	printInt(endTick);
+	printNL();
+
+	while(!done)
+	{
+		batteryFault();
+
+		frontLeft = readSensor(LEFT_DET);
+		frontRight = readSensor(RIGHT_DET);
+		temp = HAL_GetTick();
+		diff = endTick - temp;
+		dt = 1 - diff/1000;
+
+		if (dt >= 1) {
+			dt = 1;
+			dtFlag = true;
+		}
+		if (dt <= 0) {
+			dt = 0;
+		}
+
+		speed = base_speed*dt;
+
+		if (frontLeft <= getWall(IDEALLEFTFRONT) && frontRight <= getWall(IDEALRIGHTFRONT)) {
+			hardBrake();
+			frontCorrection();
+			break;
+		}
+
+		// Grab current location
+		currentLeft = getEncoder(LEFTENCODER);
+
+		// Calculate Error given location
+		errorL = endL - currentLeft;
+		errorPercent = errorL/(cells*CELL_L);
+		dePercent = errorL/(cells*CELL_L*UPPER_BOUND);
+
+		// If position has passed desired location
+		if (endL <= currentLeft) {
+			brakeCorrection(endR, endL);
+			done = true;
+		}
+//		else if (errorL < CELL_L) {
+//			correction2(SLOW);
+//		}
+		else if (errorPercent > UPPER_BOUND) {
+			correction2(speed);
+		}
+		else {
+			if (speed*dePercent < SLOW) {
+				correction2(SLOW);
+			}
+			else {
+				correction2(speed*dePercent);
+			}
+		}
+	}
+	HAL_Delay(100);
+	HAL_TIM_Base_Stop_IT(&htim2);
+	setSpeed(LEFTMOTOR,0);
+	setSpeed(RIGHTMOTOR,0);
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
+}
