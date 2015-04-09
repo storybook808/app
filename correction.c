@@ -53,14 +53,8 @@ void frontCorrection() {
 		if (errorR*k > 20) {
 			errorR = 20/k;
 		}
-		else if (errorR*k < 5) {
-			errorR = 5/k;
-		}
 		if (errorL*k > 20) {
 			errorL = 20/k;
-		}
-		else if (errorL*k < 5) {
-			errorL = 5/k;
 		}
 
 		// Check if we have reached our ideal location
@@ -108,18 +102,12 @@ void brakeCorrection(int startR, int startL) {
 		errorL = startL - currentFrontLeft;
 
 
-		// Set Upper & Lower Bound of speed via error
+		// Set Upper Bound of speed via error
 		if (errorR*k > 20) {
 			errorR = 20/k;
 		}
-		else if (errorR*k < 5) {
-			errorR = 5/k;
-		}
 		if (errorL*k > 20) {
 			errorL = 20/k;
-		}
-		else if (errorL*k < 5) {
-			errorL = 5/k;
 		}
 
 		if (abs(errorR) < CORRECTION_FRONT_THRESH) {

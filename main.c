@@ -43,6 +43,7 @@ void main(void) {
 	testChaser(1,250);
 
 	double base_speed = 50;
+	double speed = base_speed;
 
 	resetEncoder(LEFTENCODER);
 	resetEncoder(RIGHTENCODER);
@@ -50,9 +51,72 @@ void main(void) {
 	double frontRight, frontLeft;
 	double centerRight, centerLeft;
 	bool rightWall, leftWall, frontWall;
+	rightWall = true;
+	leftWall = true;
+	frontWall = false;
+
+	int start = getEncoder(LEFTENCODER);
+	int location;
+	int end;
+	bool map = true;
+	bool cells[16][2];
+	cells[0][0] = true;
+	cells[0][1] = true;
+	int cell = 0;
+	int i;
+	int value;
+	bool stop;
 
 	while(1) {
 		batteryFault();
 
+		// Get Sensor Readings
+		frontRight = readSensor(RIGHT_DET);
+		frontLeft = readSensor(LEFT_DET);
+		centerRight = readSensor(RIGHT_CEN_DET);
+		centerLeft = readSensor(LEFT_CEN_DET);
+
+		// Determine walls
+
+		frontWall = hasFrontWall(frontRight,frontLeft);
+		rightWall = hasRightWall(centerRight);
+		leftWall = hasLeftWall(centerLeft);
+		cell = location/CELL_L;
+
+		// Determine location
+		location = getEncoder(LEFTENCODER);
+
+		// If we are half-way through a cell
+		if (location%CELL_L >= CELL_L/2 && map) {
+			// Check side walls
+
+			// Map values to map here
+
+			// Disable Mapping
+			map = false;
+		}
+		// If we are a quarter in a cell
+		if (location%CELL_L <= CELL_L/4 && !map) {
+			// Enable mapping
+			map = true;
+		}
+
+		if (!rightWall) {
+			// Brake at center of cell
+			brakeInCell(base_speed);
+			rightWall = true;
+			// Turn right
+			turnRight();
+		}
+
+		// If front wall
+		if (frontWall) {
+			// Stop & correct off wall
+			hardBrake();
+			frontCorrection();
+			turnLeft();
+		}
+
+		correction2(base_speed);
 	}
 }

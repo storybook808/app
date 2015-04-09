@@ -35,4 +35,8 @@ void turnRight();
 void turnRight2();
 void turnRight3();
 
+void brakeInCell(double base_speed);
+
+void searchSlow();
+
 #endif
