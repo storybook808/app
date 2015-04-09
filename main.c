@@ -53,12 +53,6 @@ void main(void) {
 
 	while(1) {
 		batteryFault();
-		move(15,100);
-		while(!getButton()) {
-			batteryFault();
-			toggleLED(WHITE);
-			HAL_Delay(100);
-		}
-		HAL_Delay(500);
+
 	}
 }
