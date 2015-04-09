@@ -21,7 +21,7 @@ static void setWall(Wall wall, double value);
 void calibrateSensors(void) {
 	setLED(BLUE);
 //	waitForTop();
-	while(!getButton());
+	while(!getButton())batteryFault();
 	calibrateWall(LEFT);
 	resetLED(BLUE);
 	resetLED(WHITE);
@@ -29,7 +29,7 @@ void calibrateSensors(void) {
 
 	setLED(GREEN);
 //	waitForTop();
-	while(!getButton());
+	while(!getButton())batteryFault();
 	calibrateWall(RIGHT);
 	resetLED(GREEN);
 	resetLED(WHITE);
@@ -37,7 +37,7 @@ void calibrateSensors(void) {
 
 	setLED(RED);
 //	waitForTop();
-	while(!getButton());
+	while(!getButton())batteryFault();
 	calibrateWall(CENTER);
 	resetLED(RED);
 	resetLED(WHITE);
@@ -45,7 +45,7 @@ void calibrateSensors(void) {
 
 	setLEDAll();
 //	waitForTop();
-	while(!getButton());
+	while(!getButton())batteryFault();
 	calibrateWall(FRONT);
 	resetLEDAll();
 
@@ -53,7 +53,7 @@ void calibrateSensors(void) {
 
 	setLED(RED);
 	setLED(GREEN);
-	while(!getButton());
+	while(!getButton())batteryFault();
 	calibrateWall(FRONTCENTER);
 	resetLEDAll();
 	HAL_Delay(1000);

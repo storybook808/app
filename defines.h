@@ -34,8 +34,8 @@
 #define VELOCITY_k_L	25			// Velocity slow-down/speedup rate left motor
 #define BRAKE_k_R		50
 #define BRAKE_k_L		50
-#define CELL_R			4356
-#define CELL_L			4315
+#define CELL_R			4395
+#define CELL_L			4375
 #define TURN_R			1500
 #define TURN_L			1450
 

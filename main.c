@@ -64,20 +64,5 @@ void main(void) {
 		leftWall = hasLeftWall(centerLeft);
 		frontWall = hasFrontWall(frontRight, frontLeft);
 
-		turnLeft();
-		frontCorrection();
-		turnLeft();
-		frontCorrection();
-		turnLeft();
-		frontCorrection();
-		turnLeft();
-		HAL_Delay(500);
-
-		moveCells(1,30);
-		while (!getButton()) batteryFault();
-		HAL_Delay(500);
-		for(i = 0; i < 10; i++)	moveCells(1,30);
-		while (!getButton()) batteryFault();
-		HAL_Delay(500);
 	}
 }
