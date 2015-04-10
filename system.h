@@ -16,6 +16,7 @@
 #include "encoder.h"
 #include "interface.h"
 #include "correction.h"
+#include "tracking.h"
 
 // Data structure for TIM configuration
 TIM_HandleTypeDef buzzerHandler;

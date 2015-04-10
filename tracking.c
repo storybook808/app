@@ -523,6 +523,7 @@ void brakeInCell(double base_speed) {
 			}
 		}
 	}
+
 	HAL_Delay(100);
 	HAL_TIM_Base_Stop_IT(&htim2);
 	setSpeed(LEFTMOTOR,0);
@@ -531,6 +532,145 @@ void brakeInCell(double base_speed) {
 	resetEncoder(LEFTENCODER);
 }
 
+void startCellStop() {
+	if (!brb) {
+		if (x == 0 && y == 0 && dir == 0) {
+			brb = !brb;
+			while(!getButton()) {
+				batteryFault();
+				toggleLEDAll();
+				HAL_Delay(100);
+			}
+			HAL_Delay(500);
+		}
+	}
+	if (x != 0 || y != 0) {
+		brb = !brb;
+	}
+}
+
 void searchSlow() {
+	double base_speed = 50;
+	double frontRight, frontLeft;
+	double centerRight, centerLeft;
+	int location;
+	bool rightWall, leftWall, frontWall, backWall;
+	bool map = true;
+
+	rightWall = true;
+	leftWall = true;
+	frontWall = false;
+	backWall = true;
+
+	while(1) {
+		batteryFault();
+
+		// Get Sensor Readings
+		frontRight = readSensor(RIGHT_DET);
+		frontLeft = readSensor(LEFT_DET);
+		centerRight = readSensor(RIGHT_CEN_DET);
+		centerLeft = readSensor(LEFT_CEN_DET);
+
+		// Determine walls
+
+		frontWall = hasFrontWall(frontRight,frontLeft);
+
+		// Determine location
+		location = getEncoder(LEFTENCODER);
+
+		// If we are half-way through a cell
+		if (location%CELL_L >= CELL_L/2 && map) {
+			// Check side walls
+			rightWall = hasRightWall(centerRight);
+			leftWall = hasLeftWall(centerLeft);
+			backWall = frontWall;
+			// Map values to map here
+			switch (dir) {
+				case 0:
+					y++;
+					break;
+				case 1:
+					x++;
+					break;
+				case 2:
+					y--;
+					break;
+				case 3:
+					x--;
+					break;
+				default:
+					break;
+			}
+			if (x == 2 && y == 3) {
+				setBuzzer(ON);
+			}
+
+			else setBuzzer(OFF);
+			// Disable Mapping
+			map = false;
+		}
+		// If we are a quarter in a cell
+		if (location%CELL_L <= CELL_L/4 && !map) {
+			// Enable mapping
+			map = true;
+		}
+
+		if (!rightWall) {
+			// Brake at center of cell
+			brakeInCell(base_speed);
+			rightWall = true;
+			leftWall = true;
+			// Turn right
+			turnRight();
+			if (dir == 3) {
+				dir = 0;
+			}
+			else dir++;
+			frontWall = false;
+			backWall = leftWall;
+		}
+
+		// If front wall
+		if (frontWall && rightWall) {
+			// Stop & correct off wall
+			hardBrake();
+			frontCorrection();
+			turnLeft();
+			if (dir == 0) {
+				dir = 3;
+			}
+			else dir--;
+			frontWall = false;
+			rightWall = true;
+			backWall = rightWall;
+			leftWall = true;
+		}
+
+		switch (dir) {
+			case 0:
+				resetLEDAll();
+				setLED(WHITE);
+				break;
+			case 1:
+				resetLEDAll();
+				setLED(BLUE);
+				break;
+			case 2:
+				resetLEDAll();
+				setLED(GREEN);
+				break;
+			case 3:
+				resetLEDAll();
+				setLED(RED);
+				break;
+			default:
+				resetLEDAll();
+				break;
+		}
+
+		startCellStop();
+
+		correction2(base_speed);
+}
 
 }

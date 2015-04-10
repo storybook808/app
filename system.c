@@ -23,6 +23,10 @@ void initSystem(void) {
 	last_errorP = 0;
 	last_leftErrorP = 0;
 	last_rightErrorP = 0;
+	x = 0;
+	y = 0;
+	dir = 0;
+	brb = true;
 
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);

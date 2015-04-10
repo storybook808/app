@@ -50,10 +50,11 @@ void main(void) {
 
 	double frontRight, frontLeft;
 	double centerRight, centerLeft;
-	bool rightWall, leftWall, frontWall;
+	bool rightWall, leftWall, frontWall, backWall;
 	rightWall = true;
 	leftWall = true;
 	frontWall = false;
+	backWall = true;
 
 	int start = getEncoder(LEFTENCODER);
 	int location;
@@ -76,6 +77,7 @@ void main(void) {
 	turnLeft();
 
 	while(1) {
+
 		batteryFault();
 
 		// Get Sensor Readings
@@ -97,8 +99,29 @@ void main(void) {
 			// Check side walls
 			rightWall = hasRightWall(centerRight);
 			leftWall = hasLeftWall(centerLeft);
+			backWall = frontWall;
 			// Map values to map here
+			switch (dir) {
+				case 0:
+					y++;
+					break;
+				case 1:
+					x++;
+					break;
+				case 2:
+					y--;
+					break;
+				case 3:
+					x--;
+					break;
+				default:
+					break;
+			}
+			if (x == 2 && y == 3) {
+				setBuzzer(ON);
+			}
 
+			else setBuzzer(OFF);
 			// Disable Mapping
 			map = false;
 		}
@@ -115,15 +138,53 @@ void main(void) {
 			leftWall = true;
 			// Turn right
 			turnRight();
+			if (dir == 3) {
+				dir = 0;
+			}
+			else dir++;
+			frontWall = false;
+			backWall = leftWall;
 		}
 
 		// If front wall
-		if (frontWall) {
+		if (frontWall && rightWall) {
 			// Stop & correct off wall
 			hardBrake();
 			frontCorrection();
 			turnLeft();
+			if (dir == 0) {
+				dir = 3;
+			}
+			else dir--;
+			frontWall = false;
+			rightWall = true;
+			backWall = rightWall;
+			leftWall = true;
 		}
+
+		switch (dir) {
+			case 0:
+				resetLEDAll();
+				setLED(WHITE);
+				break;
+			case 1:
+				resetLEDAll();
+				setLED(BLUE);
+				break;
+			case 2:
+				resetLEDAll();
+				setLED(GREEN);
+				break;
+			case 3:
+				resetLEDAll();
+				setLED(RED);
+				break;
+			default:
+				resetLEDAll();
+				break;
+		}
+
+		startCellStop();
 
 		correction2(base_speed);
 	}

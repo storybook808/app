@@ -36,8 +36,8 @@
 #define BRAKE_k_L		50
 #define CELL_R			4395
 #define CELL_L			4375
-#define TURN_R			1500
-#define TURN_L			1450
+#define TURN_R			1515
+#define TURN_L			1465
 #define SLOW			15
 #define	UPPER_BOUND		0.2
 #define ACCEL_RATE		250			// Acceleration time in milliseconds

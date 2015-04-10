@@ -15,6 +15,9 @@
 #include "calibration.h"
 #include "correction.h"
 
+bool brb;
+int x, y, dir;
+
 bool hasRightWall(double value);
 
 bool hasLeftWall(double value);
@@ -36,6 +39,8 @@ void turnRight2();
 void turnRight3();
 
 void brakeInCell(double base_speed);
+
+void startCellStop();
 
 void searchSlow();
 
