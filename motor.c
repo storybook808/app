@@ -161,16 +161,28 @@ static void velocityCallBack() {
 	int currRspeed = currentSpeed(RIGHTMOTOR);
 	int currLspeed = currentSpeed(LEFTMOTOR);
 
+	int speedR, speedL;
+
 	currentRightVelocity = (double)(currentEncoderR - oldEncoderR)*R_ENCODER_DIST/0.001;
 	currentLeftVelocity = (double)(currentEncoderL - oldEncoderL)*L_ENCODER_DIST/0.001;
 
-	if ( currentRightVelocity > targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed-vel_k_R);
-	else if ( currentRightVelocity < targetRightVelocity ) setSpeed(RIGHTMOTOR, currRspeed+vel_k_R);
-	else setSpeed(RIGHTMOTOR,currRspeed);
+	if ( currentRightVelocity > targetRightVelocity ) speedR = currRspeed-vel_k_R;
+	else if ( currentRightVelocity < targetRightVelocity ) speedR = currRspeed+vel_k_R;
+	else speedR = currRspeed;
 
-	if ( currentLeftVelocity > targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed-vel_k_L);
-	else if ( currentLeftVelocity < targetLeftVelocity ) setSpeed(LEFTMOTOR, currLspeed+vel_k_L);
-	else setSpeed(LEFTMOTOR,currLspeed);
+	if ( currentLeftVelocity > targetLeftVelocity ) speedL = currLspeed-vel_k_L;
+	else if ( currentLeftVelocity < targetLeftVelocity ) speedL = currLspeed+vel_k_L;
+	else speedL = currLspeed;
+
+	if (speedR > 1000) {
+		speedR = 1000;
+	}
+	if (speedL > 1000) {
+		speedL = 1000;
+	}
+
+	setSpeed(RIGHTMOTOR,speedR);
+	setSpeed(LEFTMOTOR,speedL);
 
 	oldEncoderR = currentEncoderR;
 	oldEncoderL = currentEncoderL;

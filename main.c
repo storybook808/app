@@ -67,6 +67,14 @@ void main(void) {
 	int value;
 	bool stop;
 
+	turnLeft();
+	frontCorrection();
+	turnLeft();
+	frontCorrection();
+	turnLeft();
+	frontCorrection();
+	turnLeft();
+
 	while(1) {
 		batteryFault();
 
@@ -79,8 +87,6 @@ void main(void) {
 		// Determine walls
 
 		frontWall = hasFrontWall(frontRight,frontLeft);
-		rightWall = hasRightWall(centerRight);
-		leftWall = hasLeftWall(centerLeft);
 		cell = location/CELL_L;
 
 		// Determine location
@@ -89,7 +95,8 @@ void main(void) {
 		// If we are half-way through a cell
 		if (location%CELL_L >= CELL_L/2 && map) {
 			// Check side walls
-
+			rightWall = hasRightWall(centerRight);
+			leftWall = hasLeftWall(centerLeft);
 			// Map values to map here
 
 			// Disable Mapping
@@ -105,6 +112,7 @@ void main(void) {
 			// Brake at center of cell
 			brakeInCell(base_speed);
 			rightWall = true;
+			leftWall = true;
 			// Turn right
 			turnRight();
 		}
