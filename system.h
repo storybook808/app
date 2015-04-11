@@ -17,6 +17,7 @@
 #include "interface.h"
 #include "correction.h"
 #include "tracking.h"
+#include "motor.h"
 
 // Data structure for TIM configuration
 TIM_HandleTypeDef buzzerHandler;
@@ -24,6 +25,7 @@ TIM_HandleTypeDef countHandler;
 TIM_HandleTypeDef rightHandler;
 TIM_HandleTypeDef motorHandler;
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim5;
 TIM_HandleTypeDef brakeHandler;
 
 //Data structure for USART configuration

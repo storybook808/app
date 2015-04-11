@@ -121,6 +121,18 @@ void brakeCorrection(int startR, int startL) {
 		if (errorL*k > 20) {
 			errorL = 20/k;
 		}
+		if (errorR*k < -20) {
+			errorR = -20/k;
+		}
+		if (errorL*k < -20) {
+			errorL = -20/k;
+		}
+		if (right) {
+			errorR = 0;
+		}
+		if (left) {
+			errorL = 0;
+		}
 
 		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
 			errorR = 0;

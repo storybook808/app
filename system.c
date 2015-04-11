@@ -9,6 +9,7 @@
 #include "system.h"
 
 static void MX_TIM2_Init(void);
+static void MX_TIM5_Init(void);
 uint16_t vel_k_R;
 uint16_t vel_k_L;
 
@@ -17,6 +18,8 @@ void initSystem(void) {
 	initTIM();
 	initADC();
 	initUSART();
+	// Start battery fault check
+	HAL_TIM_Base_Start_IT(&htim5);
 
 	vel_k_R = VELOCITY_k_R;
 	vel_k_L = VELOCITY_k_L;
@@ -27,6 +30,7 @@ void initSystem(void) {
 	y = 0;
 	dir = 0;
 	brb = true;
+	angle = 0;
 
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
@@ -248,15 +252,32 @@ void initTIM(void) {
     MX_TIM2_Init();
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
-	// Configure TIM for ms
-	brakeHandler.Instance = TIM5;
-	brakeHandler.Init.Period = 55999;
-	brakeHandler.Init.Prescaler = 2;
-	brakeHandler.Init.ClockDivision = 0;
-	brakeHandler.Init.CounterMode = TIM_COUNTERMODE_UP;
-	HAL_TIM_Base_Init(&brakeHandler);
-	HAL_TIM_Base_Stop_IT(&brakeHandler);
+	// Configure TIM for countLeft
+	MX_TIM5_Init();
 	HAL_NVIC_EnableIRQ(TIM5_IRQn);
+}
+
+/* TIM5 init function */
+void MX_TIM5_Init(void)
+{
+
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+
+  htim5.Instance = TIM5;
+  htim5.Init.Prescaler = 2;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim5.Init.Period = 55999;
+  htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  HAL_TIM_Base_Init(&htim5);
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig);
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig);
+
 }
 
 /* TIM2 init function */

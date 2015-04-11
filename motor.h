@@ -18,6 +18,8 @@
 #include "interface.h"
 #include "correction.h"
 
+int angle;
+
 void brake();
 void hardBrake();
 void brakeLeft();
@@ -28,5 +30,6 @@ void setRightVelocity(double velocity);
 void setLeftVelocity(double velocity);
 double getCurrentVelocity(Motor channel);
 double getTargetVelocity(Motor channel);
+void readGyro();
 
 #endif

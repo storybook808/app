@@ -28,6 +28,7 @@
 #define BREAK_k	50					// Brake slow-down/speedup rate
 #define brakeThresh	100				// Brake time wait in milliseconds
 #define CORRECTION_FRONT_THRESH	10	// Threshold for stopping infront of walls
+#define TURN_THRESH		5
 #define R_ENCODER_DIST	0.00200001	// Right encoder tick per cm 0.0020000 is left bias
 #define L_ENCODER_DIST	0.00205		// Left encoder tick per cm
 #define VELOCITY_k_R	25			// Velocity slow-down/speedup rate right motor
@@ -36,8 +37,8 @@
 #define BRAKE_k_L		50
 #define CELL_R			4395
 #define CELL_L			4375
-#define TURN_R			1515
-#define TURN_L			1465
+#define TURN_R			1470
+#define TURN_L			1515
 #define SLOW			15
 #define	UPPER_BOUND		0.2
 #define ACCEL_RATE		250			// Acceleration time in milliseconds
@@ -50,7 +51,8 @@ typedef enum
 	RIGHT_CEN_DET,
 	RIGHT_DET,
 	VOLT_DET,
-	GYRO,
+	GYRO1,
+	GYRO2,
 	FLASH_MEM
 }ADC_Channel;
 

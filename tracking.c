@@ -8,7 +8,6 @@
 
 #include "tracking.h"
 
-
 bool hasRightWall(double value) {
 	if (value < getWall(FARRIGHTWALL)) return true;
 	else return false;
@@ -64,7 +63,7 @@ void turnRight() {
 	int currentFrontLeft;
 
 	int endR = getEncoder(RIGHTENCODER) - TURN_R;
-	int endL = getEncoder(LEFTENCODER) + TURN_L;
+	int endL = getEncoder(LEFTENCODER) + TURN_L-75;
 
 	double errorR;
 	double errorL;
@@ -77,7 +76,7 @@ void turnRight() {
 		errorR = endR - currentFrontRight;
 		errorL = endL - currentFrontLeft;
 
-		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
+		if (abs(errorR) < TURN_THRESH) {
 			errorR = 0;
 			brakeRight();
 			right = true;
@@ -85,7 +84,7 @@ void turnRight() {
 		else {
 			setRightVelocity(errorR*k);
 		}
-		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
+		if (abs(errorL) < TURN_THRESH) {
 			errorL = 0;
 			brakeLeft();
 			left = true;
@@ -127,7 +126,7 @@ void turnRight2() {
 
 		errorR = endR - currentFrontRight;
 
-		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
+		if (abs(errorR) < TURN_THRESH) {
 			brakeRight();
 			right = true;
 		}
@@ -157,7 +156,7 @@ void turnRight3() {
 
 	int currentFrontLeft;
 
-	int endL = getEncoder(LEFTENCODER) + 2*TURN_L;
+	int endL = getEncoder(LEFTENCODER) + 2*TURN_L-150;
 
 	double errorL;
 
@@ -168,7 +167,7 @@ void turnRight3() {
 
 		errorL = endL - currentFrontLeft;
 
-		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
+		if (abs(errorL) < TURN_THRESH) {
 			brakeLeft();
 			left = true;
 		}
@@ -214,7 +213,7 @@ void turnLeft() {
 		errorR = endR - currentFrontRight;
 		errorL = endL - currentFrontLeft;
 
-		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
+		if (abs(errorR) < TURN_THRESH) {
 			errorR = 0;
 			brakeRight();
 			right = true;
@@ -222,7 +221,7 @@ void turnLeft() {
 		else {
 			setRightVelocity(errorR*k);
 		}
-		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
+		if (abs(errorL) < TURN_THRESH) {
 			errorL = 0;
 			brakeLeft();
 			left = true;
@@ -246,7 +245,8 @@ void turnLeft() {
 }
 
 void turnLeft2() {
-
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
 	double k = 0.03;
 	setVelocity(0);
 	bool right = false;
@@ -264,7 +264,7 @@ void turnLeft2() {
 
 		errorR = endR - currentFrontRight;
 
-		if (abs(errorR) < CORRECTION_FRONT_THRESH) {
+		if (abs(errorR) < TURN_THRESH) {
 			brakeRight();
 			right = true;
 		}
@@ -287,7 +287,8 @@ void turnLeft2() {
 }
 
 void turnLeft3() {
-
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
 	double k = 0.03;
 	setVelocity(0);
 	bool left = false;
@@ -304,7 +305,7 @@ void turnLeft3() {
 		currentFrontLeft = getEncoder(LEFTENCODER);
 
 		errorL = endL - currentFrontLeft;
-		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
+		if (abs(errorL) < TURN_THRESH) {
 			brakeLeft();
 			left = true;
 		}
@@ -557,6 +558,10 @@ void searchSlow() {
 	bool rightWall, leftWall, frontWall, backWall;
 	bool map = true;
 
+	x = 0;
+	y = 0;
+	dir = 0;
+
 	rightWall = true;
 	leftWall = true;
 	frontWall = false;
@@ -601,11 +606,6 @@ void searchSlow() {
 				default:
 					break;
 			}
-			if (x == 2 && y == 3) {
-				setBuzzer(ON);
-			}
-
-			else setBuzzer(OFF);
 			// Disable Mapping
 			map = false;
 		}

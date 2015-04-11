@@ -10,7 +10,7 @@
 
 
 extern TIM_HandleTypeDef buzzerHandler;
-extern TIM_HandleTypeDef brakeHandler;
+extern TIM_HandleTypeDef htim5;
 extern TIM_HandleTypeDef velocityHandler;
 extern TIM_HandleTypeDef htim2;
 
@@ -39,5 +39,5 @@ void TIM3_IRQHandler(void) {
 }
 
 void TIM5_IRQHandler(void) {
-	HAL_TIM_IRQHandler(&brakeHandler);
+	HAL_TIM_IRQHandler(&htim5);
 }

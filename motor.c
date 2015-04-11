@@ -33,6 +33,10 @@ static void velocityCallBack();
 extern uint16_t vel_k_R;
 extern uint16_t vel_k_L;
 
+void readGyro() {
+	setLED(GREEN);
+}
+
 void brake() {
 	int right = getEncoder(RIGHTENCODER);
 	int left = getEncoder(LEFTENCODER);
@@ -199,6 +203,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if (htim->Instance == TIM5) //Millisecond Timer
 	{
-
+		batteryFault();
 	}
 }

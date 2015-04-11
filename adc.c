@@ -81,7 +81,7 @@ uint32_t readADC(ADC_Channel channel) {
             sConfig.Offset = 0;
             HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
             break;
-        case GYRO:
+        case GYRO1:
         	//Gyrometer
         	sConfig.Channel = ADC_CHANNEL_3;
         	sConfig.Rank = 1;
@@ -89,6 +89,14 @@ uint32_t readADC(ADC_Channel channel) {
         	sConfig.Offset = 0;
         	HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
         	break;
+        case GYRO2:
+			//Gyrometer VREF
+			sConfig.Channel = ADC_CHANNEL_2;
+			sConfig.Rank = 1;
+			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+			sConfig.Offset = 0;
+			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+			break;
     }
     // Wait 8us
     while(i--);
