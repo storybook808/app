@@ -19,6 +19,7 @@
 #include "tracking.h"
 #include "usart.h"
 #include "system.h"
+#include "flash.h"
 
 extern TIM_HandleTypeDef htim2;
 
@@ -36,6 +37,7 @@ void main(void) {
 	while(!getButton()) {
 		batteryFault();
 		toggleLED(WHITE);
+		HAL_Delay(100);
 	}
 
 	resetLED(WHITE);
@@ -51,9 +53,48 @@ void main(void) {
 	// 0x08080000  == 512KB
 	// 0x080C0000  == 768KB
 	// 0x080E0000  == 896KB
-	uint32_t startAddress = 0x080E0000;
+	// 32768 words in sectors 5 through 11
+	uint32_t startAddress = ADDR_FLASH_SECTOR_6;
+	uint32_t sectorSize = 32768;
+	uint32_t *data = (uint32_t *)ADDR_FLASH_SECTOR_6;
+	int thing[5] = {1,2,3,4,5};
+	int i;
+	// Read Data
+		printInt(*data);
+		printComma();
+		printInt(i);
+		printNL();
+	// Erase Data
+		flash_erase(startAddress, sectorSize);
+	// Read Data
+		printInt(*data);
+		printNL();
+	// Write Data
+		flash_write(startAddress, thing, sizeof(thing)/4);
+	// Read Data
+		printInt(*data);
+		printNL();
+	// Read Data
+		data+=1;
+		printInt(*data);
+		printNL();
+	// Read Data
+	data+=1;
+	printInt(*data);
+	printNL();
+	// Read Data
+	data+=1;
+	printInt(*data);
+	printNL();
+	// Read Data
+	data+=1;
+	printInt(*data);
+	printNL();
 
 	while(1) {
-
+		while(!getButton()) {
+			toggleLED(WHITE);
+			HAL_Delay(100);
+		}
 	}
 }

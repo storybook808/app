@@ -27,6 +27,8 @@
 #define ADDR_FLASH_SECTOR_10    ((uint32_t)0x080C0000) /* Base @ of Sector 10, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_11    ((uint32_t)0x080E0000) /* Base @ of Sector 11, 128 Kbytes */
 
+#define SECTOR_SIZE	32768	/* Amount of words in Sectors */
+
 /* Get Sector Function
  * 		Takes in a user specified address
  *  	Return is the Flash Sector
@@ -40,10 +42,10 @@ uint32_t flash_get_sector_info(uint32_t addr, uint32_t *start_addr, uint32_t *si
  */
 void flash_erase(uint32_t flash_dest, uint32_t num_word32);
 
-/*
- *
- *
- *
+/* Takes in the address location and writes the array's data to flash
+ *		flash_dest is the starting address
+ *		*src is an array of uint32_t data
+ *		num_word32 is the size of the array
  */
 void flash_write(uint32_t flash_dest, const uint32_t *src, uint32_t num_word32);
 

@@ -45,8 +45,9 @@ static const uint32_t flash_info_table[26] = {
 };
 
 uint32_t flash_get_sector_info(uint32_t addr, uint32_t *start_addr, uint32_t *size) {
+	int i;
     if (addr >= flash_info_table[0]) {
-        for (int i = 0; i < 24; i += 2) {
+        for (i = 0; i < 24; i += 2) {
             if (addr < flash_info_table[i + 2]) {
                 if (start_addr != NULL) {
                     *start_addr = flash_info_table[i];
@@ -119,7 +120,8 @@ void flash_erase_it(uint32_t flash_dest, const uint32_t *src, uint32_t num_word3
 
 void flash_write(uint32_t flash_dest, const uint32_t *src, uint32_t num_word32) {
     // program the flash word by word
-    for (int i = 0; i < num_word32; i++) {
+	int i;
+    for (i = 0; i < num_word32; i++) {
         if (HAL_FLASH_Program(TYPEPROGRAM_WORD, flash_dest, *src) != HAL_OK) {
             // error occurred during flash write
             HAL_FLASH_Lock(); // lock the flash
