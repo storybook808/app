@@ -68,8 +68,10 @@ void main(void) {
 
 	// Controller variables.
 	const double kP = 1.0;
-//	double error;
+	const double kD = 0.0;
+
 	double left_error, right_error;
+	double last_left_error = 0.0, last_right_error = 0.0;
 
 	// Initial sensor readings
 	left_front_sensor  = readSensor(LEFT_DET);
@@ -125,36 +127,9 @@ void main(void) {
 		if (is_right_wall) setLED(BLUE);
 		else resetLED(BLUE);
 
-//		// Both walls are present.
-//		if (is_left_wall && is_right_wall) {
-//			// Right wall tracking.
-//			error = getWall(IDEALRIGHTCENTER) - right_side_sensor;
-//			setSpeed(LEFTMOTOR, (int)(base_speed - (error * kP)));
-//			setSpeed(RIGHTMOTOR, (int)(base_speed + (error * kP)));
-//		}
-//
-//		// Only the right wall is present.
-//		else if (!is_left_wall && is_right_wall) {
-//			// Right wall tracking.
-//			error = getWall(IDEALRIGHTCENTER) - right_side_sensor;
-//			setSpeed(LEFTMOTOR, (int)(base_speed - (error * kP)));
-//			setSpeed(RIGHTMOTOR, (int)(base_speed + (error * kP)));
-//		}
-//
-//		// Only the left wall is present.
-//		else if (is_left_wall && !is_right_wall) {
-//			// Left wall tracking.
-//			error = getWall(IDEALLEFTCENTER) - left_side_sensor;
-//			setSpeed(LEFTMOTOR, (int)(base_speed + (error * kP)));
-//			setSpeed(RIGHTMOTOR, (int)(base_speed) - (error * kP));
-//		}
-//
-//		// No walls are present.
-//		else {
-//			// No wall tracking.
-//			setSpeed(LEFTMOTOR, base_speed);
-//			setSpeed(RIGHTMOTOR, base_speed);
-//		}
+
+		last_left_error  = left_error;
+		last_right_error = right_error;
 
 		left_error  = getWall(IDEALLEFTCENTER) - left_side_sensor;
 		right_error = getWall(IDEALRIGHTCENTER) - right_side_sensor;
@@ -162,8 +137,8 @@ void main(void) {
 		if (left_error < 0) left_error = 0;
 		if (right_error < 0) right_error = 0;
 
-		setSpeed(LEFTMOTOR, base_speed - right_error * kP);
-		setSpeed(RIGHTMOTOR, base_speed - left_error * kP);
+		setSpeed(LEFTMOTOR, base_speed - (right_error * kP + (right_error - last_right_error) * kD));
+		setSpeed(RIGHTMOTOR, base_speed - (left_error * kP + (left_error - last_left_error) * kD));
 
 	}
 }
