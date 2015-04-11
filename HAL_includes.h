@@ -20,5 +20,7 @@
 #include "components/coocox-master/STM32F405xx_cmsisboot/source/Hal/stm32f4xx_hal_conf.h"
 #include "components/coocox-master/STM32F405xx_cmsisboot/source/Hal/stm32f4xx_hal_tim.h"
 #include "components/coocox-master/STM32F405xx_cmsisboot/source/Hal/stm32f4xx_hal_usart.h"
+#include "components/coocox-master/STM32F405xx_cmsisboot/source/Hal/stm32f4xx_hal_flash.h"
+#include "components/coocox-master/STM32F405xx_cmsisboot/source/Hal/stm32f4xx_hal_flash_ex.h"
 
 #endif

@@ -45,6 +45,14 @@ void main(void) {
 	resetEncoder(LEFTENCODER);
 	resetEncoder(RIGHTENCODER);
 
+	// Test Flash Memory Variables
+	// 0x08010000  == 64KB
+	// 0x08040000  == 256KB
+	// 0x08080000  == 512KB
+	// 0x080C0000  == 768KB
+	// 0x080E0000  == 896KB
+	uint32_t startAddress = 0x080E0000;
+
 	while(1) {
 
 	}
