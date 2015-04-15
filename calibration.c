@@ -19,14 +19,9 @@ static void setWall(Wall wall, double value);
 /*=Public Functions===========================================================*/
 
 void calibrateSensors(void) {
-	printString("Entering calibrate sensors");
-	printNL();
 	setLED(BLUE);
 //	waitForTop();
-	while(!getButton()){
-		toggleLED(BLUE);
-		HAL_Delay(100);
-	}
+	while(!getButton());
 	calibrateWall(LEFT);
 	resetLED(BLUE);
 	resetLED(WHITE);
@@ -65,8 +60,6 @@ void calibrateSensors(void) {
 }
 
 void calibrateWall(Wall wall) {
-	printString("Entering calibrate Wall");
-	printNL();
     switch (wall) {
         case LEFT:
             setWall(FARLEFTWALL, readSensor(LEFT_CEN_DET));
@@ -125,15 +118,11 @@ double getWall(Wall wall) {
 }
 
 double toLinear(uint16_t input) {
-	printString("Entering toLinear");
-	printNL();
 	return (double)5000/log((double)input);
 }
 
 /*=Private Functions==========================================================*/
 static void setWall(Wall wall, double value) {
-	printString("Entering setWall");
-	printNL();
     switch (wall) {
         case FARLEFTWALL:
             farLeftWall = value;
