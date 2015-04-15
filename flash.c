@@ -158,6 +158,7 @@ bool writeRows() {
 	int i;
 	uint32_t flash_dest = WRITE_ADDRESS_ROWS;
 	bool result = true;
+
 	// write the 16 rows of data
 	for (i = 0; i < 16; ++i) {
 		if (HAL_FLASH_Program(TYPEPROGRAM_WORD, flash_dest, row[i]) != HAL_OK) {
@@ -189,8 +190,18 @@ bool writeCalibration() {
 	int i;
 	uint32_t flash_dest = WRITE_ADDRESS_CALI;
 	bool result = false;
+
+	calibration[0] = getWall(CENTERRIGHTFRONT);
+	calibration[1] = getWall(CENTERLEFTFRONT);
+	calibration[2] = getWall(IDEALRIGHTFRONT);
+	calibration[3] = getWall(IDEALLEFTFRONT);
+	calibration[4] = getWall(IDEALRIGHTCENTER);
+	calibration[5] = getWall(IDEALLEFTCENTER);
+	calibration[6] = getWall(FARRIGHTWALL);
+	calibration[7] = getWall(FARLEFTWALL);
+
 	// write the 2 calibration readings of data
-	for (i = 0; i < 2; ++i) {
+	for (i = 0; i < 8; ++i) {
 		if (HAL_FLASH_Program(TYPEPROGRAM_DOUBLEWORD, flash_dest, calibration[i]) != HAL_OK) {
 			// error during write process
 			HAL_FLASH_Lock();
@@ -210,8 +221,17 @@ void loadCalibration() {
 	int i;
 	uint32_t *data = (uint32_t *)WRITE_ADDRESS_CALI;
 
-	for (i = 0; i < 2; ++i) {
+	for (i = 0; i < 8; ++i) {
 		calibration[i] = *data;
 		data+=8;
 	}
+
+	setWall(CENTERRIGHTFRONT, calibration[0]);
+	setWall(CENTERLEFTFRONT, calibration[1]);
+	setWall(IDEALRIGHTFRONT, calibration[2]);
+	setWall(IDEALLEFTFRONT, calibration[3]);
+	setWall(IDEALRIGHTCENTER, calibration[4]);
+	setWall(IDEALLEFTCENTER, calibration[5]);
+	setWall(FARRIGHTWALL, calibration[6]);
+	setWall(FARLEFTWALL, calibration[7]);
 }

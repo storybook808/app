@@ -13,9 +13,6 @@ static double idealLeftFront, idealRightFront;
 static double idealLeftCenter, idealRightCenter;
 static double centerLeftFront, centerRightFront;
 
-/*=Private Functions==========================================================*/
-static void setWall(Wall wall, double value);
-
 /*=Public Functions===========================================================*/
 
 void testCalibration(void) {
@@ -148,7 +145,7 @@ double toLinear(uint16_t input) {
 }
 
 /*=Private Functions==========================================================*/
-static void setWall(Wall wall, double value) {
+void setWall(Wall wall, double value) {
     switch (wall) {
         case FARLEFTWALL:
             farLeftWall = value;

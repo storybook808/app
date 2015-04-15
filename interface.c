@@ -158,16 +158,15 @@ Mode menu() {
 	// Variable to place Encoder value
 	int count;
 	double rightSensor;
-	double thresh = 50;
+	double thresh = 400;
 
 	resetLEDAll();
 
 	while(1) {
-		rightSensor = readSensor(RIGHT_DET);
+		rightSensor = readSensor(RIGHT_CEN_DET);
 		count = getEncoder(RIGHTENCODER);
-		count%=size*4;
+		count = count%(size*4);
 
-		if (count < 0) count = size*4-1;
 
 		if (count >= 0 && count <= size) {
 			setLED(WHITE);
@@ -218,41 +217,32 @@ void buzzerConfirm() {
 	playBuzzer(100,100);
 	setBuzzerTone(C7);
 	playBuzzer(100,100);
-	setBuzzerTone(G7);
-	playBuzzer(100,100);
-	setBuzzerTone(G7);
-	playBuzzer(100,100);
-	setBuzzerTone(A7);
-	playBuzzer(100,100);
-	setBuzzerTone(A7);
-	playBuzzer(100,100);
-	setBuzzerTone(G7);
-	playBuzzer(100,100);
-	setBuzzerTone(F7);
-	playBuzzer(100,100);
-	setBuzzerTone(F7);
-	playBuzzer(100,100);
-	setBuzzerTone(E7);
-	playBuzzer(100,100);
-	setBuzzerTone(E7);
-	playBuzzer(100,100);
-	setBuzzerTone(D7);
-	playBuzzer(100,100);
-	setBuzzerTone(D7);
-	playBuzzer(100,100);
 	setBuzzerTone(C7);
 	playBuzzer(100,100);
-	setBuzzerTone(C9);
+	setBuzzerTone(C7);
+	playBuzzer(300,100);
+	setBuzzerTone(G8);
+	playBuzzer(300,100);
+	setBuzzerTone(A8);
+	playBuzzer(300,100);
+	setBuzzerTone(C7);
+	playBuzzer(200,100);
+	setBuzzerTone(A8);
 	playBuzzer(100,100);
+	setBuzzerTone(C7);
+	playBuzzer(300,100);
 }
 
 void buzzerCancel() {
-
+	setBuzzerTone(C9);
+	playBuzzer(100,100);
+	setBuzzerTone(C7);
+	playBuzzer(100,100);
 }
 
 bool confirm(Mode mode) {
 	double rightSensor;
-	double thresh;
+	double thresh = 400;
 	Led color;
 	int cancel;
 	resetEncoder(LEFTENCODER);
@@ -276,7 +266,7 @@ bool confirm(Mode mode) {
 
 	while(1) {
 		cancel = getEncoder(LEFTENCODER);
-		rightSensor = readSensor(RIGHT_DET);
+		rightSensor = readSensor(RIGHT_CEN_DET);
 
 		if (rightSensor <= thresh) {
 			return true;

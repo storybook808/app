@@ -32,9 +32,7 @@ void main(void) {
 	printString("Hello world!");
 	printNL();
 
-	testCalibration();
-
-	buzzerConfirm();
+//	calibrateSensors();
 
 	resetLED(WHITE);
 
@@ -43,7 +41,12 @@ void main(void) {
 	resetEncoder(LEFTENCODER);
 	resetEncoder(RIGHTENCODER);
 
+	Mode mode;
+
 	while(1) {
-		searchSlow();
+		mode = menu();
+
+		printInt(mode);
+		printNL();
 	}
 }

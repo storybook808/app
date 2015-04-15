@@ -33,7 +33,7 @@ void initSystem(void) {
 	last_rightErrorP = 0;
 	x = 0;
 	y = 0;
-	dir = 0;
+	dir = 1;
 	brb = true;
 	angle = 0;
 
