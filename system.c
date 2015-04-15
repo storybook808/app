@@ -253,11 +253,11 @@ void initTIM(void) {
 
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 
-	// Configure TIM for countLeft
+	// Configure TIM for velocity
     MX_TIM2_Init();
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
-	// Configure TIM for countLeft
+	// Configure TIM for batteryFault
 	MX_TIM5_Init();
 	HAL_NVIC_EnableIRQ(TIM5_IRQn);
 }
@@ -351,7 +351,6 @@ void MX_TIM5_Init(void)
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig);
-
 }
 
 /* TIM2 init function */
@@ -377,7 +376,6 @@ void MX_TIM2_Init(void)
     sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
     sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
     HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
-    
 }
 
 void initADC(void) {

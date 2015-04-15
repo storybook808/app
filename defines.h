@@ -43,6 +43,21 @@
 #define	UPPER_BOUND		0.2
 #define ACCEL_RATE		250			// Acceleration time in milliseconds
 
+/* Calibration readings
+ *
+ * CenterRightFront = 634.849
+ * CenterLeftFront = 618.250
+ *
+ * IdealRightFront = 781.218
+ * IdealLeftFront = 750.397
+ *
+ * IdealRightCenter = 805.597
+ * IdealLeft Center = 831.432
+ *
+ * FarRightWall = 908.882
+ * FarLeftWall = 978.93
+ */
+
 /* Global Variables */
 uint32_t row[16];
 

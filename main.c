@@ -32,29 +32,9 @@ void main(void) {
 	printString("Hello world!");
 	printNL();
 
-	calibrateSensors();
+	testCalibration();
 
-	while(!getButton()) {
-		toggleLED(WHITE);
-		HAL_Delay(100);
-	}
-
-	printFloat(getWall(CENTERRIGHTFRONT));
-	printNL();
-	printFloat(getWall(CENTERLEFTFRONT));
-	printNL();
-	printFloat(getWall(IDEALRIGHTFRONT));
-	printNL();
-	printFloat(getWall(IDEALLEFTFRONT));
-	printNL();
-	printFloat(getWall(IDEALRIGHTCENTER));
-	printNL();
-	printFloat(getWall(IDEALLEFTCENTER));
-	printNL();
-	printFloat(getWall(FARRIGHTWALL));
-	printNL();
-	printFloat(getWall(FARLEFTWALL));
-	printNL();
+	buzzerConfirm();
 
 	resetLED(WHITE);
 
@@ -64,6 +44,6 @@ void main(void) {
 	resetEncoder(RIGHTENCODER);
 
 	while(1) {
-
+		searchSlow();
 	}
 }

@@ -18,6 +18,32 @@ static void setWall(Wall wall, double value);
 
 /*=Public Functions===========================================================*/
 
+void testCalibration(void) {
+	setLED(WHITE);
+	setLED(BLUE);
+	while(!getButton());
+	HAL_Delay(500);
+	calibrateWall(FRONTCENTER);
+	resetLEDAll();
+	turnRight();
+	setLED(WHITE);
+	setLED(GREEN);
+	frontCorrection();
+	resetLEDAll();
+	turnRight();
+	setLED(WHITE);
+	setLED(RED);
+	frontCorrection();
+	turnRight();
+	HAL_Delay(200);
+	calibrateWall(CENTER);
+
+	setWall(FARLEFTWALL, getWall(IDEALLEFTCENTER)+140);
+	setWall(FARRIGHTWALL, getWall(IDEALRIGHTCENTER)+110);
+	setWall(IDEALLEFTFRONT, getWall(IDEALLEFTCENTER)+110);
+	setWall(IDEALRIGHTFRONT, getWall(IDEALRIGHTCENTER)+110);
+}
+
 void calibrateSensors(void) {
 	setLED(BLUE);
 //	waitForTop();
