@@ -26,6 +26,8 @@
 #define ADDR_FLASH_SECTOR_9     ((uint32_t)0x080A0000) /* Base @ of Sector 9, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_10    ((uint32_t)0x080C0000) /* Base @ of Sector 10, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_11    ((uint32_t)0x080E0000) /* Base @ of Sector 11, 128 Kbytes */
+#define WRITE_ADDRESS_ROWS		((uint32_t)0x080C0000) /* Write address for map data */
+#define WRITE_ADDRESS_CALI		((uint32_t)0x080E0000) /* Write address for calibration data */
 
 #define SECTOR_SIZE	32768	/* Amount of words in Sectors */
 
@@ -40,7 +42,7 @@ uint32_t flash_get_sector_info(uint32_t addr, uint32_t *start_addr, uint32_t *si
 /* Erase Sector based on flash_dest
  * 		Number of sectors erased is based upon num_word32
  */
-void flash_erase(uint32_t flash_dest, uint32_t num_word32);
+bool flash_erase(uint32_t flash_dest, uint32_t num_word32);
 
 /* Takes in the address location and writes the array's data to flash
  *		flash_dest is the starting address
@@ -48,5 +50,17 @@ void flash_erase(uint32_t flash_dest, uint32_t num_word32);
  *		num_word32 is the size of the array
  */
 void flash_write(uint32_t flash_dest, const uint32_t *src, uint32_t num_word32);
+
+bool writeRows();
+
+void loadRows();
+
+bool writeCalibration();
+
+void loadCalibration();
+
+bool eraseMap();
+
+bool eraseCalibration();
 
 #endif

@@ -43,6 +43,25 @@
 #define	UPPER_BOUND		0.2
 #define ACCEL_RATE		250			// Acceleration time in milliseconds
 
+/* Global Variables */
+uint32_t row[16];
+
+typedef struct walls {
+	bool south;
+	bool west;
+} walls;
+
+typedef struct cell {
+	bool north;
+	bool east;
+	bool south;
+	bool west;
+} cell;
+
+walls map[16][16];
+
+double calibration[2];
+
 /* Enumeration Variable for ADC Channels */
 typedef enum
 {
