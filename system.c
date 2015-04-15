@@ -8,6 +8,8 @@
 
 #include "system.h"
 
+extern bool adc_unlock;
+
 static void MX_TIM2_Init(void);
 static void MX_TIM5_Init(void);
 uint16_t vel_k_R;
@@ -18,6 +20,9 @@ void initSystem(void) {
 	initTIM();
 	initADC();
 	initUSART();
+
+	adc_unlock = true;
+
 	// Start battery fault check
 	HAL_TIM_Base_Start_IT(&htim5);
 
@@ -419,7 +424,7 @@ void initUSART(void) {
 	USART_HandleStructure.Init.CLKLastBit = USART_LASTBIT_ENABLE;
 
 	if (HAL_USART_Init(&USART_HandleStructure) != HAL_OK) {
-		      setLED(RED); // this LED never comes on so I presume UART init is ok
-		      while(1) { }
-		  }
+		setLED(RED); // this LED never comes on so I presume UART init is ok
+		while(1) { }
+	}
 }

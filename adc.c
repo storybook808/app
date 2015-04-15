@@ -14,6 +14,8 @@ uint16_t uhADCxConvertedValue = 0;
 int convertedValue[6];
 int currentTarget;
 
+bool adc_unlock;
+
 uint32_t readBattery() {
     ADC_ChannelConfTypeDef sConfig;
     
@@ -33,6 +35,7 @@ uint32_t readBattery() {
 
 uint32_t readADC(ADC_Channel channel) {
 
+	adc_unlock = false;
     ADC_ChannelConfTypeDef sConfig;
     int x = 14444;
     int i = x;
@@ -114,7 +117,11 @@ uint32_t readADC(ADC_Channel channel) {
 
     while(i--);
     
-    return HAL_ADC_GetValue(&ADCHandle);
+    int result = HAL_ADC_GetValue(&ADCHandle);
+
+    adc_unlock = true;
+
+    return result;
 }
 
 double readSensor(ADC_Channel channel) {

@@ -8,6 +8,8 @@
 
 #include "motor.h"
 
+extern bool adc_unlock;
+
 //Data structure for TIM configuration
 extern TIM_HandleTypeDef buzzerHandler;
 extern TIM_HandleTypeDef brakeHandler;
@@ -203,6 +205,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if (htim->Instance == TIM5) //Millisecond Timer
 	{
-		batteryFault();
+		if (adc_unlock) batteryFault();
 	}
 }
