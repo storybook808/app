@@ -40,5 +40,6 @@ void initTIM(void);
 void initADC(void);
 void initUSART(void);
 void SystemClock_Config(void);
+void setBuzzerTone(Note note);
 
 #endif

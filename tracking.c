@@ -417,8 +417,6 @@ void move(int cells, double base_speed) {
 
 	while(!done)
 	{
-		batteryFault();
-
 		frontLeft = readSensor(LEFT_DET);
 		frontRight = readSensor(RIGHT_DET);
 		temp = HAL_GetTick();
@@ -492,8 +490,6 @@ void brakeInCell(double base_speed) {
 
 	while(!done)
 	{
-		batteryFault();
-
 		frontLeft = readSensor(LEFT_DET);
 		frontRight = readSensor(RIGHT_DET);
 
@@ -538,7 +534,6 @@ void startCellStop() {
 		if (x == 0 && y == 0 && dir == 0) {
 			brb = !brb;
 			while(!getButton()) {
-				batteryFault();
 				toggleLEDAll();
 				HAL_Delay(100);
 			}
@@ -568,7 +563,6 @@ void searchSlow() {
 	backWall = true;
 
 	while(1) {
-		batteryFault();
 
 		// Get Sensor Readings
 		frontRight = readSensor(RIGHT_DET);

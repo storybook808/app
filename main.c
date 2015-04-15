@@ -32,13 +32,29 @@ void main(void) {
 	printString("Hello world!");
 	printNL();
 
-//	calibrateSensors();
+	calibrateSensors();
 
 	while(!getButton()) {
-		batteryFault();
 		toggleLED(WHITE);
 		HAL_Delay(100);
 	}
+
+	printFloat(getWall(CENTERRIGHTFRONT));
+	printNL();
+	printFloat(getWall(CENTERLEFTFRONT));
+	printNL();
+	printFloat(getWall(IDEALRIGHTFRONT));
+	printNL();
+	printFloat(getWall(IDEALLEFTFRONT));
+	printNL();
+	printFloat(getWall(IDEALRIGHTCENTER));
+	printNL();
+	printFloat(getWall(IDEALLEFTCENTER));
+	printNL();
+	printFloat(getWall(FARRIGHTWALL));
+	printNL();
+	printFloat(getWall(FARLEFTWALL));
+	printNL();
 
 	resetLED(WHITE);
 

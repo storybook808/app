@@ -28,6 +28,13 @@ void toggleLEDAll(void);
 void setBuzzer(int state);
 void testChaser(int mode, int period);
 void testMenu(int channel);
+
+Mode menu();
+void playBuzzer(int duration, int pause);
+void buzzerConfirm();
+void buzzerCancel();
+bool confirm(Mode mode);
+
 void batteryFault();
 
 bool getButton(void);

@@ -257,6 +257,75 @@ void initTIM(void) {
 	HAL_NVIC_EnableIRQ(TIM5_IRQn);
 }
 
+void setBuzzerTone(Note note) {
+
+	switch (note) {
+		case C7:
+			buzzerHandler.Init.Period = 40067;
+			buzzerHandler.Init.Prescaler = 1;
+			break;
+		case D7:
+			buzzerHandler.Init.Period = 35699;
+			buzzerHandler.Init.Prescaler = 1;
+			break;
+		case E7:
+			buzzerHandler.Init.Period = 63671;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case F7:
+			buzzerHandler.Init.Period = 60143;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case G7:
+			buzzerHandler.Init.Period = 53591;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case A7:
+			buzzerHandler.Init.Period = 47711;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case B7:
+			buzzerHandler.Init.Period = 42503;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case C8:
+			buzzerHandler.Init.Period = 40151;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case D8:
+			buzzerHandler.Init.Period = 35783;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case E8:
+			buzzerHandler.Init.Period = 31751;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case F8:
+			buzzerHandler.Init.Period = 30071;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case G8:
+			buzzerHandler.Init.Period = 26711;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case A8:
+			buzzerHandler.Init.Period = 23855;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case B8:
+			buzzerHandler.Init.Period = 21167;
+			buzzerHandler.Init.Prescaler = 0;
+			break;
+		case C9:
+			buzzerHandler.Init.Period = 19991;
+			buzzerHandler.Init.Prescaler = 0;
+		default:
+			break;
+	}
+
+	HAL_TIM_Base_Init(&buzzerHandler);
+}
+
 /* TIM5 init function */
 void MX_TIM5_Init(void)
 {

@@ -148,26 +148,170 @@ void testChaser(int mode, int period) {
  	}
  }
 
+Mode menu() {
+	// Mode for Menu
+	int mode = 0;
+
+	// Size for Encoder ticks to move through Menu
+	int size = 400;
+
+	// Variable to place Encoder value
+	int count;
+	double rightSensor;
+	double thresh = 50;
+
+	resetLEDAll();
+
+	while(1) {
+		rightSensor = readSensor(RIGHT_DET);
+		count = getEncoder(RIGHTENCODER);
+		count%=size*4;
+
+		if (count < 0) count = size*4-1;
+
+		if (count >= 0 && count <= size) {
+			setLED(WHITE);
+			resetLED(RED);
+			resetLED(BLUE);
+			mode = MODE1;
+		} else if (count > size && count <= (size*2)) {
+			setLED(BLUE);
+			resetLED(WHITE);
+			resetLED(GREEN);
+			mode = MODE2;
+		} else if (count > (size*2) && count <= (size*3)) {
+			setLED(GREEN);
+			resetLED(BLUE);
+			resetLED(RED);
+			mode = MODE3;
+		} else if (count > (size*3) && count <= (size*4)) {
+			setLED(RED);
+			resetLED(WHITE);
+			resetLED(GREEN);
+			mode = MODE4;
+		}
+
+		if (rightSensor <= thresh) {
+			if (confirm(mode)) {
+				buzzerConfirm();
+				return mode;
+			}
+			buzzerCancel();
+		}
+		HAL_Delay(100);
+	}
+
+	return mode;
+}
+
+void playBuzzer(int duration, int pause) {
+	setLED(BLUE);
+	setBuzzer(1);
+	HAL_Delay(duration);
+	setBuzzer(0);
+	resetLED(BLUE);
+	HAL_Delay(pause);
+}
+
+void buzzerConfirm() {
+	setBuzzerTone(C7);
+	playBuzzer(100,100);
+	setBuzzerTone(C7);
+	playBuzzer(100,100);
+	setBuzzerTone(G7);
+	playBuzzer(100,100);
+	setBuzzerTone(G7);
+	playBuzzer(100,100);
+	setBuzzerTone(A7);
+	playBuzzer(100,100);
+	setBuzzerTone(A7);
+	playBuzzer(100,100);
+	setBuzzerTone(G7);
+	playBuzzer(100,100);
+	setBuzzerTone(F7);
+	playBuzzer(100,100);
+	setBuzzerTone(F7);
+	playBuzzer(100,100);
+	setBuzzerTone(E7);
+	playBuzzer(100,100);
+	setBuzzerTone(E7);
+	playBuzzer(100,100);
+	setBuzzerTone(D7);
+	playBuzzer(100,100);
+	setBuzzerTone(D7);
+	playBuzzer(100,100);
+	setBuzzerTone(C7);
+	playBuzzer(100,100);
+	setBuzzerTone(C9);
+	playBuzzer(100,100);
+}
+
+void buzzerCancel() {
+
+}
+
+bool confirm(Mode mode) {
+	double rightSensor;
+	double thresh;
+	Led color;
+	int cancel;
+	resetEncoder(LEFTENCODER);
+
+	switch (mode) {
+		case MODE1:
+			color = WHITE;
+			break;
+		case MODE2:
+			color = BLUE;
+			break;
+		case MODE3:
+			color = GREEN;
+			break;
+		case MODE4:
+			color = RED;
+			break;
+		default:
+			break;
+	}
+
+	while(1) {
+		cancel = getEncoder(LEFTENCODER);
+		rightSensor = readSensor(RIGHT_DET);
+
+		if (rightSensor <= thresh) {
+			return true;
+		}
+		if (cancel <= -400) {
+			return false;
+		}
+		toggleLED(color);
+		HAL_Delay(100);
+	}
+
+}
+
+
 void testMenu(int channel) {
+	int size = 400;
 	int count = getEncoder(channel);
 	if (count < 0) {
 		count = 0;
-	} else if (count >= 0 && count <= 800) {
+	} else if (count >= 0 && count <= size) {
 		setLED(RED);
 		resetLED(GREEN);
-	} else if (count > 800 && count <= (800*2)) {
+	} else if (count > size && count <= (size*2)) {
 		resetLED(RED);
 		setLED(GREEN);
 		resetLED(BLUE);
-	} else if (count > (800*2) && count <= (800*3)) {
+	} else if (count > (size*2) && count <= (size*3)) {
 		resetLED(GREEN);
 		setLED(BLUE);
 		resetLED(WHITE);
-	} else if (count > (800*3) && count <= (800*4)) {
+	} else if (count > (size*3) && count <= (size*4)) {
 		resetLED(BLUE);
 		setLED(WHITE);
-	} else if (count > (800*4)) {
-		count = (800*4);
+	} else if (count > (size*4)) {
+		count = (size*4);
 	}
 }
 

@@ -128,4 +128,33 @@ typedef enum
 	BACKWARD
 }Direction;
 
+/* Enumeration for Modes */
+typedef enum
+{
+	MODE1,
+	MODE2,
+	MODE3,
+	MODE4
+}Mode;
+
+/* Enumeration for Buzzer */
+typedef enum
+{
+	C7,
+	D7,
+	E7,
+	F7,
+	G7,
+	A7,
+	B7,
+	C8,
+	D8,
+	E8,
+	F8,
+	G8,
+	A8,
+	B8,
+	C9
+}Note;
+
 #endif
