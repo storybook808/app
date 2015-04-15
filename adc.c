@@ -32,6 +32,8 @@ uint32_t readBattery() {
 }
 
 uint32_t readADC(ADC_Channel channel) {
+	printString("Entering readADC");
+	printNL();
     ADC_ChannelConfTypeDef sConfig;
     int x = 14444;
     int i = x;
@@ -104,6 +106,9 @@ uint32_t readADC(ADC_Channel channel) {
     
     HAL_ADC_Start(&ADCHandle);
     
+    printString("waiting for conversion");
+    printNL();
+
     //Wait for conversion
     while(HAL_ADC_PollForConversion(&ADCHandle, HAL_MAX_DELAY) != HAL_OK);
     HAL_GPIO_WritePin(GPIOH, GPIO_PIN_1, GPIO_PIN_RESET);
@@ -111,12 +116,17 @@ uint32_t readADC(ADC_Channel channel) {
     HAL_GPIO_WritePin(GPIOH, GPIO_PIN_0, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET);
     
+    printString("done with conversion");
+    printNL();
+
     while(i--);
     
     return HAL_ADC_GetValue(&ADCHandle);
 }
 
 double readSensor(ADC_Channel channel) {
+	printString("Entering readSensor");
+	printNL();
 	setLED(RED);
 //    return toLinear(ADC_getSampleAvgNDeleteX(5,2,channel));
     return toLinear(readADC(channel));
