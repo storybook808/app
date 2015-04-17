@@ -32,7 +32,7 @@ void main(void) {
 	printString("Hello world!");
 	printNL();
 
-//	calibrateSensors();
+	loadCalibration();
 
 	resetLED(WHITE);
 
@@ -54,7 +54,91 @@ void main(void) {
 
 		mode = menu();
 
-		printInt(mode);
-		printNL();
+		if (mode == MODE1) {
+			printFloat(getWall(CENTERRIGHTFRONT));
+			printComma();
+			printFloat(calibration[0]);
+			printNL();
+			printFloat(getWall(CENTERLEFTFRONT));
+			printComma();
+			printFloat(calibration[1]);
+			printNL();
+			printFloat(getWall(IDEALRIGHTFRONT));
+			printComma();
+			printFloat(calibration[2]);
+			printNL();
+			printFloat(getWall(IDEALLEFTFRONT));
+			printComma();
+			printFloat(calibration[3]);
+			printNL();
+			printFloat(getWall(IDEALRIGHTCENTER));
+			printComma();
+			printFloat(calibration[4]);
+			printNL();
+			printFloat(getWall(IDEALLEFTCENTER));
+			printComma();
+			printFloat(calibration[5]);
+			printNL();
+			printFloat(getWall(FARRIGHTWALL));
+			printComma();
+			printFloat(calibration[6]);
+			printNL();
+			printFloat(getWall(FARLEFTWALL));
+			printComma();
+			printFloat(calibration[7]);
+			printNL();
+		}
+
+		else if (mode == MODE2) {
+			int i;
+			uint32_t flash_dest = ADDR_FLASH_SECTOR_6;
+
+			float test = 12.5;
+			uint32_t *testpt;
+			testpt = &test;
+
+			flash_erase(flash_dest, 32768);
+
+			// write the 2 calibration readings of data
+			for (i = 0; i < 1; i++) {
+				if (HAL_FLASH_Program(TYPEPROGRAM_WORD, flash_dest, test) != HAL_OK) {
+					// error during write process
+					HAL_FLASH_Lock();
+					while(1) {
+						printInt(21);
+						printNL();
+					}
+				}
+				// 8 is for eight bytes in the double
+				flash_dest+=8;
+			}
+
+			// lock the flash
+			HAL_FLASH_Lock();
+
+		}
+
+		else if (mode == MODE3) {
+			uint32_t *data = (uint32_t *)ADDR_FLASH_SECTOR_6;
+			printFloat(*data);
+			printNL();
+		}
+
+		else {
+			calibrateSensors();
+			if (eraseCalibration()) {
+				while(1) {
+					printInt(41);
+					printNL();
+				}
+			}
+			HAL_Delay(500);
+			if (writeCalibration()) {
+				while(1) {
+					printInt(42);
+					printNL();
+				}
+			}
+		}
 	}
 }

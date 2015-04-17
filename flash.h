@@ -26,8 +26,8 @@
 #define ADDR_FLASH_SECTOR_9     ((uint32_t)0x080A0000) /* Base @ of Sector 9, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_10    ((uint32_t)0x080C0000) /* Base @ of Sector 10, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_11    ((uint32_t)0x080E0000) /* Base @ of Sector 11, 128 Kbytes */
-#define WRITE_ADDRESS_ROWS		((uint32_t)0x080C0000) /* Write address for map data */
-#define WRITE_ADDRESS_CALI		((uint32_t)0x080E0000) /* Write address for calibration data */
+#define WRITE_ADDRESS_ROWS		((uint32_t)0x08060000) /* Write address for map data */
+#define WRITE_ADDRESS_CALI		((uint32_t)0x08040000) /* Write address for calibration data */
 
 #define SECTOR_SIZE	32768	/* Amount of words in Sectors */
 

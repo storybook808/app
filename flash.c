@@ -92,49 +92,11 @@ bool flash_erase(uint32_t flash_dest, uint32_t num_word32) {
 }
 
 bool eraseMap() {
-	HAL_FLASH_Unlock();
-
-    // Clear pending flags (if any)
-    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
-                           FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
-
-    // erase the sector(s)
-    FLASH_EraseInitTypeDef EraseInitStruct;
-    EraseInitStruct.TypeErase = TYPEERASE_SECTORS;
-    EraseInitStruct.VoltageRange = VOLTAGE_RANGE_3; // voltage range needs to be 2.7V to 3.6V
-    EraseInitStruct.Sector = flash_get_sector_info(WRITE_ADDRESS_ROWS, NULL, NULL);
-    EraseInitStruct.NbSectors = flash_get_sector_info(WRITE_ADDRESS_ROWS + 4 * 15, NULL, NULL) - EraseInitStruct.Sector + 1;
-    uint32_t SectorError = 0;
-    if (HAL_FLASHEx_Erase(&EraseInitStruct, &SectorError) != HAL_OK) {
-        // error occurred during sector erase
-        HAL_FLASH_Lock(); // lock the flash
-        return true;
-    }
-
-    return false;
+	return flash_erase(WRITE_ADDRESS_ROWS, 32768);
 }
 
 bool eraseCalibration() {
-	HAL_FLASH_Unlock();
-
-    // Clear pending flags (if any)
-    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
-                           FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
-
-    // erase the sector(s)
-    FLASH_EraseInitTypeDef EraseInitStruct;
-    EraseInitStruct.TypeErase = TYPEERASE_SECTORS;
-    EraseInitStruct.VoltageRange = VOLTAGE_RANGE_3; // voltage range needs to be 2.7V to 3.6V
-    EraseInitStruct.Sector = flash_get_sector_info(WRITE_ADDRESS_CALI, NULL, NULL);
-    EraseInitStruct.NbSectors = flash_get_sector_info(WRITE_ADDRESS_CALI + 4 * 3, NULL, NULL) - EraseInitStruct.Sector + 1;
-    uint32_t SectorError = 0;
-    if (HAL_FLASHEx_Erase(&EraseInitStruct, &SectorError) != HAL_OK) {
-        // error occurred during sector erase
-        HAL_FLASH_Lock(); // lock the flash
-        return true;
-    }
-
-    return false;
+	return flash_erase(WRITE_ADDRESS_CALI, 32768);
 }
 
 void flash_write(uint32_t flash_dest, const uint32_t *src, uint32_t num_word32) {
@@ -189,7 +151,7 @@ void loadRows() {
 bool writeCalibration() {
 	int i;
 	uint32_t flash_dest = WRITE_ADDRESS_CALI;
-	bool result = false;
+	bool result = true;
 
 	calibration[0] = getWall(CENTERRIGHTFRONT);
 	calibration[1] = getWall(CENTERLEFTFRONT);
@@ -201,20 +163,21 @@ bool writeCalibration() {
 	calibration[7] = getWall(FARLEFTWALL);
 
 	// write the 2 calibration readings of data
-	for (i = 0; i < 8; ++i) {
-		if (HAL_FLASH_Program(TYPEPROGRAM_DOUBLEWORD, flash_dest, calibration[i]) != HAL_OK) {
+	for (i = 0; i < 8; i++) {
+		if (HAL_FLASH_Program(TYPEPROGRAM_WORD, flash_dest, calibration[i]) != HAL_OK) {
 			// error during write process
 			HAL_FLASH_Lock();
+			printInt(i);
 			return result;
 		}
-		// 8 is for eight bytes in the double
-		flash_dest+=8;
+		// 4 is for four bytes in the float
+		flash_dest+=4;
 	}
 
 	// lock the flash
 	HAL_FLASH_Lock();
 
-	return true;
+	return false;
 }
 
 void loadCalibration() {
@@ -223,7 +186,7 @@ void loadCalibration() {
 
 	for (i = 0; i < 8; ++i) {
 		calibration[i] = *data;
-		data+=8;
+		data+=1;
 	}
 
 	setWall(CENTERRIGHTFRONT, calibration[0]);

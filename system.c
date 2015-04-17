@@ -39,6 +39,11 @@ void initSystem(void) {
 
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
+
+	int i;
+	for (i = 0; i < 8; i++) {
+		calibration[i]=0;
+	}
 }
 
 void initGPIO(void) {
