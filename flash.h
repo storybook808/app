@@ -12,6 +12,9 @@
 #include "global_libs.h"
 #include "HAL_includes.h"
 #include "defines.h"
+#include "usart.h"
+#include "mapping.h"
+#include "calibration.h"
 
 /* Base address of the Flash sectors */
 #define ADDR_FLASH_SECTOR_0     ((uint32_t)0x08000000) /* Base @ of Sector 0, 16 Kbytes */

@@ -152,6 +152,7 @@ bool writeCalibration() {
 	int i;
 	uint32_t flash_dest = WRITE_ADDRESS_CALI;
 	bool result = true;
+	float sample = getWall(CENTERRIGHTFRONT);
 
 	calibration[0] = getWall(CENTERRIGHTFRONT);
 	calibration[1] = getWall(CENTERLEFTFRONT);
@@ -161,6 +162,13 @@ bool writeCalibration() {
 	calibration[5] = getWall(IDEALLEFTCENTER);
 	calibration[6] = getWall(FARRIGHTWALL);
 	calibration[7] = getWall(FARLEFTWALL);
+
+	printFloat(sample);
+	printNL();
+	for (i = 0; i < 8; ++i) {
+		printFloat(calibration[i]);
+		printNL();
+	}
 
 	// write the 2 calibration readings of data
 	for (i = 0; i < 8; i++) {

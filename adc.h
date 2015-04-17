@@ -19,7 +19,7 @@
 uint32_t readADC(ADC_Channel channel);
 uint32_t readBattery(void);
 
-double readSensor(ADC_Channel channel);
+float readSensor(ADC_Channel channel);
 
 uint16_t ADC_getSampleAvgNDeleteX(uint8_t N, uint8_t X, int channel);
 void Sort_tab(uint16_t tab[], uint8_t length);

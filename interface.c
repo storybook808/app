@@ -157,8 +157,8 @@ Mode menu() {
 
 	// Variable to place Encoder value
 	int count;
-	double rightSensor;
-	double thresh = 700;
+	float rightSensor;
+	float thresh = 700;
 
 	resetLEDAll();
 
@@ -213,23 +213,23 @@ void playBuzzer(int duration, int pause) {
 }
 
 void buzzerConfirm() {
-	setBuzzerTone(C7);
+	setBuzzerTone(C8);
 	playBuzzer(100,100);
-	setBuzzerTone(C7);
+	setBuzzerTone(C8);
 	playBuzzer(100,100);
-	setBuzzerTone(C7);
+	setBuzzerTone(C8);
 	playBuzzer(100,100);
-	setBuzzerTone(C7);
+	setBuzzerTone(C8);
 	playBuzzer(300,100);
-	setBuzzerTone(G8);
+	setBuzzerTone(G7);
 	playBuzzer(300,100);
-	setBuzzerTone(A8);
+	setBuzzerTone(A7);
 	playBuzzer(300,100);
-	setBuzzerTone(C7);
+	setBuzzerTone(C8);
 	playBuzzer(200,100);
-	setBuzzerTone(A8);
+	setBuzzerTone(A7);
 	playBuzzer(100,100);
-	setBuzzerTone(C7);
+	setBuzzerTone(C8);
 	playBuzzer(300,100);
 }
 
@@ -241,8 +241,8 @@ void buzzerCancel() {
 }
 
 bool confirm(Mode mode) {
-	double rightSensor;
-	double thresh = 700;
+	float rightSensor;
+	float thresh = 700;
 	Led color;
 	int cancel;
 	resetEncoder(LEFTENCODER);
@@ -329,7 +329,7 @@ void batteryFault() {
 // 			//Half second delay
 // 			HAL_Delay(500);
 // 		}
-// 	}
+ 	}
  }
 
 bool getButton(void) {

@@ -8,28 +8,28 @@
 
 #include "tracking.h"
 
-bool hasRightWall(double value) {
+bool hasRightWall(float value) {
 	if (value < getWall(FARRIGHTWALL)) return true;
 	else return false;
 }
 
-bool hasLeftWall(double value) {
+bool hasLeftWall(float value) {
 	if (value < getWall(FARLEFTWALL)) return true;
 	else return false;
 }
 
-bool hasFrontWall(double valueRight, double valueLeft) {
+bool hasFrontWall(float valueRight, float valueLeft) {
 	if ((valueRight < getWall(IDEALRIGHTFRONT)) && (valueLeft < getWall(IDEALLEFTFRONT))) return true;
 	else return false;
 }
 
-void moveForward(int cells, Wall_Correction wall, double base_speed) {
+void moveForward(int cells, Wall_Correction wall, float base_speed) {
 	int x;
 	for (x = 0; x < cells; x++) {
 
 		int startL = getEncoder(LEFTENCODER);
-		double left_front_sensor;
-		double right_front_sensor;
+		float left_front_sensor;
+		float right_front_sensor;
 		resetLEDAll();
 
 		while(1) {
@@ -54,7 +54,7 @@ void moveForward(int cells, Wall_Correction wall, double base_speed) {
 
 void turnRight() {
 
-	double k = 0.03;
+	float k = 0.03;
 	setVelocity(0);
 	bool right = false;
 	bool left = false;
@@ -65,8 +65,8 @@ void turnRight() {
 	int endR = getEncoder(RIGHTENCODER) - TURN_R;
 	int endL = getEncoder(LEFTENCODER) + TURN_L-75;
 
-	double errorR;
-	double errorL;
+	float errorR;
+	float errorL;
 
 	while(!right || !left)
 	{
@@ -109,7 +109,7 @@ void turnRight() {
 
 void turnRight2() {
 
-	double k = 0.03;
+	float k = 0.03;
 	setVelocity(0);
 	bool right = false;
 
@@ -117,7 +117,7 @@ void turnRight2() {
 
 	int endR = getEncoder(RIGHTENCODER) - 2*TURN_R;
 
-	double errorR;
+	float errorR;
 
 	while(!right)
 	{
@@ -150,7 +150,7 @@ void turnRight2() {
 
 void turnRight3() {
 
-	double k = 0.03;
+	float k = 0.03;
 	setVelocity(0);
 	bool left = false;
 
@@ -158,7 +158,7 @@ void turnRight3() {
 
 	int endL = getEncoder(LEFTENCODER) + 2*TURN_L-150;
 
-	double errorL;
+	float errorL;
 
 	while(!left)
 	{
@@ -191,7 +191,7 @@ void turnRight3() {
 
 void turnLeft() {
 
-	double k = 0.03;
+	float k = 0.03;
 	setVelocity(0);
 	bool right = false;
 	bool left = false;
@@ -202,8 +202,8 @@ void turnLeft() {
 	int endR = getEncoder(RIGHTENCODER) + TURN_R;
 	int endL = getEncoder(LEFTENCODER) - TURN_L;
 
-	double errorR;
-	double errorL;
+	float errorR;
+	float errorL;
 
 	while(!right || !left)
 	{
@@ -247,7 +247,7 @@ void turnLeft() {
 void turnLeft2() {
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
-	double k = 0.03;
+	float k = 0.03;
 	setVelocity(0);
 	bool right = false;
 
@@ -255,7 +255,7 @@ void turnLeft2() {
 
 	int endR = getEncoder(RIGHTENCODER) + 2*TURN_R;
 
-	double errorR;
+	float errorR;
 
 	while(!right)
 	{
@@ -289,7 +289,7 @@ void turnLeft2() {
 void turnLeft3() {
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
-	double k = 0.03;
+	float k = 0.03;
 	setVelocity(0);
 	bool left = false;
 
@@ -297,7 +297,7 @@ void turnLeft3() {
 
 	int endL = getEncoder(LEFTENCODER) - 2*TURN_L;
 
-	double errorL;
+	float errorL;
 
 	while(!left)
 	{
@@ -327,7 +327,7 @@ void turnLeft3() {
 	setRightVelocity(0);
 }
 
-void moveCells(int num, double base_speed) {
+void moveCells(int num, float base_speed) {
 
 	int location;
 	int startL = getEncoder(LEFTENCODER);
@@ -335,11 +335,11 @@ void moveCells(int num, double base_speed) {
 	int distanceL = startL + CELL_L*(num);
 	int distanceR = startR + CELL_R*(num);
 	setLED(GREEN);
-	double left_front_sensor, right_front_sensor;
-	double left_side_sensor, right_side_sensor;
+	float left_front_sensor, right_front_sensor;
+	float left_side_sensor, right_side_sensor;
 	bool is_left_wall  = true;
 	bool is_right_wall = true;
-	double speed = base_speed;
+	float speed = base_speed;
 	bool slowDown = false;
 
 	while(1) {
@@ -395,7 +395,7 @@ void moveCells(int num, double base_speed) {
 	}
 }
 
-void move(int cells, double base_speed) {
+void move(int cells, float base_speed) {
 
 	int endL = getEncoder(LEFTENCODER) + cells*CELL_L;
 	int endR = getEncoder(RIGHTENCODER) + cells*CELL_R;
@@ -403,12 +403,12 @@ void move(int cells, double base_speed) {
 
 	int currentLeft;
 
-	double errorL;
-	double errorPercent, dePercent;
-	double frontLeft,frontRight;
-	double speed;
-	double dt;
-	double diff;
+	float errorL;
+	float errorPercent, dePercent;
+	float frontLeft,frontRight;
+	float speed;
+	float dt;
+	float diff;
 	int temp;
 	int endTick = HAL_GetTick()+1000;
 
@@ -474,7 +474,7 @@ void move(int cells, double base_speed) {
 	resetEncoder(LEFTENCODER);
 }
 
-void brakeInCell(double base_speed) {
+void brakeInCell(float base_speed) {
 
 	int location = getEncoder(LEFTENCODER);
 	int endL = ((location/CELL_L)+1)*CELL_L;
@@ -484,9 +484,9 @@ void brakeInCell(double base_speed) {
 
 	int currentLeft;
 
-	double errorL;
-	double errorPercent;
-	double frontLeft,frontRight;
+	float errorL;
+	float errorPercent;
+	float frontLeft,frontRight;
 
 	while(!done)
 	{
@@ -546,9 +546,9 @@ void startCellStop() {
 }
 
 void searchSlow() {
-	double base_speed = 50;
-	double frontRight, frontLeft;
-	double centerRight, centerLeft;
+	float base_speed = 50;
+	float frontRight, frontLeft;
+	float centerRight, centerLeft;
 	int location;
 	bool rightWall, leftWall, frontWall, backWall;
 	bool map = true;

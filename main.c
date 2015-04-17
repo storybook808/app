@@ -43,7 +43,7 @@ void main(void) {
 
 	Mode mode;
 
-	double sensor_value;
+	float sensor_value;
 
 	while(1) {
 
@@ -109,7 +109,7 @@ void main(void) {
 						printNL();
 					}
 				}
-				// 8 is for eight bytes in the double
+				// 8 is for eight bytes in the float
 				flash_dest+=8;
 			}
 
