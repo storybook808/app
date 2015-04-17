@@ -158,7 +158,7 @@ Mode menu() {
 	// Variable to place Encoder value
 	int count;
 	double rightSensor;
-	double thresh = 400;
+	double thresh = 700;
 
 	resetLEDAll();
 
@@ -242,7 +242,7 @@ void buzzerCancel() {
 
 bool confirm(Mode mode) {
 	double rightSensor;
-	double thresh = 400;
+	double thresh = 700;
 	Led color;
 	int cancel;
 	resetEncoder(LEFTENCODER);

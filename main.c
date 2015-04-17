@@ -43,7 +43,15 @@ void main(void) {
 
 	Mode mode;
 
+	double sensor_value;
+
 	while(1) {
+
+//		sensor_value = readSensor(RIGHT_CEN_DET);
+//		printFloat(sensor_value);
+//		printNL();
+//		HAL_Delay(500);
+
 		mode = menu();
 
 		printInt(mode);
