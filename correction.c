@@ -30,16 +30,16 @@ extern TIM_HandleTypeDef htim2;
 
 void frontCorrection() {
 
-	float k = 0.3;
+	double k = 0.3;
 	setVelocity(0);
 	bool right = false;
 	bool left = false;
 
-	float currentFrontRight;
-	float currentFrontLeft;
+	double currentFrontRight;
+	double currentFrontLeft;
 
-	float errorR;
-	float errorL;
+	double errorR;
+	double errorL;
 
 	while(!right || !left)
 	{
@@ -95,15 +95,15 @@ void frontCorrection() {
 }
 
 void brakeCorrection(int startR, int startL) {
-	float k = 0.03;
+	double k = 0.03;
 	bool right = false;
 	bool left = false;
 
 	int currentFrontRight;
 	int currentFrontLeft;
 
-	float errorR;
-	float errorL;
+	double errorR;
+	double errorL;
 
 	while(!right || !left)
 	{
@@ -159,17 +159,17 @@ void brakeCorrection(int startR, int startL) {
 	resetEncoder(LEFTENCODER);
 }
 
-void correction(uint8_t wall, float base_speed) {
+void correction(uint8_t wall, double base_speed) {
 
-	float errorP;
-	float errorD;
-	float error_total;
+	double errorP;
+	double errorD;
+	double error_total;
 
-	const float kP = .2;
-	const float kD = 0;
+	const double kP = .2;
+	const double kD = 0;
 
-	float left_side_sensor = readSensor(LEFT_CEN_DET);
-	float right_side_sensor = readSensor(RIGHT_CEN_DET);
+	double left_side_sensor = readSensor(LEFT_CEN_DET);
+	double right_side_sensor = readSensor(RIGHT_CEN_DET);
 
 	HAL_TIM_Base_Start_IT(&htim2);
 
@@ -195,17 +195,17 @@ void correction(uint8_t wall, float base_speed) {
 	last_errorP = errorP;
 }
 
-void correction2(float base_speed) {
+void correction2(double base_speed) {
 
-	float errorLeftP,errorRightP;
-	float errorLeftD,errorRightD;
-	float error_left_total,error_right_total;
+	double errorLeftP,errorRightP;
+	double errorLeftD,errorRightD;
+	double error_left_total,error_right_total;
 
-	const float kP = .1;//.5 speed 50
-	const float kD = .1;//.06 speed 50
+	const double kP = .1;//.5 speed 50
+	const double kD = .1;//.06 speed 50
 
-	float left_side_sensor = readSensor(LEFT_CEN_DET);
-	float right_side_sensor = readSensor(RIGHT_CEN_DET);
+	double left_side_sensor = readSensor(LEFT_CEN_DET);
+	double right_side_sensor = readSensor(RIGHT_CEN_DET);
 
 	HAL_TIM_Base_Start_IT(&htim2);
 

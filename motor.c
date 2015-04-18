@@ -24,10 +24,10 @@ static int oldEncoderR;
 static int oldEncoderL;
 static uint8_t thresh;
 
-static float targetRightVelocity;
-static float targetLeftVelocity;
-static float currentRightVelocity;
-static float currentLeftVelocity;
+static double targetRightVelocity;
+static double targetLeftVelocity;
+static double currentRightVelocity;
+static double currentLeftVelocity;
 
 /* Private Functions */
 static void setDirection(Motor channel, Direction state);
@@ -87,17 +87,17 @@ void brakeLeft() {
 }
 
 
-void setVelocity(float velocity) {
+void setVelocity(double velocity) {
 	targetRightVelocity = velocity;
 	targetLeftVelocity = velocity;
 	HAL_TIM_Base_Start_IT(&htim2);
 }
 
-void setRightVelocity(float velocity) {
+void setRightVelocity(double velocity) {
 	targetRightVelocity = velocity;
 }
 
-void setLeftVelocity(float velocity) {
+void setLeftVelocity(double velocity) {
 	targetLeftVelocity = velocity;
 }
 
@@ -150,12 +150,12 @@ void setSpeed(Motor channel, int speed) {
 	}
 }
 
-float getCurrentVelocity(Motor channel) {
+double getCurrentVelocity(Motor channel) {
 	if (channel == RIGHTMOTOR) return currentRightVelocity;
 	else return currentLeftVelocity;
 }
 
-float getTargetVelocity(Motor channel) {
+double getTargetVelocity(Motor channel) {
 	if (channel == RIGHTMOTOR) return targetRightVelocity;
 	else return targetLeftVelocity;
 }
@@ -169,8 +169,8 @@ static void velocityCallBack() {
 
 	int speedR, speedL;
 
-	currentRightVelocity = (float)(currentEncoderR - oldEncoderR)*R_ENCODER_DIST/0.001;
-	currentLeftVelocity = (float)(currentEncoderL - oldEncoderL)*L_ENCODER_DIST/0.001;
+	currentRightVelocity = (double)(currentEncoderR - oldEncoderR)*R_ENCODER_DIST/0.001;
+	currentLeftVelocity = (double)(currentEncoderL - oldEncoderL)*L_ENCODER_DIST/0.001;
 
 	if ( currentRightVelocity > targetRightVelocity ) speedR = currRspeed-vel_k_R;
 	else if ( currentRightVelocity < targetRightVelocity ) speedR = currRspeed+vel_k_R;

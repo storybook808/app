@@ -21,10 +21,10 @@
 void calibrateSensors(void);
 void calibrateWall(Wall wall);
 void testCalibration();
-void setWall(Wall wall, float value);
+void setWall(Wall wall, double value);
 
 /* Rename getFarWall functions */
-float getWall(Wall wall);
-float toLinear(uint16_t input);
+double getWall(Wall wall);
+double toLinear(uint16_t input);
 
 #endif

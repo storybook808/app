@@ -8,10 +8,10 @@
 
 #include "calibration.h"
 
-static float farLeftWall, farRightWall;
-static float idealLeftFront, idealRightFront;
-static float idealLeftCenter, idealRightCenter;
-static float centerLeftFront, centerRightFront;
+static double farLeftWall, farRightWall;
+static double idealLeftFront, idealRightFront;
+static double idealLeftCenter, idealRightCenter;
+static double centerLeftFront, centerRightFront;
 
 /*=Public Functions===========================================================*/
 
@@ -108,7 +108,7 @@ void calibrateWall(Wall wall) {
     }
 }
 
-float getWall(Wall wall) {
+double getWall(Wall wall) {
     switch (wall) {
         case FARLEFTWALL:
             return farLeftWall;
@@ -140,12 +140,12 @@ float getWall(Wall wall) {
     }
 }
 
-float toLinear(uint16_t input) {
-	return (float)5000/log((float)input);
+double toLinear(uint16_t input) {
+	return (double)5000/log((double)input);
 }
 
 /*=Private Functions==========================================================*/
-void setWall(Wall wall, float value) {
+void setWall(Wall wall, double value) {
     switch (wall) {
         case FARLEFTWALL:
             farLeftWall = value;

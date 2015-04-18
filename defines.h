@@ -75,7 +75,7 @@ typedef struct cell {
 
 walls map[16][16];
 
-float calibration[8];
+double calibration[8];
 
 /* Enumeration Variable for ADC Channels */
 typedef enum

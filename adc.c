@@ -124,7 +124,7 @@ uint32_t readADC(ADC_Channel channel) {
     return result;
 }
 
-float readSensor(ADC_Channel channel) {
+double readSensor(ADC_Channel channel) {
 //    return toLinear(ADC_getSampleAvgNDeleteX(5,2,channel));
     return toLinear(readADC(channel));
 }

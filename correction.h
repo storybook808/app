@@ -20,11 +20,11 @@
 
 void frontCorrection();
 void brakeCorrection(int startR, int startL);
-void correction(uint8_t wall, float base_speed);
-void correction2(float base_speed);
+void correction(uint8_t wall, double base_speed);
+void correction2(double base_speed);
 
-float last_errorP;
-float last_leftErrorP;
-float last_rightErrorP;
+double last_errorP;
+double last_leftErrorP;
+double last_rightErrorP;
 
 #endif

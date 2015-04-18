@@ -18,17 +18,17 @@
 bool brb;
 int x, y, dir;
 
-bool hasRightWall(float value);
+bool hasRightWall(double value);
 
-bool hasLeftWall(float value);
+bool hasLeftWall(double value);
 
-bool hasFrontWall(float valueRight, float valueLeft);
+bool hasFrontWall(double valueRight, double valueLeft);
 
-void moveForward(int cells, Wall_Correction wall, float base_speed);
+void moveForward(int cells, Wall_Correction wall, double base_speed);
 
-void moveCells(int num, float base_speed);
+void moveCells(int num, double base_speed);
 
-void move(int cells, float base_speed);
+void move(int cells, double base_speed);
 
 void turnLeft();
 void turnLeft2();
@@ -38,7 +38,7 @@ void turnRight();
 void turnRight2();
 void turnRight3();
 
-void brakeInCell(float base_speed);
+void brakeInCell(double base_speed);
 
 void startCellStop();
 

@@ -25,11 +25,11 @@ void hardBrake();
 void brakeLeft();
 void brakeRight();
 void setSpeed(Motor channel, int speed);
-void setVelocity(float velocity);
-void setRightVelocity(float velocity);
-void setLeftVelocity(float velocity);
-float getCurrentVelocity(Motor channel);
-float getTargetVelocity(Motor channel);
+void setVelocity(double velocity);
+void setRightVelocity(double velocity);
+void setLeftVelocity(double velocity);
+double getCurrentVelocity(Motor channel);
+double getTargetVelocity(Motor channel);
 void readGyro();
 
 #endif
