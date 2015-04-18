@@ -55,38 +55,7 @@ void main(void) {
 		mode = menu();
 
 		if (mode == MODE1) {
-			printFloat(getWall(CENTERRIGHTFRONT));
-			printComma();
-			printFloat(calibration[0]);
-			printNL();
-			printFloat(getWall(CENTERLEFTFRONT));
-			printComma();
-			printFloat(calibration[1]);
-			printNL();
-			printFloat(getWall(IDEALRIGHTFRONT));
-			printComma();
-			printFloat(calibration[2]);
-			printNL();
-			printFloat(getWall(IDEALLEFTFRONT));
-			printComma();
-			printFloat(calibration[3]);
-			printNL();
-			printFloat(getWall(IDEALRIGHTCENTER));
-			printComma();
-			printFloat(calibration[4]);
-			printNL();
-			printFloat(getWall(IDEALLEFTCENTER));
-			printComma();
-			printFloat(calibration[5]);
-			printNL();
-			printFloat(getWall(FARRIGHTWALL));
-			printComma();
-			printFloat(calibration[6]);
-			printNL();
-			printFloat(getWall(FARLEFTWALL));
-			printComma();
-			printFloat(calibration[7]);
-			printNL();
+			searchSlow();
 		}
 
 		else if (mode == MODE2) {
@@ -125,20 +94,40 @@ void main(void) {
 		}
 
 		else {
+			resetLEDAll();
 			calibrateSensors();
+			setLED(WHITE);
+			setLED(GREEN);
 			if (eraseCalibration()) {
 				while(1) {
 					printInt(41);
 					printNL();
 				}
 			}
+			setLEDAll();
 			HAL_Delay(500);
+			resetLEDAll();
+			setLED(BLUE);
+			setLED(RED);
 			if (writeCalibration()) {
 				while(1) {
 					printInt(42);
 					printNL();
 				}
 			}
+			resetLEDAll();
+			toggleLED(RED);
+			HAL_Delay(100);
+			toggleLED(RED);
+			HAL_Delay(100);
+			toggleLED(RED);
+			HAL_Delay(100);
+			toggleLED(RED);
+			HAL_Delay(100);
+			toggleLED(RED);
+			HAL_Delay(100);
+			toggleLED(RED);
+			HAL_Delay(100);
 		}
 	}
 }

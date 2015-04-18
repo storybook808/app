@@ -214,23 +214,23 @@ void playBuzzer(int duration, int pause) {
 
 void buzzerConfirm() {
 	setBuzzerTone(C8);
-	playBuzzer(100,100);
+	playBuzzer(100,0);
 	setBuzzerTone(C8);
-	playBuzzer(100,100);
+	playBuzzer(100,0);
 	setBuzzerTone(C8);
-	playBuzzer(100,100);
+	playBuzzer(100,0);
 	setBuzzerTone(C8);
-	playBuzzer(300,100);
+	playBuzzer(300,0);
 	setBuzzerTone(G7);
-	playBuzzer(300,100);
+	playBuzzer(300,0);
 	setBuzzerTone(A7);
-	playBuzzer(300,100);
+	playBuzzer(300,0);
 	setBuzzerTone(C8);
-	playBuzzer(200,100);
+	playBuzzer(200,0);
 	setBuzzerTone(A7);
-	playBuzzer(100,100);
+	playBuzzer(100,0);
 	setBuzzerTone(C8);
-	playBuzzer(300,100);
+	playBuzzer(300,0);
 }
 
 void buzzerCancel() {
