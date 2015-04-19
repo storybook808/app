@@ -20,6 +20,7 @@ void initSystem(void) {
 	initTIM();
 	initADC();
 	initUSART();
+	emptyMap();
 
 	adc_unlock = true;
 

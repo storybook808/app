@@ -14,6 +14,7 @@
 #include "defines.h"
 #include "calibration.h"
 #include "correction.h"
+#include "mapping.h"
 
 bool brb;
 int x, y, dir;
@@ -43,5 +44,7 @@ void brakeInCell(double base_speed);
 void startCellStop();
 
 void searchSlow();
+
+void mapSlow();
 
 #endif

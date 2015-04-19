@@ -8,6 +8,26 @@
 
 #include "mapping.h"
 
+void emptyMap() {
+	int i,j;
+	for (i = 0; i < 16; ++i) {
+		for (j = 0; j < 16; ++j) {
+			map[i][j].south = false;
+			map[i][j].west = false;
+			map[i][j].mapped = false;
+		}
+	}
+
+	for (i = 0; i < 16; ++i) {
+		map[0][i].west = true;
+		map[i][0].south = true;
+	}
+	map[0][0].mapped = true;
+	map[0][0].south = true;
+	map[0][0].west = true;
+	map[1][0].west = true;
+}
+
 cell getWallsForCell(uint8_t x, uint8_t y) {
     cell request;
 
@@ -34,6 +54,39 @@ cell getWallsForCell(uint8_t x, uint8_t y) {
     }
 
     return request;
+}
+
+void setWallsForCell(uint8_t x, uint8_t y, cell here) {
+	// If cell is not mapped
+	if(!map[x][y].mapped) {
+		// Map Cell
+		map[x][y].south = here.south;
+		map[x][y].west = here.west;
+		if (x != 15) map[x+1][y].west = here.east;
+		if (y != 15) map[x][y+1].south = here.north;
+		map[x][y].mapped = true;
+	}
+	// Else
+	else {
+		cell test = getWallsForCell(x,y);
+		// Verify cell
+		if (here.south != test.south) {
+			setBuzzerTone(C7);
+			playBuzzer(50,0);
+		}
+		if (here.north != test.north) {
+			setBuzzer(C8);
+			playBuzzer(50,0);
+		}
+		if (here.east != test.east) {
+			setBuzzer(G7);
+			playBuzzer(50,0);
+		}
+		if (here.west != test.west) {
+			setBuzzer(G8);
+			playBuzzer(50,0);
+		}
+	}
 }
 
 bool convertWallsToRows() {
@@ -92,13 +145,37 @@ bool saveMap() {
 	if (convertWallsToRows()) {
 		return false;
 	}
-
 	if (eraseMap()) {
 		return false;
 	}
-
 	if (writeRows()) {
 		return false;
 	}
 	return true;
+}
+
+void printMap() {
+	int i,j;
+	for (j = 15; j >= 0; --j) {
+		for (i = 0; i < 1; ++i) {
+			printString("Cell:[");
+			printInt(i);
+			printComma();
+			printInt(j);
+			printString("]: ");
+			if (map[i][j].west) {
+				printString("|");
+			}
+			else printString(" ");
+			if (map[i][j].south) {
+				printString("_");
+			}
+			else printString(" ");
+			if (map[i+1][j].west) {
+				printString("|");
+			}
+			else printString(" ");
+			printNL();
+		}
+	}
 }

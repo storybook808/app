@@ -402,6 +402,7 @@ void move(int cells, double base_speed) {
 	bool done = false;
 
 	int currentLeft;
+	int currentRight;
 
 	double errorL;
 	double errorPercent, dePercent;
@@ -440,6 +441,7 @@ void move(int cells, double base_speed) {
 
 		// Grab current location
 		currentLeft = getEncoder(LEFTENCODER);
+		currentRight = getEncoder(RIGHTENCODER);
 
 		// Calculate Error given location
 		errorL = endL - currentLeft;
@@ -447,13 +449,10 @@ void move(int cells, double base_speed) {
 		dePercent = errorL/(cells*CELL_L*UPPER_BOUND);
 
 		// If position has passed desired location
-		if (endL <= currentLeft) {
+		if (endL <= currentLeft || endR <= currentRight) {
 			brakeCorrection(endR, endL);
 			done = true;
 		}
-//		else if (errorL < CELL_L) {
-//			correction2(SLOW);
-//		}
 		else if (errorPercent > UPPER_BOUND) {
 			correction2(speed);
 		}
@@ -496,6 +495,7 @@ void brakeInCell(double base_speed) {
 		if (frontLeft <= getWall(IDEALLEFTFRONT) && frontRight <= getWall(IDEALRIGHTFRONT)) {
 			hardBrake();
 			frontCorrection();
+			hardBrake();
 			break;
 		}
 
@@ -549,9 +549,9 @@ void startCellStop() {
 void searchSlow() {
 	double base_speed = 50;
 	double frontRight, frontLeft;
-	double centerRight, centerLeft;
+	double centerRight;
 	int location;
-	bool rightWall, leftWall, frontWall, backWall;
+	bool rightWall, frontWall;
 	bool map = true;
 
 	x = 0;
@@ -559,9 +559,7 @@ void searchSlow() {
 	dir = 0;
 
 	rightWall = true;
-	leftWall = true;
 	frontWall = false;
-	backWall = true;
 
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
@@ -572,7 +570,6 @@ void searchSlow() {
 		frontRight = readSensor(RIGHT_DET);
 		frontLeft = readSensor(LEFT_DET);
 		centerRight = readSensor(RIGHT_CEN_DET);
-		centerLeft = readSensor(LEFT_CEN_DET);
 
 		// Determine walls
 
@@ -585,8 +582,6 @@ void searchSlow() {
 		if (location%CELL_L >= CELL_L/2 && map) {
 			// Check side walls
 			rightWall = hasRightWall(centerRight);
-			leftWall = hasLeftWall(centerLeft);
-			backWall = frontWall;
 			// Map values to map here
 			switch (dir) {
 				case 0:
@@ -616,8 +611,8 @@ void searchSlow() {
 		if (!rightWall) {
 			// Brake at center of cell
 			brakeInCell(base_speed);
+			setBuzzer(OFF);
 			rightWall = true;
-			leftWall = true;
 			// Turn right
 			turnRight();
 			if (dir == 3) {
@@ -625,7 +620,6 @@ void searchSlow() {
 			}
 			else dir++;
 			frontWall = false;
-			backWall = leftWall;
 		}
 
 		// If front wall
@@ -658,8 +652,6 @@ void searchSlow() {
 			else dir--;
 			frontWall = false;
 			rightWall = true;
-			backWall = rightWall;
-			leftWall = true;
 		}
 
 		switch (dir) {
@@ -687,6 +679,130 @@ void searchSlow() {
 		startCellStop();
 
 		correction2(base_speed);
-}
+	}
 
 }
+
+void mapSlow() {
+	double base_speed = 50;
+	double frontLeft;
+	double centerRight, centerLeft;
+	int location;
+	bool rightWall, leftWall, frontWall, backWall;
+	bool map = true;
+	cell here;
+
+	x = 0;
+	y = 0;
+	dir = 0;
+
+	rightWall = true;
+	leftWall = true;
+	frontWall = false;
+	backWall = true;
+
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
+
+	while(1) {
+
+		// Get Sensor Readings
+//		frontRight = readSensor(RIGHT_DET);
+		frontLeft = readSensor(LEFT_DET);
+		centerRight = readSensor(RIGHT_CEN_DET);
+		centerLeft = readSensor(LEFT_CEN_DET);
+
+		// Determine walls
+
+		if (frontLeft <= getWall(IDEALLEFTFRONT)) {
+			hardBrake();
+			while(!getButton()) {
+				HAL_Delay(100);
+				toggleLED(RED);
+			}
+			printMap();
+			HAL_Delay(1000);
+			while(!getButton()) {
+				HAL_Delay(100);
+				toggleLED(WHITE);
+			}
+			break;
+		}
+
+		// Determine location
+		location = getEncoder(LEFTENCODER);
+
+		// If we are half-way through a cell
+		if (location%CELL_L >= CELL_L/2 && map) {
+			// Check side walls
+			rightWall = hasRightWall(centerRight);
+			leftWall = hasLeftWall(centerLeft);
+			// Check front wall
+			// frontWall = hasFrontWall(frontRight,frontLeft);
+			backWall = false;
+			switch (dir) {
+				case 0:
+					y++;
+					break;
+				case 1:
+					x++;
+					break;
+				case 2:
+					y--;
+					break;
+				case 3:
+					x--;
+					break;
+				default:
+					break;
+			}
+			// Map values to map here
+			switch (dir) {
+			// North
+				case 0:
+					here.north = frontWall;
+					here.south = backWall;
+					here.west = leftWall;
+					here.east = rightWall;
+					break;
+			// East
+				case 1:
+					here.north = leftWall;
+					here.south = rightWall;
+					here.west = backWall;
+					here.east = frontWall;
+					break;
+			// South
+				case 2:
+					here.north = backWall;
+					here.south = frontWall;
+					here.west = rightWall;
+					here.east = leftWall;
+					break;
+			//West
+				case 3:
+					here.north = rightWall;
+					here.south = leftWall;
+					here.west = frontWall;
+					here.east = backWall;
+					break;
+				default:
+					break;
+			}
+			setWallsForCell(x,y,here);
+
+			// Disable Mapping
+			map = false;
+		}
+		// If we are a quarter in a cell
+		if (location%CELL_L <= CELL_L/4 && !map) {
+			// Enable mapping
+			map = true;
+		}
+
+		startCellStop();
+
+		correction2(base_speed);
+	}
+}
+

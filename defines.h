@@ -64,6 +64,7 @@ uint32_t row[16];
 typedef struct walls {
 	bool south;
 	bool west;
+	bool mapped;
 } walls;
 
 typedef struct cell {

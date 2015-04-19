@@ -75,15 +75,15 @@ void frontCorrection() {
 			brakeRight();
 			right = true;
 		}
-		else {
+		if (!right) {
 			setRightVelocity(errorR*k);
 		}
-		if (abs(errorL) < CORRECTION_FRONT_THRESH && !left) {
+		if (abs(errorL) < CORRECTION_FRONT_THRESH) {
 			errorL = 0;
 			brakeLeft();
 			left = true;
 		}
-		else {
+		if (!left) {
 			setLeftVelocity(errorL*k);
 		}
 	}
@@ -209,18 +209,18 @@ void correction2(double base_speed) {
 
 	HAL_TIM_Base_Start_IT(&htim2);
 
-	errorLeftP = getWall(IDEALLEFTCENTER)-10 - left_side_sensor;
-	errorRightP = getWall(IDEALRIGHTCENTER)-10 - right_side_sensor;
+	errorLeftP = getWall(IDEALLEFTCENTER) - left_side_sensor;
+	errorRightP = getWall(IDEALRIGHTCENTER) - right_side_sensor;
 	errorRightD = errorRightP - last_rightErrorP;
 	errorLeftD = errorLeftP - last_leftErrorP;
 
 	error_right_total = errorRightP*kP + errorRightD*kD;
 	error_left_total = errorLeftP*kP + errorLeftD*kD;
 
-	if (errorLeftP < 0) {
+	if (error_left_total < 0) {
 		error_left_total = 0;
 	}
-	if (errorRightP < 0) {
+	if (error_right_total < 0) {
 		error_right_total = 0;
 	}
 

@@ -18,6 +18,7 @@
 #include "correction.h"
 #include "tracking.h"
 #include "motor.h"
+#include "mapping.h"
 
 // Data structure for TIM configuration
 TIM_HandleTypeDef buzzerHandler;
