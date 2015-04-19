@@ -59,38 +59,10 @@ void main(void) {
 		}
 
 		else if (mode == MODE2) {
-			int i;
-			uint32_t flash_dest = ADDR_FLASH_SECTOR_6;
-
-			float test = 12.5;
-			uint32_t *testpt;
-			testpt = &test;
-
-			flash_erase(flash_dest, 32768);
-
-			// write the 2 calibration readings of data
-			for (i = 0; i < 1; i++) {
-				if (HAL_FLASH_Program(TYPEPROGRAM_WORD, flash_dest, test) != HAL_OK) {
-					// error during write process
-					HAL_FLASH_Lock();
-					while(1) {
-						printInt(21);
-						printNL();
-					}
-				}
-				// 8 is for eight bytes in the float
-				flash_dest+=8;
-			}
-
-			// lock the flash
-			HAL_FLASH_Lock();
-
+			mapSlow();
 		}
 
 		else if (mode == MODE3) {
-			uint32_t *data = (uint32_t *)ADDR_FLASH_SECTOR_6;
-			printFloat(*data);
-			printNL();
 		}
 
 		else {
