@@ -528,21 +528,27 @@ void brakeInCell(double base_speed) {
 	resetEncoder(LEFTENCODER);
 }
 
-void startCellStop() {
+bool startCellStop() {
 	if (!brb) {
-		if (x == 0 && y == 0 && dir == 0) {
+		if (x == 0 && y == 0) {
 			hardBrake();
-			brb = !brb;
+			playBuzzer(100,100);
+			playBuzzer(100,100);
+			playBuzzer(100,100);
+			brb = true;;
 			while(!getButton()) {
 				toggleLEDAll();
 				HAL_Delay(100);
 			}
+			printMap();
 			HAL_Delay(500);
+			return true;
 		}
 	}
 	if (x != 0 || y != 0) {
-		brb = !brb;
+		brb = false;
 	}
+	return false;
 }
 
 void searchSlow() {
@@ -715,7 +721,6 @@ void mapSlow() {
 
 		frontWall = hasFrontWall(frontRight, frontLeft);
 
-
 		// Determine location
 		location = getEncoder(LEFTENCODER);
 
@@ -776,7 +781,7 @@ void mapSlow() {
 				default:
 					break;
 			}
-			setWallsForCell(x,y,here);
+			mapSideWalls(x,y,here);
 
 			// Disable Mapping
 			map = false;
@@ -790,6 +795,12 @@ void mapSlow() {
 		if (!rightWall) {
 			// Brake at center of cell
 			brakeInCell(base_speed);
+			frontRight = readSensor(RIGHT_DET);
+			frontLeft = readSensor(LEFT_DET);
+			if (hasFrontWall(frontRight,frontLeft)) {
+				frontCorrection();
+				mapFrontWall(x,y,true);
+			}
 			rightWall = true;
 			leftWall = true;
 			// Turn right
@@ -805,32 +816,34 @@ void mapSlow() {
 		// If front wall
 		if (frontWall && rightWall) {
 			// Stop & correct off wall
-			hardBrake();
-			if(location%CELL_L >= CELL_L/2 && map) {
-				switch (dir) {
-					case 0:
-						y++;
-						break;
-					case 1:
-						x++;
-						break;
-					case 2:
-						y--;
-						break;
-					case 3:
-						x--;
-						break;
-					default:
-						break;
-				}
-			}
+//			hardBrake();
 			frontCorrection();
+//			if(location%CELL_L >= CELL_L/2 && map) {
+//				switch (dir) {
+//					case 0:
+//						y++;
+//						break;
+//					case 1:
+//						x++;
+//						break;
+//					case 2:
+//						y--;
+//						break;
+//					case 3:
+//						x--;
+//						break;
+//					default:
+//						break;
+//				}
+//				map = false;
+//			}
+			mapFrontWall(x,y,true);
 			turnLeft();
 			if (dir == 0) {
 				dir = 3;
 			}
 			else dir--;
-			frontWall = false;
+			frontWall = leftWall;;
 			rightWall = true;
 			backWall = rightWall;
 			leftWall = true;
@@ -858,7 +871,7 @@ void mapSlow() {
 				break;
 		}
 
-		startCellStop();
+		if (startCellStop()) break;
 
 		correction2(base_speed);
 	}

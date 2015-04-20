@@ -21,6 +21,12 @@
 #define ON  1		// Used for on/off states
 #define OFF 0		// Used for on/off states
 
+// Direction
+#define NORTH		0
+#define EAST		1
+#define SOUTH		2
+#define WEST		3
+
 #define PERIOD 1000	// Motor period
 
 #define TRANS_DELAY 200	// Delay between USART transmissions
@@ -35,8 +41,8 @@
 #define VELOCITY_k_L	25			// Velocity slow-down/speedup rate left motor
 #define BRAKE_k_R		50
 #define BRAKE_k_L		50
-#define CELL_R			4395
-#define CELL_L			4375
+#define CELL_R			4395		//4110		//4395
+#define CELL_L			4375		//4110		//4375
 #define TURN_R			1470
 #define TURN_L			1515
 #define SLOW			15

@@ -74,8 +74,6 @@ void hardBrake() {
 	setSpeed(LEFTMOTOR,0);
 	vel_k_R = VELOCITY_k_R;
 	vel_k_L = VELOCITY_k_L;
-	resetEncoder(RIGHTENCODER);
-	resetEncoder(LEFTENCODER);
 }
 
 void brakeRight() {

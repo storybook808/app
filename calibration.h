@@ -22,6 +22,7 @@ void calibrateSensors(void);
 void calibrateWall(Wall wall);
 void testCalibration();
 void setWall(Wall wall, double value);
+void calibrateEncoders();
 
 /* Rename getFarWall functions */
 double getWall(Wall wall);

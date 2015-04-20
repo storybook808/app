@@ -56,36 +56,74 @@ cell getWallsForCell(uint8_t x, uint8_t y) {
     return request;
 }
 
-void setWallsForCell(uint8_t x, uint8_t y, cell here) {
+void setSideWallsForCell(uint8_t x, uint8_t y, cell here) {
 	// If cell is not mapped
-	if(!map[x][y].mapped) {
+//	if(!map[x][y].mapped) {
 		// Map Cell
 		map[x][y].south = here.south;
 		map[x][y].west = here.west;
 		if (x != 15) map[x+1][y].west = here.east;
 		if (y != 15) map[x][y+1].south = here.north;
 		map[x][y].mapped = true;
+//	}
+//	// Else
+//	else {
+//		cell test = getWallsForCell(x,y);
+//		// Verify cell
+//		if (here.south != test.south) {
+//			setBuzzerTone(C7);
+//			playBuzzer(50,0);
+//		}
+//		if (here.north != test.north) {
+//			setBuzzer(C8);
+//			playBuzzer(50,0);
+//		}
+//		if (here.east != test.east) {
+//			setBuzzer(G7);
+//			playBuzzer(50,0);
+//		}
+//		if (here.west != test.west) {
+//			setBuzzer(G8);
+//			playBuzzer(50,0);
+//		}
+//	}
+}
+
+void mapSideWalls(uint8_t x, uint8_t y, cell here) {
+	switch (dir) {
+		case NORTH:
+			map[x][y].west = here.west;
+			if (x !=15) map[x+1][y].west = here.east;
+			break;
+		case EAST:
+			if (y != 15) map[x][y+1].south = here.north;
+			map[x][y].south = here.south;
+			break;
+		case SOUTH:
+			map[x][y].west = here.west;
+			if (x !=15) map[x+1][y].west = here.east;
+			break;
+		case WEST:
+			if (y != 15) map[x][y+1].south = here.north;
+			map[x][y].south = here.south;
+			break;
 	}
-	// Else
-	else {
-		cell test = getWallsForCell(x,y);
-		// Verify cell
-		if (here.south != test.south) {
-			setBuzzerTone(C7);
-			playBuzzer(50,0);
-		}
-		if (here.north != test.north) {
-			setBuzzer(C8);
-			playBuzzer(50,0);
-		}
-		if (here.east != test.east) {
-			setBuzzer(G7);
-			playBuzzer(50,0);
-		}
-		if (here.west != test.west) {
-			setBuzzer(G8);
-			playBuzzer(50,0);
-		}
+}
+
+void mapFrontWall(uint8_t x, uint8_t y, bool here) {
+	switch (dir) {
+		case NORTH:
+			if (y != 15) map[x][y+1].south = here;
+			break;
+		case EAST:
+			if (x != 15) map[x+1][y].west = here;
+			break;
+		case SOUTH:
+			map[x][y].south = here;
+			break;
+		case WEST:
+			map[x][y].west = here;
+			break;
 	}
 }
 
@@ -157,12 +195,12 @@ bool saveMap() {
 void printMap() {
 	int i,j;
 	for (j = 15; j >= 0; --j) {
-		for (i = 0; i < 1; ++i) {
-			printString("Cell:[");
-			printInt(i);
-			printComma();
-			printInt(j);
-			printString("]: ");
+		for (i = 0; i < 16; ++i) {
+//			printString("Cell:[");
+//			printInt(i);
+//			printComma();
+//			printInt(j);
+//			printString("]: ");
 			if (map[i][j].west) {
 				printString("|");
 			}
@@ -171,11 +209,7 @@ void printMap() {
 				printString("_");
 			}
 			else printString(" ");
-			if (map[i+1][j].west) {
-				printString("|");
-			}
-			else printString(" ");
-			printNL();
 		}
+		printNL();
 	}
 }

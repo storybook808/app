@@ -41,6 +41,45 @@ void testCalibration(void) {
 	setWall(IDEALRIGHTFRONT, getWall(IDEALRIGHTCENTER)+110);
 }
 
+void calibrateEncoders() {
+	int rightEncoder, leftEncoder;
+	int startR, startL;
+	resetEncoder(LEFTENCODER);
+	resetEncoder(RIGHTENCODER);
+
+	startR = getEncoder(RIGHTENCODER);
+	startL = getEncoder(LEFTENCODER);
+
+	double right, left;
+
+	while(1) {
+		right = readSensor(RIGHT_DET);
+		left = readSensor(LEFT_DET);
+		if (hasFrontWall(right,left)) {
+			frontCorrection();
+			HAL_Delay(300);
+			rightEncoder = getEncoder(RIGHTENCODER);
+			leftEncoder = getEncoder(LEFTENCODER);
+			while(!getButton()) {
+				HAL_Delay(200);
+				toggleLED(WHITE);
+			}
+			printInt(startR);
+			printComma();
+			printInt(rightEncoder);
+			printNL();
+			printInt(startL);
+			printComma();
+			printInt(leftEncoder);
+			printNL();
+			break;
+		}
+		else {
+			correction2(50);
+		}
+	}
+}
+
 void calibrateSensors(void) {
 	setLED(BLUE);
 //	waitForTop();

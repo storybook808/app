@@ -44,6 +44,7 @@ void main(void) {
 	Mode mode;
 
 	float sensor_value;
+	int rightEncoder, leftEncoder;
 
 	while(1) {
 
@@ -55,7 +56,7 @@ void main(void) {
 		mode = menu();
 
 		if (mode == MODE1) {
-			searchSlow();
+			calibrateEncoders();
 		}
 
 		else if (mode == MODE2) {

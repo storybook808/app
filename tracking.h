@@ -41,7 +41,7 @@ void turnRight3();
 
 void brakeInCell(double base_speed);
 
-void startCellStop();
+bool startCellStop();
 
 void searchSlow();
 
