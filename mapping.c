@@ -380,14 +380,19 @@ void floodCell(coordinate cell, uint8_t dir) {
 	switch (dir) {
 		case NORTH:
 			flood[cell.x][cell.y+1] = getFloodValue(cell,CURRENT)+1;
+            break;
 		case EAST:
 			flood[cell.x+1][cell.y] = getFloodValue(cell,CURRENT)+1;
+            break;
 		case SOUTH:
 			flood[cell.x][cell.y-1] = getFloodValue(cell,CURRENT)+1;
+            break;
 		case WEST:
 			flood[cell.x-1][cell.y] = getFloodValue(cell,CURRENT)+1;
+            break;
 		case CURRENT:
 			flood[cell.x][cell.y] = getFloodValue(cell,CURRENT)+1;
+            break;
 		default:
 			break;
 	}
