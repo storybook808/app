@@ -165,25 +165,27 @@ bool convertWallsToRows() {
 bool convertRowsToWalls() {
     int i,j;
     bool result = false;
+    uint32_t info;
 
     loadRows();
 
     for (j = 15; j >= 0; j--) {
+        info = row[j];
         for (i = 15; i >= 0; i--) {
-        	if ((row[j] & 1) == 1) {
+        	if ((info & 1) == 1) {
 				map[i][j].west = true;
 			}
         	else {
 				map[i][j].west = false;
 			}
-            row[j]>>=1;
-            if ((row[j] & 1) == 1) {
+            info>>=1;
+            if ((info & 1) == 1) {
 				map[i][j].south = true;
 			}
             else {
 				map[i][j].south = false;
 			}
-            row[j]>>=1;
+            info>>=1;
         }
     }
 
