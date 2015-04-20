@@ -144,7 +144,7 @@ void loadRows() {
 
 	for (i = 0; i < 16; ++i) {
 		row[i] = *data;
-		data++;
+		data+=1;
 	}
 }
 
@@ -167,7 +167,6 @@ bool writeCalibration() {
 		if (HAL_FLASH_Program(TYPEPROGRAM_WORD, flash_dest, calibration[i]) != HAL_OK) {
 			// error during write process
 			HAL_FLASH_Lock();
-			printInt(i);
 			return result;
 		}
 		// 4 is for four bytes in the float
