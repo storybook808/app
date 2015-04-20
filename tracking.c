@@ -540,7 +540,6 @@ bool startCellStop() {
 				toggleLEDAll();
 				HAL_Delay(100);
 			}
-			printMap();
 			HAL_Delay(500);
 			return true;
 		}
@@ -723,6 +722,11 @@ void mapSlow() {
 
 		// Determine location
 		location = getEncoder(LEFTENCODER);
+
+		if (location >= CELL_L) {
+			resetEncoder(RIGHTENCODER);
+			resetEncoder(LEFTENCODER);
+		}
 
 		// If we are half-way through a cell
 		if (location%CELL_L >= CELL_L/2 && map) {

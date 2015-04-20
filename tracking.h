@@ -47,4 +47,6 @@ void searchSlow();
 
 void mapSlow();
 
+void floodSearch();
+
 #endif

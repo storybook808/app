@@ -33,6 +33,7 @@ void main(void) {
 	printNL();
 
 	loadCalibration();
+	loadMap();
 
 	resetLED(WHITE);
 
@@ -43,8 +44,7 @@ void main(void) {
 
 	Mode mode;
 
-	float sensor_value;
-	int rightEncoder, leftEncoder;
+	int i;
 
 	while(1) {
 
@@ -56,14 +56,26 @@ void main(void) {
 		mode = menu();
 
 		if (mode == MODE1) {
-			calibrateEncoders();
+			printMap();
 		}
 
 		else if (mode == MODE2) {
+			emptyMap();
 			mapSlow();
+			saveMap();
 		}
 
 		else if (mode == MODE3) {
+			for (i = 0; i < 16; ++i) {
+				printInt(row[i]);
+				printNL();
+			}
+			if(saveMap()) playBuzzer(5000,100);
+			loadMap();
+			for (i = 0; i < 16; ++i) {
+				printInt(row[i]);
+				printNL();
+			}
 		}
 
 		else {

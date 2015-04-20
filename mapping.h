@@ -31,4 +31,21 @@ bool convertRowsToWalls();
 
 void printMap();
 
+bool saveMap();
+void loadMap();
+
+void printFlood();
+
+void flood1();
+
+void floodCell(coordinate cell, uint8_t dir);
+
+void resetStack(floodStack *stack);
+
+void pushStack(floodStack *stack, uint8_t i, uint8_t j);
+
+coordinate setCoordinate(uint8_t i, uint8_t j);
+
+uint8_t getFloodValue(coordinate cell, uint8_t dir);
+
 #endif

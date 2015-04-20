@@ -144,7 +144,7 @@ void loadRows() {
 
 	for (i = 0; i < 16; ++i) {
 		row[i] = *data;
-		data+=4;
+		data++;
 	}
 }
 

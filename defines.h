@@ -26,6 +26,7 @@
 #define EAST		1
 #define SOUTH		2
 #define WEST		3
+#define CURRENT		4
 
 #define PERIOD 1000	// Motor period
 
@@ -81,8 +82,21 @@ typedef struct cell {
 } cell;
 
 walls map[16][16];
+uint8_t flood[16][16];
 
 double calibration[8];
+
+/* Flood structures */
+
+typedef struct coordinate {
+	uint8_t x;
+	uint8_t y;
+}coordinate;
+
+typedef struct floodStack {
+	coordinate stack[256];
+	uint8_t stackCount;
+}floodStack;
 
 /* Enumeration Variable for ADC Channels */
 typedef enum
