@@ -40,7 +40,7 @@ void flood1();
 void flood2();
 
 void floodCell(coordinate cell, uint8_t dir);
-void floodCell2(coordinate cell, uint8_t dir);
+void floodCellTurn(coordinate cell, uint8_t dir);
 
 void resetStack(floodStack *stack);
 
