@@ -196,6 +196,14 @@ bool convertRowsToWalls() {
     return result;
 }
 
+void printRows() {
+    int i;
+    for (i = 0; i < 16; i++) {
+        printInt(row[i]);
+        printNL();
+    }
+}
+
 bool saveMap() {
 	if (convertWallsToRows()) {
 		playBuzzer(100,100);
