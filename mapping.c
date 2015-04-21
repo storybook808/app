@@ -164,7 +164,7 @@ bool convertWallsToRows() {
 
 bool convertRowsToWalls() {
     int i,j;
-    bool result = false;
+    bool result = true;
     uint32_t info;
 
     loadRows();
@@ -190,7 +190,7 @@ bool convertRowsToWalls() {
     }
 
     if (j == -1 && i == -1) {
-        result = true;
+        result = false;
     }
 
     return result;
