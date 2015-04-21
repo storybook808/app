@@ -82,7 +82,7 @@ typedef struct cell {
 } cell;
 
 walls map[16][16];
-uint8_t flood[16][16];
+float flood[16][16];
 
 double calibration[8];
 

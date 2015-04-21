@@ -37,8 +37,10 @@ void loadMap();
 void printFlood();
 
 void flood1();
+void flood2();
 
 void floodCell(coordinate cell, uint8_t dir);
+void floodCell2(coordinate cell, uint8_t dir);
 
 void resetStack(floodStack *stack);
 
@@ -46,6 +48,6 @@ void pushStack(floodStack *stack, uint8_t i, uint8_t j);
 
 coordinate setCoordinate(uint8_t i, uint8_t j);
 
-uint8_t getFloodValue(coordinate cell, uint8_t dir);
+float getFloodValue(coordinate cell, uint8_t dir);
 
 #endif
