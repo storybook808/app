@@ -59,14 +59,14 @@ cell getWallsForCell(uint8_t x, uint8_t y) {
 
 void setSideWallsForCell(uint8_t x, uint8_t y, cell here) {
 	// If cell is not mapped
-//	if(!map[x][y].mapped) {
+	if(!map[x][y].mapped) {
 		// Map Cell
 		map[x][y].south = here.south;
 		map[x][y].west = here.west;
 		if (x != 15) map[x+1][y].west = here.east;
 		if (y != 15) map[x][y+1].south = here.north;
 		map[x][y].mapped = true;
-//	}
+	}
 //	// Else
 //	else {
 //		cell test = getWallsForCell(x,y);
@@ -109,6 +109,7 @@ void mapSideWalls(uint8_t x, uint8_t y, cell here) {
 			map[x][y].south = here.south;
 			break;
 	}
+	map[x][y].mapped = true;
 }
 
 void mapFrontWall(uint8_t x, uint8_t y, bool here) {
@@ -499,6 +500,229 @@ void flood2() {
     }
 }
 
+void floodCenter() {
+    cell currentCell;
+    floodStack stack1;
+    floodStack stack2;
+
+    resetStack(&stack1);
+    resetStack(&stack2);
+
+    pushStack(&stack1,7,7);
+    pushStack(&stack1,7,8);
+    pushStack(&stack1,8,7);
+    pushStack(&stack1,8,8);
+
+    int size;
+    int i,j;
+    bool flag1, flag2;
+    flag1 = false;
+    flag2 = false;
+    int times = 0;
+    int rounds = 0;
+
+    for (i = 0; i < 16; i++) {
+		for (j = 0; j < 16; j++) {
+			flood[i][j] = 0b11111111;
+		}
+	}
+
+    flood[7][7] = 0;
+	flood[7][8] = 0;
+	flood[8][7] = 0;
+	flood[8][8] = 0;
+
+    for (i = 1; i <= 256; ++i) {
+        if (flag1 && flag2) {
+            break;
+        }
+        rounds++;
+        // Determine current stack
+        if (i%2 == 1) {
+            size = stack1.stackCount;
+            if (size == 0) flag1 = true;
+            else flag1 = false;
+            for (j = 0; j < size; ++j) {
+                currentCell = getWallsForCell(stack1.stack[j].x,stack1.stack[j].y);
+                if (!currentCell.north) {
+                    if (getFloodValue(stack1.stack[j], NORTH) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],NORTH);
+                        pushStack(&stack2,stack1.stack[j].x,stack1.stack[j].y+1);
+                        times++;
+                    }
+                }
+                if (!currentCell.east) {
+                    if (getFloodValue(stack1.stack[j], EAST) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],EAST);
+                        pushStack(&stack2,stack1.stack[j].x+1,stack1.stack[j].y);
+                        times++;
+                    }
+                }
+                if (!currentCell.south) {
+                    if (getFloodValue(stack1.stack[j], SOUTH) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],SOUTH);
+                        pushStack(&stack2,stack1.stack[j].x,stack1.stack[j].y-1);
+                        times++;
+                    }
+                }
+                if (!currentCell.west) {
+                    if (getFloodValue(stack1.stack[j], WEST) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],WEST);
+                        pushStack(&stack2,stack1.stack[j].x-1,stack1.stack[j].y);
+                        times++;
+                    }
+                }
+            }
+            resetStack(&stack1);
+        }
+        else {
+            size = stack2.stackCount;
+            if (size == 0) flag2 = true;
+            else flag2 = false;
+            for (j = 0; j < size; ++j) {
+                currentCell = getWallsForCell(stack2.stack[j].x,stack2.stack[j].y);
+                if (!currentCell.north) {
+                    if (getFloodValue(stack2.stack[j], NORTH) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],NORTH);
+                        pushStack(&stack1,stack2.stack[j].x,stack2.stack[j].y+1);
+                        times++;
+                    }
+                }
+                if (!currentCell.east) {
+                    if (getFloodValue(stack2.stack[j], EAST) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],EAST);
+                        pushStack(&stack1,stack2.stack[j].x+1,stack2.stack[j].y);
+                        times++;
+                    }
+                }
+                if (!currentCell.south) {
+                    if (getFloodValue(stack2.stack[j], SOUTH) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],SOUTH);
+                        pushStack(&stack1,stack2.stack[j].x,stack2.stack[j].y-1);
+                        times++;
+                    }
+                }
+                if (!currentCell.west) {
+                    if (getFloodValue(stack2.stack[j], WEST) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],WEST);
+                        pushStack(&stack1,stack2.stack[j].x-1,stack2.stack[j].y);
+                        times++;
+                    }
+                }
+            }
+            resetStack(&stack2);
+        }
+    }
+}
+
+void floodStart() {
+    cell currentCell;
+    floodStack stack1;
+    floodStack stack2;
+
+    resetStack(&stack1);
+    resetStack(&stack2);
+
+    pushStack(&stack1,0,0);
+
+    int size;
+    int i,j;
+    bool flag1, flag2;
+    flag1 = false;
+    flag2 = false;
+    int times = 0;
+    int rounds = 0;
+
+    for (i = 0; i < 16; i++) {
+		for (j = 0; j < 16; j++) {
+			flood[i][j] = 0b11111111;
+		}
+	}
+
+    flood[0][0] = 0;
+
+    for (i = 1; i <= 256; ++i) {
+        if (flag1 && flag2) {
+            break;
+        }
+        rounds++;
+        // Determine current stack
+        if (i%2 == 1) {
+            size = stack1.stackCount;
+            if (size == 0) flag1 = true;
+            else flag1 = false;
+            for (j = 0; j < size; ++j) {
+                currentCell = getWallsForCell(stack1.stack[j].x,stack1.stack[j].y);
+                if (!currentCell.north) {
+                    if (getFloodValue(stack1.stack[j], NORTH) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],NORTH);
+                        pushStack(&stack2,stack1.stack[j].x,stack1.stack[j].y+1);
+                        times++;
+                    }
+                }
+                if (!currentCell.east) {
+                    if (getFloodValue(stack1.stack[j], EAST) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],EAST);
+                        pushStack(&stack2,stack1.stack[j].x+1,stack1.stack[j].y);
+                        times++;
+                    }
+                }
+                if (!currentCell.south) {
+                    if (getFloodValue(stack1.stack[j], SOUTH) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],SOUTH);
+                        pushStack(&stack2,stack1.stack[j].x,stack1.stack[j].y-1);
+                        times++;
+                    }
+                }
+                if (!currentCell.west) {
+                    if (getFloodValue(stack1.stack[j], WEST) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],WEST);
+                        pushStack(&stack2,stack1.stack[j].x-1,stack1.stack[j].y);
+                        times++;
+                    }
+                }
+            }
+            resetStack(&stack1);
+        }
+        else {
+            size = stack2.stackCount;
+            if (size == 0) flag2 = true;
+            else flag2 = false;
+            for (j = 0; j < size; ++j) {
+                currentCell = getWallsForCell(stack2.stack[j].x,stack2.stack[j].y);
+                if (!currentCell.north) {
+                    if (getFloodValue(stack2.stack[j], NORTH) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],NORTH);
+                        pushStack(&stack1,stack2.stack[j].x,stack2.stack[j].y+1);
+                        times++;
+                    }
+                }
+                if (!currentCell.east) {
+                    if (getFloodValue(stack2.stack[j], EAST) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],EAST);
+                        pushStack(&stack1,stack2.stack[j].x+1,stack2.stack[j].y);
+                        times++;
+                    }
+                }
+                if (!currentCell.south) {
+                    if (getFloodValue(stack2.stack[j], SOUTH) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],SOUTH);
+                        pushStack(&stack1,stack2.stack[j].x,stack2.stack[j].y-1);
+                        times++;
+                    }
+                }
+                if (!currentCell.west) {
+                    if (getFloodValue(stack2.stack[j], WEST) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],WEST);
+                        pushStack(&stack1,stack2.stack[j].x-1,stack2.stack[j].y);
+                        times++;
+                    }
+                }
+            }
+            resetStack(&stack2);
+        }
+    }
+}
 
 void floodCell(coordinate cell, uint8_t dir) {
 	switch (dir) {

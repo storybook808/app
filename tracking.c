@@ -23,6 +23,11 @@ bool hasFrontWall(double valueRight, double valueLeft) {
 	else return false;
 }
 
+bool hasFarFrontWall(double valueRight, double valueLeft) {
+	if ((valueRight < getWall(FLOODRIGHTFRONT)) && (valueLeft < getWall(FLOODLEFTFRONT))) return true;
+	else return false;
+}
+
 void moveForward(int cells, Wall_Correction wall, double base_speed) {
 	int x;
 	for (x = 0; x < cells; x++) {
@@ -62,8 +67,8 @@ void turnRight() {
 	int currentFrontRight;
 	int currentFrontLeft;
 
-	int endR = getEncoder(RIGHTENCODER) - TURN_R-75;
-	int endL = getEncoder(LEFTENCODER) + TURN_L;
+	int endR = getEncoder(RIGHTENCODER) - TURN_R-100;
+	int endL = getEncoder(LEFTENCODER) + TURN_L + 75;
 
 	double errorR;
 	double errorL;
@@ -199,8 +204,8 @@ void turnLeft() {
 	int currentFrontRight;
 	int currentFrontLeft;
 
-	int endR = getEncoder(RIGHTENCODER) + TURN_R;
-	int endL = getEncoder(LEFTENCODER) - TURN_L;
+	int endR = getEncoder(RIGHTENCODER) + TURN_R+100;
+	int endL = getEncoder(LEFTENCODER) - TURN_L-100;
 
 	double errorR;
 	double errorL;
@@ -851,6 +856,399 @@ void mapSlow() {
 			rightWall = true;
 			backWall = rightWall;
 			leftWall = true;
+		}
+
+		switch (dir) {
+			case 0:
+				resetLEDAll();
+				setLED(WHITE);
+				break;
+			case 1:
+				resetLEDAll();
+				setLED(BLUE);
+				break;
+			case 2:
+				resetLEDAll();
+				setLED(GREEN);
+				break;
+			case 3:
+				resetLEDAll();
+				setLED(RED);
+				break;
+			default:
+				resetLEDAll();
+				break;
+		}
+
+		if (startCellStop()) break;
+
+		correction2(base_speed);
+	}
+}
+
+void floodSlow(double base_speed) {
+	double frontRight, frontLeft;
+	double centerRight, centerLeft;
+	int location;
+	bool rightWall, leftWall, frontWall, backWall;
+	bool mapTime = true;
+	cell here;
+
+	x = 0;
+	y = 0;
+	dir = 0;
+
+	rightWall = true;
+	leftWall = true;
+	frontWall = false;
+	backWall = true;
+
+	uint8_t wallCount;
+	uint8_t decision;
+
+	float floodRight, floodFront, floodLeft;
+
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
+
+	bool flag = false;
+
+	while(1) {
+
+		// Get Sensor Readings
+		frontRight = readSensor(RIGHT_DET);
+		frontLeft = readSensor(LEFT_DET);
+		centerRight = readSensor(RIGHT_CEN_DET);
+		centerLeft = readSensor(LEFT_CEN_DET);
+
+		// Determine walls
+
+		// Determine location
+		location = getEncoder(LEFTENCODER);
+
+		if (location >= CELL_L) {
+			resetEncoder(RIGHTENCODER);
+			resetEncoder(LEFTENCODER);
+		}
+
+		// If we are half-way through a cell
+		if (location%CELL_L >= CELL_L/2 && mapTime) {
+			// Check side walls.
+			rightWall = hasRightWall(centerRight);
+			leftWall = hasLeftWall(centerLeft);
+			// Check front wall.
+			frontWall = hasFarFrontWall(frontRight,frontLeft);
+			backWall = false;
+
+			// Node decisions.
+			wallCount = rightWall + leftWall + frontWall;
+
+			switch (dir) {
+				case 0:
+					y++;
+					break;
+				case 1:
+					x++;
+					break;
+				case 2:
+					y--;
+					break;
+				case 3:
+					x--;
+					break;
+				default:
+					break;
+			}
+			// Map values to map here
+			if (1) { //map[x][y].mapped == false
+				switch (dir) {
+				// North
+					case 0:
+						here.north = frontWall;
+						here.south = backWall;
+						here.west = leftWall;
+						here.east = rightWall;
+						break;
+				// East
+					case 1:
+						here.north = leftWall;
+						here.south = rightWall;
+						here.west = backWall;
+						here.east = frontWall;
+						break;
+				// South
+					case 2:
+						here.north = backWall;
+						here.south = frontWall;
+						here.west = rightWall;
+						here.east = leftWall;
+						break;
+				//West
+					case 3:
+						here.north = rightWall;
+						here.south = leftWall;
+						here.west = frontWall;
+						here.east = backWall;
+						break;
+					default:
+						break;
+				}
+				mapSideWalls(x,y,here);
+			}
+			else {
+				here = getWallsForCell(x,y);
+				switch (dir) {
+				// North
+					case 0:
+						frontWall = here.north;
+						backWall = here.south;
+						leftWall = here.west;
+						rightWall = here.east;
+						break;
+				// East
+					case 1:
+						leftWall = here.north;
+						rightWall = here.south;
+						backWall = here.west;
+						frontWall = here.east;
+						break;
+				// South
+					case 2:
+						backWall = here.north;
+						frontWall = here.south;
+						rightWall = here.west;
+						leftWall = here.east;
+						break;
+				//West
+					case 3:
+						rightWall = here.north;
+						leftWall = here.south;
+						frontWall = here.west;
+						backWall = here.east;
+						break;
+					default:
+						break;
+				}
+			}
+
+			decision = 0 + leftWall;
+			decision <<= 1;
+			decision += frontWall;
+			decision <<= 1;
+			decision += rightWall;
+
+			if (!flag) {
+				if (x == 8 && y == 8) {
+					flag = true;
+				}
+			}
+
+			if (!flag) {
+				floodCenter();
+			}
+			else {
+				floodStart();
+			}
+
+			switch(decision) {
+			case 0:
+				// Left: 0 Front: 0 Right: 0
+
+				switch (dir) {
+				case NORTH:
+					floodLeft = getFloodValue(setCoordinate(x,y),WEST);
+					floodFront = getFloodValue(setCoordinate(x,y),NORTH);
+					floodRight = getFloodValue(setCoordinate(x,y),EAST);
+					break;
+				case EAST:
+					floodLeft = getFloodValue(setCoordinate(x,y),NORTH);
+					floodFront = getFloodValue(setCoordinate(x,y),EAST);
+					floodRight = getFloodValue(setCoordinate(x,y),SOUTH);
+					break;
+				case SOUTH:
+					floodLeft = getFloodValue(setCoordinate(x,y),EAST);
+					floodFront = getFloodValue(setCoordinate(x,y),SOUTH);
+					floodRight = getFloodValue(setCoordinate(x,y),WEST);
+					break;
+				case WEST:
+					floodLeft = getFloodValue(setCoordinate(x,y),SOUTH);
+					floodFront = getFloodValue(setCoordinate(x,y),WEST);
+					floodRight = getFloodValue(setCoordinate(x,y),NORTH);
+					break;
+				}
+
+				if (floodFront <= floodLeft && floodFront <= floodRight) {
+
+				}
+
+				else if (floodRight <= floodLeft) {
+					brakeInCell(base_speed);
+					turnRight();
+					if (dir == 3) dir = 0;
+					else dir++;
+				}
+
+				else {
+					brakeInCell(base_speed);
+					turnLeft();
+					if (dir == 0) dir = 3;
+					else dir--;
+				}
+
+				break;
+			case 1:
+				// Left: 0 Front: 0 Right: 1
+
+				switch (dir) {
+				case NORTH:
+					floodLeft = getFloodValue(setCoordinate(x,y),WEST);
+					floodFront = getFloodValue(setCoordinate(x,y),NORTH);
+					break;
+				case EAST:
+					floodLeft = getFloodValue(setCoordinate(x,y),NORTH);
+					floodFront = getFloodValue(setCoordinate(x,y),EAST);
+					break;
+				case SOUTH:
+					floodLeft = getFloodValue(setCoordinate(x,y),EAST);
+					floodFront = getFloodValue(setCoordinate(x,y),SOUTH);
+					break;
+				case WEST:
+					floodLeft = getFloodValue(setCoordinate(x,y),SOUTH);
+					floodFront = getFloodValue(setCoordinate(x,y),WEST);
+					break;
+				}
+
+				if (floodFront <= floodLeft) {
+
+				}
+
+				else {
+					brakeInCell(base_speed);
+					turnLeft();
+					if (dir == 0) dir = 3;
+					else dir--;
+				}
+
+				break;
+			case 2:
+				// Left: 0 Front: 1 Right: 0
+				frontCorrection();
+				mapFrontWall(x, y, true);
+
+				switch (dir) {
+				case NORTH:
+					floodLeft = getFloodValue(setCoordinate(x,y),WEST);
+					floodRight = getFloodValue(setCoordinate(x,y),EAST);
+					break;
+				case EAST:
+					floodLeft = getFloodValue(setCoordinate(x,y),NORTH);
+					floodRight = getFloodValue(setCoordinate(x,y),SOUTH);
+					break;
+				case SOUTH:
+					floodLeft = getFloodValue(setCoordinate(x,y),EAST);
+					floodRight = getFloodValue(setCoordinate(x,y),WEST);
+					break;
+				case WEST:
+					floodLeft = getFloodValue(setCoordinate(x,y),SOUTH);
+					floodRight = getFloodValue(setCoordinate(x,y),NORTH);
+					break;
+				}
+
+				if (floodRight <= floodLeft) {
+					brakeInCell(base_speed);
+					turnRight();
+					if (dir == 3) dir = 0;
+					else dir++;
+				}
+
+				else {
+					brakeInCell(base_speed);
+					turnLeft();
+					if (dir == 0) dir = 3;
+					else dir--;
+				}
+
+				break;
+			case 3:
+				// Left: 0 Front: 1 Right: 1
+				frontCorrection();
+				mapFrontWall(x, y, true);
+				turnLeft();
+				if (dir == 0) dir = 3;
+				else dir--;
+				break;
+			case 4:
+				// Left: 1 Front: 0 Right: 0
+				switch (dir) {
+				case NORTH:
+					floodFront = getFloodValue(setCoordinate(x,y),NORTH);
+					floodRight = getFloodValue(setCoordinate(x,y),EAST);
+					break;
+				case EAST:
+					floodFront = getFloodValue(setCoordinate(x,y),EAST);
+					floodRight = getFloodValue(setCoordinate(x,y),SOUTH);
+					break;
+				case SOUTH:
+					floodFront = getFloodValue(setCoordinate(x,y),SOUTH);
+					floodRight = getFloodValue(setCoordinate(x,y),WEST);
+					break;
+				case WEST:
+					floodFront = getFloodValue(setCoordinate(x,y),WEST);
+					floodRight = getFloodValue(setCoordinate(x,y),NORTH);
+					break;
+				}
+
+				if (floodFront <= floodRight) {
+
+				}
+
+				else {
+					brakeInCell(base_speed);
+					turnRight();
+					if (dir == 3) dir = 0;
+					else dir++;
+				}
+				break;
+			case 5:
+				// Left: 1 Front: 0 Right: 1
+				break;
+			case 6:
+				// Left: 1 Front: 1 Right: 0
+				frontCorrection();
+				mapFrontWall(x, y, true);
+				turnRight();
+				if (dir == 3) dir = 0;
+				else dir++;
+				break;
+			case 7:
+				// Left: 1 Front: 1 Right: 1
+				frontCorrection();
+				mapFrontWall(x,y,true);
+				turnLeft();
+				if (dir == 0) {
+					dir = 3;
+				}
+				else dir--;
+				frontCorrection();
+				mapFrontWall(x,y,true);
+				turnLeft();
+				if (dir == 0) {
+					dir = 3;
+				}
+				else dir--;
+				break;
+			default:
+				setBuzzer(ON);
+				break;
+			}
+
+			// Disable Mapping
+			mapTime = false;
+		}
+		// If we are a quarter in a cell
+		if (location%CELL_L <= CELL_L/4 && !mapTime) {
+			// Enable mapping
+			mapTime = true;
 		}
 
 		switch (dir) {

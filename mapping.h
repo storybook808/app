@@ -38,6 +38,8 @@ void printFlood();
 
 void flood1();
 void flood2();
+void floodCenter();
+void floodStart();
 
 void floodCell(coordinate cell, uint8_t dir);
 void floodCellTurn(coordinate cell, uint8_t dir);

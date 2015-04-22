@@ -56,14 +56,13 @@ void main(void) {
 		mode = menu();
 
 		if (mode == MODE1) {
-			emptyMap();
-			mapSlow();
+			floodSlow(100);
 			saveMap();
 		}
 
 		else if (mode == MODE2) {
 			emptyMap();
-			floodSlow();
+			floodSlow(50);
 			saveMap();
 		}
 

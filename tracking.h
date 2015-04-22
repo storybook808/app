@@ -49,7 +49,7 @@ void searchSlow();
 
 void mapSlow();
 
-void floodSlow();
+void floodSlow(double base_speed);
 
 void floodSearch();
 
