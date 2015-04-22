@@ -224,7 +224,7 @@ bool saveMap() {
 }
 
 void loadMap() {
-	if (!convertRowsToWalls()) {
+	if (convertRowsToWalls()) {
 		playBuzzer(1000,100);
 	}
 }
@@ -260,37 +260,39 @@ void printFlood() {
                 value = getFloodValue(setCoordinate(i,j),CURRENT);
                 if(k == 0) {
                     if (map[i][j].west) {
-                        printf("|     ");
+                        printString("|     ");
                     }
-                    else printf("      ");
+                    else printString("      ");
                 }
                 if(k == 1) {
                     if (map[i][j].west) {
-                        printf("|");
+                        printString("|");
                     }
-                    else printf(" ");
+                    else printString(" ");
                     if (value >= 100) {
-                        printf("     ");
+                        printString("     ");
                     }
                     else if (value >= 10) {
-                        printf(" %.1f",value);
+                    	printString(" ");
+                        printFloat(value);
                     }
                     else {
-                        printf("  %.1f",value);
+                    	printString("  ");
+                        printFloat(value);
                     }
                 }
                 if(k == 2) {
                     if (map[i][j].west) {
-                        printf("|");
+                        printString("|");
                     }
-                    else printf(" ");
+                    else printString(" ");
                     if (map[i][j].south) {
-                        printf("_____");
+                        printString("_____");
                     }
-                    else printf("     ");
+                    else printString("     ");
                 }
             }
-            printf("\n");
+            printNL();
         }
     }
 }
@@ -383,11 +385,6 @@ void flood1() {
 }
 
 void flood2() {
-    flood[7][7] = 0;
-    flood[7][8] = 0;
-    flood[8][7] = 0;
-    flood[8][8] = 0;
-    
     cell currentCell;
     floodStack stack1;
     floodStack stack2;
@@ -407,6 +404,18 @@ void flood2() {
     flag2 = false;
     int times = 0;
     int rounds = 0;
+
+    for (i = 0; i < 16; i++) {
+		for (j = 0; j < 16; j++) {
+			flood[i][j] = 0b11111111;
+		}
+	}
+
+    flood[7][7] = 0;
+	flood[7][8] = 0;
+	flood[8][7] = 0;
+	flood[8][8] = 0;
+
     for (i = 1; i <= 256; ++i) {
         if (flag1 && flag2) {
             break;

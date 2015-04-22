@@ -25,6 +25,8 @@ bool hasLeftWall(double value);
 
 bool hasFrontWall(double valueRight, double valueLeft);
 
+bool hasFarFrontWall(double valueRight, double valueLeft);
+
 void moveForward(int cells, Wall_Correction wall, double base_speed);
 
 void moveCells(int num, double base_speed);
@@ -46,6 +48,8 @@ bool startCellStop();
 void searchSlow();
 
 void mapSlow();
+
+void floodSlow();
 
 void floodSearch();
 

@@ -84,7 +84,7 @@ typedef struct cell {
 walls map[16][16];
 float flood[16][16];
 
-double calibration[8];
+double calibration[10];
 
 /* Flood structures */
 
@@ -131,7 +131,10 @@ typedef enum {
     IDEALLEFTCENTER,
     IDEALRIGHTCENTER,
     CENTERRIGHTFRONT,
-    CENTERLEFTFRONT
+    CENTERLEFTFRONT,
+    FLOODRIGHTFRONT,
+    FLOODLEFTFRONT,
+    FLOODFRONT
 }Wall;
 
 /* Enumeration Variable for Encoder Channels */

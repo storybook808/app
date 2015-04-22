@@ -161,9 +161,11 @@ bool writeCalibration() {
 	calibration[5] = getWall(IDEALLEFTCENTER);
 	calibration[6] = getWall(FARRIGHTWALL);
 	calibration[7] = getWall(FARLEFTWALL);
+	calibration[8] = getWall(FLOODRIGHTFRONT);
+	calibration[9] = getWall(FLOODLEFTFRONT);
 
 	// write the 2 calibration readings of data
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < 10; i++) {
 		if (HAL_FLASH_Program(TYPEPROGRAM_WORD, flash_dest, calibration[i]) != HAL_OK) {
 			// error during write process
 			HAL_FLASH_Lock();
@@ -183,7 +185,7 @@ void loadCalibration() {
 	int i;
 	uint32_t *data = (uint32_t *)WRITE_ADDRESS_CALI;
 
-	for (i = 0; i < 8; ++i) {
+	for (i = 0; i < 10; ++i) {
 		calibration[i] = *data;
 		data+=1;
 	}
@@ -196,4 +198,6 @@ void loadCalibration() {
 	setWall(IDEALLEFTCENTER, calibration[5]);
 	setWall(FARRIGHTWALL, calibration[6]);
 	setWall(FARLEFTWALL, calibration[7]);
+	setWall(FLOODRIGHTFRONT, calibration[8]);
+	setWall(FLOODLEFTFRONT, calibration[9]);
 }

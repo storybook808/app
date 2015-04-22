@@ -56,26 +56,20 @@ void main(void) {
 		mode = menu();
 
 		if (mode == MODE1) {
-			printMap();
-		}
-
-		else if (mode == MODE2) {
 			emptyMap();
 			mapSlow();
 			saveMap();
 		}
 
+		else if (mode == MODE2) {
+			emptyMap();
+			floodSlow();
+			saveMap();
+		}
+
 		else if (mode == MODE3) {
-			for (i = 0; i < 16; ++i) {
-				printInt(row[i]);
-				printNL();
-			}
-			if(saveMap()) playBuzzer(5000,100);
-			loadMap();
-			for (i = 0; i < 16; ++i) {
-				printInt(row[i]);
-				printNL();
-			}
+			flood2();
+			printFlood();
 		}
 
 		else {

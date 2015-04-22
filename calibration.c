@@ -12,6 +12,7 @@ static double farLeftWall, farRightWall;
 static double idealLeftFront, idealRightFront;
 static double idealLeftCenter, idealRightCenter;
 static double centerLeftFront, centerRightFront;
+static double floodLeftFront, floodRightFront;
 
 /*=Public Functions===========================================================*/
 
@@ -119,6 +120,13 @@ void calibrateSensors(void) {
 	calibrateWall(FRONTCENTER);
 	resetLEDAll();
 	HAL_Delay(1000);
+
+	setLED(RED);
+	setLED(WHITE);
+	while(!getButton());
+	calibrateWall(FLOODFRONT);
+	resetLEDAll();
+	HAL_Delay(1000);
 }
 
 void calibrateWall(Wall wall) {
@@ -140,6 +148,10 @@ void calibrateWall(Wall wall) {
         case FRONTCENTER:
         	setWall(CENTERRIGHTFRONT, readSensor(RIGHT_DET));
         	setWall(CENTERLEFTFRONT, readSensor(LEFT_DET));
+        	break;
+        case FLOODFRONT:
+        	setWall(FLOODRIGHTFRONT, readSensor(RIGHT_DET));
+        	setWall(FLOODLEFTFRONT, readSensor(LEFT_DET));
         	break;
             
         default:
@@ -172,6 +184,12 @@ double getWall(Wall wall) {
         	break;
         case CENTERLEFTFRONT:
         	return centerLeftFront;
+        	break;
+        case FLOODRIGHTFRONT:
+        	return floodRightFront;
+        	break;
+        case FLOODLEFTFRONT:
+        	return floodLeftFront;
         	break;
             
         default:
@@ -209,6 +227,12 @@ void setWall(Wall wall, double value) {
         	break;
         case CENTERLEFTFRONT:
         	centerLeftFront = value;
+        	break;
+        case FLOODRIGHTFRONT:
+        	floodRightFront = value;
+        	break;
+        case FLOODLEFTFRONT:
+        	floodLeftFront = value;
         	break;
             
         default:
