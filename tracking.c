@@ -207,8 +207,8 @@ void turnLeft() {
 	int currentFrontRight;
 	int currentFrontLeft;
 
-	int endR = getEncoder(RIGHTENCODER) + TURN_R+50;
-	int endL = getEncoder(LEFTENCODER) - TURN_L-50;
+	int endR = getEncoder(RIGHTENCODER) + TURN_R+65;
+	int endL = getEncoder(LEFTENCODER) - TURN_L-65;
 
 	double errorR;
 	double errorL;

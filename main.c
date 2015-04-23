@@ -76,7 +76,7 @@ void main(void) {
 			x = 0;
 			y = 0;
 			dir = 0;
-			speed1(200);
+			speed1(175);
 			floodSlow(50);
 			saveMap();
 		}
