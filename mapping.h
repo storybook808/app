@@ -17,11 +17,11 @@
 
 void emptyMap();
 
-cell getWallsForCell(uint8_t x, uint8_t y);
+Cell getWallsForCell(uint8_t x, uint8_t y);
 
-void setWallsForCell(uint8_t x, uint8_t y, cell here);
+void setWallsForCell(uint8_t x, uint8_t y, Cell here);
 
-void mapSideWalls(uint8_t x, uint8_t y, cell here);
+void mapSideWalls(uint8_t x, uint8_t y, Cell here);
 
 void mapFrontWall(uint8_t x, uint8_t y, bool here);
 
@@ -38,18 +38,20 @@ void printFlood();
 
 void flood1();
 void flood2();
+void floodToCell(uint8_t i, uint8_t j);
 void floodCenter();
 void floodStart();
 
-void floodCell(coordinate cell, uint8_t dir);
-void floodCellTurn(coordinate cell, uint8_t dir);
+void floodCell(Coordinate cell, uint8_t dir);
+void floodCellTurn(Coordinate cell, uint8_t dir);
 
-void resetStack(floodStack *stack);
+void resetStack(FloodStack *stack);
 
-void pushStack(floodStack *stack, uint8_t i, uint8_t j);
+void pushStack(FloodStack *stack, uint8_t i, uint8_t j);
 
-coordinate setCoordinate(uint8_t i, uint8_t j);
+Coordinate setCoordinate(uint8_t i, uint8_t j);
+Coordinate farCenterCell();
 
-float getFloodValue(coordinate cell, uint8_t dir);
+float getFloodValue(Coordinate cell, uint8_t dir);
 
 #endif

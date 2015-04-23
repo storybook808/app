@@ -29,8 +29,8 @@ void emptyMap() {
 	map[1][0].west = true;
 }
 
-cell getWallsForCell(uint8_t x, uint8_t y) {
-    cell request;
+Cell getWallsForCell(uint8_t x, uint8_t y) {
+    Cell request;
 
     // Grab South wall
     request.south = map[x][y].south;
@@ -57,7 +57,7 @@ cell getWallsForCell(uint8_t x, uint8_t y) {
     return request;
 }
 
-void setSideWallsForCell(uint8_t x, uint8_t y, cell here) {
+void setSideWallsForCell(uint8_t x, uint8_t y, Cell here) {
 	// If cell is not mapped
 	if(!map[x][y].mapped) {
 		// Map Cell
@@ -90,7 +90,7 @@ void setSideWallsForCell(uint8_t x, uint8_t y, cell here) {
 //	}
 }
 
-void mapSideWalls(uint8_t x, uint8_t y, cell here) {
+void mapSideWalls(uint8_t x, uint8_t y, Cell here) {
 	switch (dir) {
 		case NORTH:
 			map[x][y].west = here.west;
@@ -304,9 +304,9 @@ void flood1() {
 	flood[8][7] = 0;
 	flood[8][8] = 0;
 
-	cell currentCell;
-	floodStack stack1;
-	floodStack stack2;
+	Cell currentCell;
+	FloodStack stack1;
+	FloodStack stack2;
 
 	resetStack(&stack1);
 	resetStack(&stack2);
@@ -386,9 +386,9 @@ void flood1() {
 }
 
 void flood2() {
-    cell currentCell;
-    floodStack stack1;
-    floodStack stack2;
+    Cell currentCell;
+    FloodStack stack1;
+    FloodStack stack2;
     
     resetStack(&stack1);
     resetStack(&stack2);
@@ -500,10 +500,119 @@ void flood2() {
     }
 }
 
+void floodToCell(uint8_t x_coor, uint8_t y_coor) {
+    Cell currentCell;
+    FloodStack stack1;
+    FloodStack stack2;
+
+    resetStack(&stack1);
+    resetStack(&stack2);
+
+    pushStack(&stack1,x_coor,y_coor);
+
+    int size;
+    int i,j;
+    bool flag1, flag2;
+    flag1 = false;
+    flag2 = false;
+    int times = 0;
+    int rounds = 0;
+
+    for (i = 0; i < 16; i++) {
+		for (j = 0; j < 16; j++) {
+			flood[i][j] = 0b11111111;
+		}
+	}
+
+    flood[x_coor][y_coor] = 0;
+
+    for (i = 1; i <= 256; ++i) {
+        if (flag1 && flag2) {
+            break;
+        }
+        rounds++;
+        // Determine current stack
+        if (i%2 == 1) {
+            size = stack1.stackCount;
+            if (size == 0) flag1 = true;
+            else flag1 = false;
+            for (j = 0; j < size; ++j) {
+                currentCell = getWallsForCell(stack1.stack[j].x,stack1.stack[j].y);
+                if (!currentCell.north) {
+                    if (getFloodValue(stack1.stack[j], NORTH) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],NORTH);
+                        pushStack(&stack2,stack1.stack[j].x,stack1.stack[j].y+1);
+                        times++;
+                    }
+                }
+                if (!currentCell.east) {
+                    if (getFloodValue(stack1.stack[j], EAST) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],EAST);
+                        pushStack(&stack2,stack1.stack[j].x+1,stack1.stack[j].y);
+                        times++;
+                    }
+                }
+                if (!currentCell.south) {
+                    if (getFloodValue(stack1.stack[j], SOUTH) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],SOUTH);
+                        pushStack(&stack2,stack1.stack[j].x,stack1.stack[j].y-1);
+                        times++;
+                    }
+                }
+                if (!currentCell.west) {
+                    if (getFloodValue(stack1.stack[j], WEST) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack1.stack[j],WEST);
+                        pushStack(&stack2,stack1.stack[j].x-1,stack1.stack[j].y);
+                        times++;
+                    }
+                }
+            }
+            resetStack(&stack1);
+        }
+        else {
+            size = stack2.stackCount;
+            if (size == 0) flag2 = true;
+            else flag2 = false;
+            for (j = 0; j < size; ++j) {
+                currentCell = getWallsForCell(stack2.stack[j].x,stack2.stack[j].y);
+                if (!currentCell.north) {
+                    if (getFloodValue(stack2.stack[j], NORTH) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],NORTH);
+                        pushStack(&stack1,stack2.stack[j].x,stack2.stack[j].y+1);
+                        times++;
+                    }
+                }
+                if (!currentCell.east) {
+                    if (getFloodValue(stack2.stack[j], EAST) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],EAST);
+                        pushStack(&stack1,stack2.stack[j].x+1,stack2.stack[j].y);
+                        times++;
+                    }
+                }
+                if (!currentCell.south) {
+                    if (getFloodValue(stack2.stack[j], SOUTH) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],SOUTH);
+                        pushStack(&stack1,stack2.stack[j].x,stack2.stack[j].y-1);
+                        times++;
+                    }
+                }
+                if (!currentCell.west) {
+                    if (getFloodValue(stack2.stack[j], WEST) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
+                        floodCellTurn(stack2.stack[j],WEST);
+                        pushStack(&stack1,stack2.stack[j].x-1,stack2.stack[j].y);
+                        times++;
+                    }
+                }
+            }
+            resetStack(&stack2);
+        }
+    }
+}
+
 void floodCenter() {
-    cell currentCell;
-    floodStack stack1;
-    floodStack stack2;
+    Cell currentCell;
+    FloodStack stack1;
+    FloodStack stack2;
 
     resetStack(&stack1);
     resetStack(&stack2);
@@ -616,9 +725,9 @@ void floodCenter() {
 }
 
 void floodStart() {
-    cell currentCell;
-    floodStack stack1;
-    floodStack stack2;
+    Cell currentCell;
+    FloodStack stack1;
+    FloodStack stack2;
 
     resetStack(&stack1);
     resetStack(&stack2);
@@ -724,7 +833,7 @@ void floodStart() {
     }
 }
 
-void floodCell(coordinate cell, uint8_t dir) {
+void floodCell(Coordinate cell, uint8_t dir) {
 	switch (dir) {
 		case NORTH:
 			flood[cell.x][cell.y+1] = getFloodValue(cell,CURRENT)+1;
@@ -746,8 +855,8 @@ void floodCell(coordinate cell, uint8_t dir) {
 	}
 }
 
-void floodCellTurn(coordinate here, uint8_t dir) {
-    cell info = getWallsForCell(here.x, here.y);
+void floodCellTurn(Coordinate here, uint8_t dir) {
+    Cell info = getWallsForCell(here.x, here.y);
     if (dir == NORTH) {
         if (getFloodValue(here, SOUTH) <= getFloodValue(here, CURRENT) && !info.south) {
             flood[here.x][here.y+1] = getFloodValue(here, CURRENT)+1;
@@ -778,23 +887,23 @@ void floodCellTurn(coordinate here, uint8_t dir) {
     }
 }
 
-void resetStack(floodStack *stack) {
+void resetStack(FloodStack *stack) {
 	stack->stackCount = 0;
 }
 
-void pushStack(floodStack *stack, uint8_t i, uint8_t j) {
+void pushStack(FloodStack *stack, uint8_t i, uint8_t j) {
 	stack->stack[stack->stackCount] = setCoordinate(i,j);
 	stack->stackCount++;
 }
 
-coordinate setCoordinate(uint8_t i, uint8_t j) {
-	coordinate cell;
+Coordinate setCoordinate(uint8_t i, uint8_t j) {
+	Coordinate cell;
 	cell.x = i;
 	cell.y = j;
 	return cell;
 }
 
-float getFloodValue(coordinate cell, uint8_t dir) {
+float getFloodValue(Coordinate cell, uint8_t dir) {
 	switch (dir) {
 		case NORTH:
 			return flood[cell.x][cell.y+1];
@@ -810,4 +919,37 @@ float getFloodValue(coordinate cell, uint8_t dir) {
 			break;
 	}
 	return flood[cell.x][cell.y];
+}
+
+Coordinate farCenterCell() {
+	Cell topLeft = getWallsForCell(7,8);
+	Cell topRight = getWallsForCell(8,8);
+	Cell botLeft = getWallsForCell(7,7);
+	Cell botRight = getWallsForCell(8,7);
+
+	if (!topLeft.west) {
+		return setCoordinate(8,8);
+	}
+	if (!topLeft.north) {
+		return setCoordinate(7,7);
+	}
+	if (!topRight.north) {
+		return setCoordinate(8,7);
+	}
+	if (!topRight.east) {
+		return setCoordinate(7,8);
+	}
+	if (!botLeft.west) {
+		return setCoordinate(8,7);
+	}
+	if (!botLeft.south) {
+		return setCoordinate(7,8);
+	}
+	if (!botRight.south) {
+		return setCoordinate(8,8);
+	}
+	if (!botRight.east) {
+		return setCoordinate(7,7);
+	}
+	return setCoordinate(0,0);
 }

@@ -53,4 +53,14 @@ void floodSlow(double base_speed);
 
 void floodSearch();
 
+void resetPath(Path *path);
+void addPathMove(Path *path, Move move);
+uint8_t getDirFromFloodValues(Coordinate here);
+void updateCoordinate(Coordinate *here, uint8_t direction);
+void updateDirection(uint8_t *direction, Move turn);
+Path findShortestPath();
+void printPath(Path *moves);
+
+void speed1();
+
 #endif

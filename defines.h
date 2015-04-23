@@ -68,35 +68,35 @@
 /* Global Variables */
 uint32_t row[16];
 
-typedef struct walls {
+typedef struct Walls {
 	bool south;
 	bool west;
 	bool mapped;
-} walls;
+} Walls;
 
-typedef struct cell {
+typedef struct Cell {
 	bool north;
 	bool east;
 	bool south;
 	bool west;
-} cell;
+} Cell;
 
-walls map[16][16];
+Walls map[16][16];
 float flood[16][16];
 
 double calibration[10];
 
 /* Flood structures */
 
-typedef struct coordinate {
+typedef struct Coordinate {
 	uint8_t x;
 	uint8_t y;
-}coordinate;
+}Coordinate;
 
-typedef struct floodStack {
-	coordinate stack[256];
+typedef struct FloodStack {
+	Coordinate stack[256];
 	uint8_t stackCount;
-}floodStack;
+}FloodStack;
 
 /* Enumeration Variable for ADC Channels */
 typedef enum
@@ -195,5 +195,24 @@ typedef enum
 	B8,
 	C9
 }Note;
+
+/* Enumeration for Moves */
+typedef enum {
+	FWD,
+	RT90,
+	LT90,
+	T180
+}Move;
+
+/* Structure for Path */
+typedef struct Path {
+	int moves;
+	Move path[256];
+}Path;
+
+typedef struct FloodDir {
+	float value;
+	uint8_t dir;
+}FloodDir;
 
 #endif

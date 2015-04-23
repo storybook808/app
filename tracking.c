@@ -7,6 +7,7 @@
  */
 
 #include "tracking.h"
+//#define PRINT
 
 bool hasRightWall(double value) {
 	if (value < getWall(FARRIGHTWALL)) return true;
@@ -67,8 +68,8 @@ void turnRight() {
 	int currentFrontRight;
 	int currentFrontLeft;
 
-	int endR = getEncoder(RIGHTENCODER) - TURN_R-100;
-	int endL = getEncoder(LEFTENCODER) + TURN_L + 75;
+	int endR = getEncoder(RIGHTENCODER) - TURN_R;
+	int endL = getEncoder(LEFTENCODER) + TURN_L;
 
 	double errorR;
 	double errorL;
@@ -110,6 +111,8 @@ void turnRight() {
 	last_rightErrorP = 0;
 	setLeftVelocity(0);
 	setRightVelocity(0);
+	if (dir == 3) dir = 0;
+	else dir++;
 }
 
 void turnRight2() {
@@ -204,8 +207,8 @@ void turnLeft() {
 	int currentFrontRight;
 	int currentFrontLeft;
 
-	int endR = getEncoder(RIGHTENCODER) + TURN_R+100;
-	int endL = getEncoder(LEFTENCODER) - TURN_L-100;
+	int endR = getEncoder(RIGHTENCODER) + TURN_R+50;
+	int endL = getEncoder(LEFTENCODER) - TURN_L-50;
 
 	double errorR;
 	double errorL;
@@ -247,6 +250,8 @@ void turnLeft() {
 	last_rightErrorP = 0;
 	setLeftVelocity(0);
 	setRightVelocity(0);
+	if (dir == 0) dir = 3;
+	else dir--;
 }
 
 void turnLeft2() {
@@ -476,6 +481,22 @@ void move(int cells, double base_speed) {
 	setSpeed(RIGHTMOTOR,0);
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
+	switch (dir) {
+		case NORTH:
+			y+=cells;
+			break;
+		case SOUTH:
+			y-=cells;
+			break;
+		case EAST:
+			x+=cells;
+			break;
+		case WEST:
+			x-=cells;
+			break;
+		default:
+			break;
+	}
 }
 
 void brakeInCell(double base_speed) {
@@ -541,11 +562,6 @@ bool startCellStop() {
 			playBuzzer(100,100);
 			playBuzzer(100,100);
 			brb = true;;
-			while(!getButton()) {
-				toggleLEDAll();
-				HAL_Delay(100);
-			}
-			HAL_Delay(500);
 			return true;
 		}
 	}
@@ -699,7 +715,7 @@ void mapSlow() {
 	int location;
 	bool rightWall, leftWall, frontWall, backWall;
 	bool map = true;
-	cell here;
+	Cell here;
 
 	x = 0;
 	y = 0;
@@ -892,11 +908,7 @@ void floodSlow(double base_speed) {
 	int location;
 	bool rightWall, leftWall, frontWall, backWall;
 	bool mapTime = true;
-	cell here;
-
-	x = 0;
-	y = 0;
-	dir = 0;
+	Cell here;
 
 	rightWall = true;
 	leftWall = true;
@@ -1084,15 +1096,11 @@ void floodSlow(double base_speed) {
 				else if (floodRight <= floodLeft) {
 					brakeInCell(base_speed);
 					turnRight();
-					if (dir == 3) dir = 0;
-					else dir++;
 				}
 
 				else {
 					brakeInCell(base_speed);
 					turnLeft();
-					if (dir == 0) dir = 3;
-					else dir--;
 				}
 
 				break;
@@ -1125,8 +1133,6 @@ void floodSlow(double base_speed) {
 				else {
 					brakeInCell(base_speed);
 					turnLeft();
-					if (dir == 0) dir = 3;
-					else dir--;
 				}
 
 				break;
@@ -1157,15 +1163,11 @@ void floodSlow(double base_speed) {
 				if (floodRight <= floodLeft) {
 					brakeInCell(base_speed);
 					turnRight();
-					if (dir == 3) dir = 0;
-					else dir++;
 				}
 
 				else {
 					brakeInCell(base_speed);
 					turnLeft();
-					if (dir == 0) dir = 3;
-					else dir--;
 				}
 
 				break;
@@ -1174,8 +1176,6 @@ void floodSlow(double base_speed) {
 				frontCorrection();
 				mapFrontWall(x, y, true);
 				turnLeft();
-				if (dir == 0) dir = 3;
-				else dir--;
 				break;
 			case 4:
 				// Left: 1 Front: 0 Right: 0
@@ -1205,8 +1205,6 @@ void floodSlow(double base_speed) {
 				else {
 					brakeInCell(base_speed);
 					turnRight();
-					if (dir == 3) dir = 0;
-					else dir++;
 				}
 				break;
 			case 5:
@@ -1217,25 +1215,15 @@ void floodSlow(double base_speed) {
 				frontCorrection();
 				mapFrontWall(x, y, true);
 				turnRight();
-				if (dir == 3) dir = 0;
-				else dir++;
 				break;
 			case 7:
 				// Left: 1 Front: 1 Right: 1
 				frontCorrection();
 				mapFrontWall(x,y,true);
 				turnLeft();
-				if (dir == 0) {
-					dir = 3;
-				}
-				else dir--;
 				frontCorrection();
 				mapFrontWall(x,y,true);
 				turnLeft();
-				if (dir == 0) {
-					dir = 3;
-				}
-				else dir--;
 				break;
 			default:
 				setBuzzer(ON);
@@ -1279,3 +1267,243 @@ void floodSlow(double base_speed) {
 	}
 }
 
+void resetPath(Path *path) {
+	path->moves = 0;
+}
+
+void addPathMove(Path *path, Move move) {
+	path->path[path->moves] = move;
+	path->moves++;
+}
+
+uint8_t getDirFromFloodValues(Coordinate here) {
+	Cell currentCell = getWallsForCell(here.x,here.y);
+	float floodNorth = getFloodValue(here,NORTH);
+	float floodSouth = getFloodValue(here,SOUTH);
+	float floodEast = getFloodValue(here,EAST);
+	float floodWest = getFloodValue(here,WEST);
+
+	FloodDir temp;
+	temp.value = 255;
+
+	if (!currentCell.west) {
+		if (temp.value > floodWest) {
+			temp.value = floodWest;
+			temp.dir = WEST;
+		}
+	}
+	if (!currentCell.south) {
+		if (temp.value > floodSouth) {
+			temp.value = floodSouth;
+			temp.dir = SOUTH;
+		}
+	}
+	if (!currentCell.east) {
+		if (temp.value > floodEast) {
+			temp.value = floodEast;
+			temp.dir = EAST;
+		}
+	}
+	if (!currentCell.north) {
+		if (temp.value > floodNorth) {
+			temp.value = floodNorth;
+			temp.dir = NORTH;
+		}
+	}
+
+	return temp.dir;
+}
+
+void updateCoordinate(Coordinate *here, uint8_t direction) {
+	switch (direction) {
+		case NORTH:
+			here->y++;
+			break;
+		case SOUTH:
+			here->y--;
+			break;
+		case EAST:
+			here->x++;
+			break;
+		case WEST:
+			here->x--;
+			break;
+		default:
+			break;
+	}
+}
+
+void updateDirection(uint8_t *direction, Move turn) {
+	if (turn == RT90) {
+		if (*direction == 3) {
+			*direction = 0;
+		}
+		else *direction = *direction + 1;
+	}
+	else if (turn == LT90) {
+		if (*direction == 0) {
+			*direction = 3;
+		}
+		else *direction = *direction - 1;
+	}
+	else if(turn == T180) {
+		*direction+=2;
+		*direction%=4;
+	}
+}
+
+Path findShortestPath() {
+	// Find Center Entrance Cell's back cell
+	Coordinate center = farCenterCell();
+
+	// Set initial Conditions of Direction North and coordinate (0,0)
+	uint8_t direction = NORTH;
+	uint8_t floodDirection;
+	Coordinate currentCell = setCoordinate(0,0);
+
+	// Flood to back center cell
+	floodToCell(center.x,center.y);
+
+	// Initialize move counter for stack
+	Path moves;
+	resetPath(&moves);
+
+	// Fill path until we have reached end cell
+	while (currentCell.x!=center.x || currentCell.y!=center.y) {
+		floodDirection = getDirFromFloodValues(currentCell);
+#ifdef PRINT
+		printString("Cell:(");
+		printInt(currentCell.x);
+		printComma();
+		printInt(currentCell.y);
+		printString(") dir:");
+		printInt(direction);
+		printString(" Go:");
+		printInt(floodDirection);
+		printNL();
+#endif
+		// If flood values tell us to move forward
+		if (direction == floodDirection) {
+			// Add forward command to path
+			addPathMove(&moves,FWD);
+			// Update cell coordinate for next round
+			updateCoordinate(&currentCell, direction);
+		}
+		// If flood value is not in the same direction, determine turn
+		else {
+			// From current Direction, decide turn
+			switch (direction) {
+				case NORTH:
+					if (floodDirection == WEST) {
+						addPathMove(&moves,LT90);
+						updateDirection(&direction,LT90);
+					}
+					else if (floodDirection == EAST) {
+						addPathMove(&moves,RT90);
+						updateDirection(&direction,RT90);
+					}
+					else {
+						addPathMove(&moves,T180);
+						updateDirection(&direction,T180);
+					}
+					break;
+				case EAST:
+					if (floodDirection == NORTH) {
+						addPathMove(&moves, LT90);
+						updateDirection(&direction,LT90);
+					}
+					else if (floodDirection == SOUTH) {
+						addPathMove(&moves, RT90);
+						updateDirection(&direction, RT90);
+					}
+					else {
+						addPathMove(&moves,T180);
+						updateDirection(&direction,T180);
+					}
+					break;
+				case SOUTH:
+					if (floodDirection == EAST) {
+						addPathMove(&moves, LT90);
+						updateDirection(&direction,LT90);
+					}
+					else if (floodDirection == WEST) {
+						addPathMove(&moves, RT90);
+						updateDirection(&direction, RT90);
+					}
+					else {
+						addPathMove(&moves,T180);
+						updateDirection(&direction,T180);
+					}
+					break;
+				case WEST:
+					if (floodDirection == SOUTH) {
+						addPathMove(&moves, LT90);
+						updateDirection(&direction,LT90);
+					}
+					else if (floodDirection == NORTH) {
+						addPathMove(&moves, RT90);
+						updateDirection(&direction, RT90);
+					}
+					else {
+						addPathMove(&moves,T180);
+						updateDirection(&direction,T180);
+					}
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	return moves;
+}
+
+void printPath(Path *moves) {
+	int count = moves->moves;
+	int i;
+	Move decision;
+	for (i = 0; i < count; ++i) {
+		decision = moves->path[i];
+		switch (decision) {
+			case FWD:
+				printString("FWD");
+				break;
+			case LT90:
+				printString("LT90");
+				break;
+			case RT90:
+				printString("RT90");
+				break;
+			case T180:
+				printString("T180");
+				break;
+			default:
+				break;
+		}
+		printNL();
+	}
+}
+
+void speed1() {
+	Path path = findShortestPath();
+	int i;
+	int count = path.moves;
+	int forward = 0;
+
+	double base_speed = 100;
+
+	for (i = 0; i < count; ++i) {
+		if (path.path[i] == FWD) {
+			forward++;
+		}
+		else if (path.path[i] == RT90) {
+			move(forward,base_speed);
+			forward = 0;
+			turnRight();
+		}
+		else if (path.path[i] == LT90) {
+			move(forward, base_speed);
+			forward = 0;
+			turnLeft();
+		}
+	}
+}

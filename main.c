@@ -43,8 +43,7 @@ void main(void) {
 	resetEncoder(RIGHTENCODER);
 
 	Mode mode;
-
-	int i;
+	Path path;
 
 	while(1) {
 
@@ -56,19 +55,26 @@ void main(void) {
 		mode = menu();
 
 		if (mode == MODE1) {
-			floodSlow(100);
-			saveMap();
+			printMap();
+			path = findShortestPath();
+			printPath(&path);
 		}
 
 		else if (mode == MODE2) {
+			x = 0;
+			y = 0;
+			dir = 0;
 			emptyMap();
 			floodSlow(50);
 			saveMap();
 		}
 
 		else if (mode == MODE3) {
-			flood2();
-			printFlood();
+			x = 0;
+			y = 0;
+			dir = 0;
+			speed1();
+			floodSlow(50);
 		}
 
 		else {
