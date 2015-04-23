@@ -76,9 +76,13 @@ void main(void) {
 			x = 0;
 			y = 0;
 			dir = 0;
-			speed1(200);
-			floodSlow(50);
-			saveMap();
+			emptyMap();
+			floodSlow2();
+			while(!getButton()) {
+				HAL_Delay(100);
+				toggleLED(WHITE);
+			}
+			printMap();
 		}
 
 		else {

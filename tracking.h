@@ -41,6 +41,8 @@ void turnRight();
 void turnRight2();
 void turnRight3();
 
+void curveTurn(Wall turn, double base_speed);
+
 void brakeInCell(double base_speed);
 
 bool startCellStop();
@@ -50,6 +52,7 @@ void searchSlow();
 void mapSlow();
 
 void floodSlow(double base_speed);
+void floodSlow2();
 
 void floodSearch();
 

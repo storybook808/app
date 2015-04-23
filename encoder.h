@@ -16,6 +16,7 @@
 /* Public Functions */
 int getEncoder(Encoder channel);
 void resetEncoder(Encoder channel);
+void setEncoder(Encoder channel, int count);
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 #endif

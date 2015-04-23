@@ -14,6 +14,11 @@ static void decrementEncoder(Encoder channel);
 
 static int leftCount, rightCount;
 
+void setEncoder(Encoder channel, int count) {
+	if (channel == LEFTENCODER) leftCount = count;
+	else rightCount = count;
+}
+
 int getEncoder(Encoder channel)
 {
 	if (channel == LEFTENCODER) return leftCount;
