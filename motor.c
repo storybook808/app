@@ -39,6 +39,11 @@ void readGyro() {
 	setLED(GREEN);
 }
 
+void initCurrentVelocity() {
+	currentRightVelocity = 0;
+	currentLeftVelocity = 0;
+}
+
 void brake() {
 	int right = getEncoder(RIGHTENCODER);
 	int left = getEncoder(LEFTENCODER);

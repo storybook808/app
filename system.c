@@ -39,6 +39,7 @@ void initSystem(void) {
 
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
+	initCurrentVelocity();
 
 	int i;
 	for (i = 0; i < 8; i++) {

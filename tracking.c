@@ -100,7 +100,7 @@ void turnRight() {
 		}
 	}
 
-	HAL_Delay(100);
+//	HAL_Delay(100);
 	HAL_TIM_Base_Stop_IT(&htim2);
 	setSpeed(RIGHTMOTOR,0);
 	setSpeed(LEFTMOTOR,0);
@@ -239,7 +239,7 @@ void turnLeft() {
 		}
 	}
 
-	HAL_Delay(100);
+//	HAL_Delay(100);
 	HAL_TIM_Base_Stop_IT(&htim2);
 	setSpeed(RIGHTMOTOR,0);
 	setSpeed(LEFTMOTOR,0);
@@ -406,6 +406,8 @@ void moveCells(int num, double base_speed) {
 }
 
 void move(int cells, double base_speed) {
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
 
 	int endL = getEncoder(LEFTENCODER) + cells*CELL_L;
 	int endR = getEncoder(RIGHTENCODER) + cells*CELL_R;
@@ -422,9 +424,6 @@ void move(int cells, double base_speed) {
 	double diff;
 	int temp;
 	int endTick = HAL_GetTick()+1000;
-
-	printInt(endTick);
-	printNL();
 
 	while(!done)
 	{
@@ -444,7 +443,6 @@ void move(int cells, double base_speed) {
 		speed = base_speed*dt;
 
 		if (frontLeft <= getWall(IDEALLEFTFRONT) && frontRight <= getWall(IDEALRIGHTFRONT)) {
-			hardBrake();
 			frontCorrection();
 			break;
 		}
@@ -475,7 +473,7 @@ void move(int cells, double base_speed) {
 			}
 		}
 	}
-	HAL_Delay(100);
+//	HAL_Delay(100);
 	HAL_TIM_Base_Stop_IT(&htim2);
 	setSpeed(LEFTMOTOR,0);
 	setSpeed(RIGHTMOTOR,0);
@@ -1483,13 +1481,11 @@ void printPath(Path *moves) {
 	}
 }
 
-void speed1() {
+void speed1(double base_speed) {
 	Path path = findShortestPath();
 	int i;
 	int count = path.moves;
 	int forward = 0;
-
-	double base_speed = 100;
 
 	for (i = 0; i < count; ++i) {
 		if (path.path[i] == FWD) {

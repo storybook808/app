@@ -61,6 +61,6 @@ void updateDirection(uint8_t *direction, Move turn);
 Path findShortestPath();
 void printPath(Path *moves);
 
-void speed1();
+void speed1(double base_speed);
 
 #endif

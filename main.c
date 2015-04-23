@@ -55,12 +55,6 @@ void main(void) {
 		mode = menu();
 
 		if (mode == MODE1) {
-			printMap();
-			path = findShortestPath();
-			printPath(&path);
-		}
-
-		else if (mode == MODE2) {
 			x = 0;
 			y = 0;
 			dir = 0;
@@ -69,12 +63,22 @@ void main(void) {
 			saveMap();
 		}
 
+		else if (mode == MODE2) {
+			x = 0;
+			y = 0;
+			dir = 0;
+			speed1(150);
+			floodSlow(50);
+			saveMap();
+		}
+
 		else if (mode == MODE3) {
 			x = 0;
 			y = 0;
 			dir = 0;
-			speed1();
+			speed1(200);
 			floodSlow(50);
+			saveMap();
 		}
 
 		else {
