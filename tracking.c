@@ -947,7 +947,7 @@ void floodSlow(double base_speed) {
 			rightWall = hasRightWall(centerRight);
 			leftWall = hasLeftWall(centerLeft);
 			// Check front wall.
-			frontWall = hasFarFrontWall(frontRight,frontLeft);
+			frontWall = ]r]r(frontRight,frontLeft);
 			backWall = false;
 
 			// Node decisions.

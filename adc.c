@@ -39,7 +39,85 @@ uint32_t readADC(ADC_Channel channel) {
     ADC_ChannelConfTypeDef sConfig;
     int x = 14444;
     int i = x;
+    int ambient;
     
+#ifdef AMBIENT
+    switch (channel) {
+		case LEFT_DET:
+			//Left detector
+			sConfig.Channel = ADC_CHANNEL_8;
+			sConfig.Rank = 1;
+			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+			sConfig.Offset = 0;
+			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+			break;
+		case LEFT_CEN_DET:
+			//Left center detector
+			sConfig.Channel = ADC_CHANNEL_7;
+			sConfig.Rank = 1;
+			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+			sConfig.Offset = 0;
+			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+			break;
+		case RIGHT_CEN_DET:
+			//Right center detector
+			sConfig.Channel = ADC_CHANNEL_4;
+			sConfig.Rank = 1;
+			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+			sConfig.Offset = 0;
+			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+			break;
+		case RIGHT_DET:
+			//Right detector
+			sConfig.Channel = ADC_CHANNEL_15;
+			sConfig.Rank = 1;
+			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+			sConfig.Offset = 0;
+			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+			break;
+		case FLASH_MEM:
+			//Flash Memory
+			sConfig.Channel = ADC_CHANNEL_14;
+			sConfig.Rank = 1;
+			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+			sConfig.Offset = 0;
+			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+			break;
+		case GYRO1:
+			//Gyrometer
+			sConfig.Channel = ADC_CHANNEL_3;
+			sConfig.Rank = 1;
+			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+			sConfig.Offset = 0;
+			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+			break;
+		case GYRO2:
+			//Gyrometer VREF
+			sConfig.Channel = ADC_CHANNEL_2;
+			sConfig.Rank = 1;
+			sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+			sConfig.Offset = 0;
+			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
+			break;
+	}
+	// Wait 8us
+	while(i--);
+	i = x;
+
+	HAL_ADC_Start(&ADCHandle);
+
+	//Wait for conversion
+	while(HAL_ADC_PollForConversion(&ADCHandle, HAL_MAX_DELAY) != HAL_OK);
+	HAL_GPIO_WritePin(GPIOH, GPIO_PIN_1, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOH, GPIO_PIN_0, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET);
+
+	while(i--);
+
+	ambient = HAL_ADC_GetValue(&ADCHandle);
+#endif
+
     switch (channel) {
         case LEFT_DET:
             //Left detector
@@ -121,7 +199,12 @@ uint32_t readADC(ADC_Channel channel) {
 
     adc_unlock = true;
 
+#ifdef AMBIENT
+    return result-ambient;
+#else
     return result;
+#endif
+
 }
 
 double readSensor(ADC_Channel channel) {
