@@ -569,6 +569,20 @@ bool startCellStop() {
 	return false;
 }
 
+bool centerCellStop() {
+	if (!brb) {
+		if ((x == 7 && y == 7)||(x == 7 && y == 8)||(x == 8 && y == 7)||(x == 8 && y == 8)) {
+			playBuzzer(10,0);
+			brb = true;;
+			return true;
+		}
+	}
+	if (x != 0 || y != 0) {
+		brb = false;
+	}
+	return false;
+}
+
 void searchSlow() {
 	double base_speed = 50;
 	double frontRight, frontLeft;
@@ -907,6 +921,7 @@ void floodSlow(double base_speed) {
 	bool rightWall, leftWall, frontWall, backWall;
 	bool mapTime = true;
 	Cell here;
+	bool center = false;
 
 	rightWall = true;
 	leftWall = true;
@@ -1260,6 +1275,9 @@ void floodSlow(double base_speed) {
 		}
 
 		if (startCellStop()) break;
+		if (!center) {
+			if (centerCellStop()) center = true;
+		}
 
 		correction2(base_speed);
 	}
@@ -1360,7 +1378,7 @@ Path findShortestPath() {
 	Coordinate currentCell = setCoordinate(0,0);
 
 	// Flood to back center cell
-	floodToCell(center.x,center.y);
+	floodSpeedRun(center.x,center.y);
 
 	// Initialize move counter for stack
 	Path moves;
