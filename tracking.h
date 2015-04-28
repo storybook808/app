@@ -52,7 +52,6 @@ void mapSlow();
 void floodSlow(double base_speed);
 
 void floodSearch();
-bool centerCellStop();
 
 void resetPath(Path *path);
 void addPathMove(Path *path, Move move);
