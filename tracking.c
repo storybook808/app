@@ -931,7 +931,7 @@ void floodSlow(double base_speed) {
 	uint8_t wallCount;
 	uint8_t decision;
 
-	float floodRight, floodFront, floodLeft;
+	float floodRight, floodFront, floodLeft, floodBack;
 
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
@@ -1084,35 +1084,45 @@ void floodSlow(double base_speed) {
 					floodLeft = getFloodValue(setCoordinate(x,y),WEST);
 					floodFront = getFloodValue(setCoordinate(x,y),NORTH);
 					floodRight = getFloodValue(setCoordinate(x,y),EAST);
+					floodBack = getFloodValue(setCoordinate(x,y),SOUTH);
 					break;
 				case EAST:
 					floodLeft = getFloodValue(setCoordinate(x,y),NORTH);
 					floodFront = getFloodValue(setCoordinate(x,y),EAST);
 					floodRight = getFloodValue(setCoordinate(x,y),SOUTH);
+					floodBack = getFloodValue(setCoordinate(x,y),WEST);
 					break;
 				case SOUTH:
 					floodLeft = getFloodValue(setCoordinate(x,y),EAST);
 					floodFront = getFloodValue(setCoordinate(x,y),SOUTH);
 					floodRight = getFloodValue(setCoordinate(x,y),WEST);
+					floodBack = getFloodValue(setCoordinate(x,y),NORTH);
 					break;
 				case WEST:
 					floodLeft = getFloodValue(setCoordinate(x,y),SOUTH);
 					floodFront = getFloodValue(setCoordinate(x,y),WEST);
 					floodRight = getFloodValue(setCoordinate(x,y),NORTH);
+					floodBack = getFloodValue(setCoordinate(x,y),EAST);
 					break;
 				}
 
-				if (floodFront <= floodLeft && floodFront <= floodRight) {
+				if (floodFront <= floodLeft && floodFront <= floodRight && floodFront <= floodBack) {
 
 				}
 
-				else if (floodRight <= floodLeft) {
+				else if (floodRight <= floodLeft && floodRight <= floodBack) {
 					brakeInCell(base_speed);
 					turnRight();
 				}
 
+				else if (floodLeft <= floodBack) {
+					brakeInCell(base_speed);
+					turnLeft();
+				}
+
 				else {
 					brakeInCell(base_speed);
+					turnLeft();
 					turnLeft();
 				}
 
@@ -1378,7 +1388,7 @@ Path findShortestPath() {
 	Coordinate currentCell = setCoordinate(0,0);
 
 	// Flood to back center cell
-	floodSpeedRun(center.x,center.y);
+	floodToCell(center.x,center.y);
 
 	// Initialize move counter for stack
 	Path moves;
