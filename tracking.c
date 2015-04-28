@@ -1666,31 +1666,44 @@ void curveTurn(Wall turn, double base_speed) {
 	int currentRight;
 	bool done = false;
 
-	float curve = 0.33;
+	float curveMinor = 0.466;
+	float curveMajor = 1.4281;
+
+	while(!done) {
+		currentLeft = getEncoder(LEFTENCODER);
+		correction2(base_speed);
+		if (currentLeft >= startLeft+486) {
+			done = true;
+		}
+	}
+
+	done = false;
 
 	if (turn == RIGHT) {
-		setRightVelocity(base_speed*curve);
+		setRightVelocity(base_speed*curveMinor);
+		setLeftVelocity(base_speed*curveMajor);
 		while(!done) {
 			currentLeft = getEncoder(LEFTENCODER);
-			if ((currentLeft - startLeft) >= CELL_L*0.98) {
+			if ((currentLeft - (startLeft+486)) >= 4362) {
 				done = true;
 			}
 		}
 		if (dir == 3) dir = 0;
 		else dir++;
-		setRightVelocity(100);
+		setVelocity(base_speed);
 	}
 	else if (turn == LEFT) {
-		setLeftVelocity(base_speed*curve);
+		setLeftVelocity(base_speed*curveMinor);
+		setRightVelocity(base_speed*curveMajor);
 		while(!done) {
 			currentRight = getEncoder(RIGHTENCODER);
-			if ((currentRight - startRight)>= CELL_R*0.997) {
+			if ((currentRight - (startRight+486))>= 4382) {
 				done = true;
 			}
 		}
 		if (dir == 0) dir = 3;
 		else dir--;
-		setLeftVelocity(100);
+		setVelocity(base_speed);
 	}
 //	setEncoder(RIGHTENCODER,(CELL_L/2-((CELL_L*10)/18)));
 //	setEncoder(LEFTENCODER,(CELL_L/2-((CELL_L*10)/18)));
@@ -1739,10 +1752,10 @@ void floodSlow2() {
 		}
 
 		// If we are half-way through a cell
-		if ((location%CELL_L >= CELL_L/2 && mapTime) || curveFlag) {
+		if ((location%CELL_L >= (CELL_L/2-243) && mapTime) || curveFlag) {
 			if (curveFlag) {
-				setEncoder(RIGHTENCODER,CELL_L/2-CELL_L/10);
-				setEncoder(LEFTENCODER,CELL_R/2-CELL_R/10);
+				setEncoder(RIGHTENCODER,CELL_L/2-243);
+				setEncoder(LEFTENCODER,CELL_R/2-243);
 				curveFlag = false;
 			}
 			// Check side walls.

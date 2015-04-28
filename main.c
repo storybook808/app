@@ -67,22 +67,16 @@ void main(void) {
 			x = 0;
 			y = 0;
 			dir = 0;
-			speed1(150);
 			floodSlow(50);
 			saveMap();
 		}
 
 		else if (mode == MODE3) {
-			x = 0;
-			y = 0;
-			dir = 0;
-			emptyMap();
-			floodSlow2();
-			while(!getButton()) {
-				HAL_Delay(100);
-				toggleLED(WHITE);
+			setVelocity(0);
+			while(1) {
+				setRightVelocity(107.1);
+				setLeftVelocity(34.9);
 			}
-			printMap();
 		}
 
 		else {
