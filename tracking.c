@@ -207,8 +207,8 @@ void turnLeft() {
 	int currentFrontRight;
 	int currentFrontLeft;
 
-	int endR = getEncoder(RIGHTENCODER) + TURN_R+50;
-	int endL = getEncoder(LEFTENCODER) - TURN_L-50;
+	int endR = getEncoder(RIGHTENCODER) + TURN_R+80;
+	int endL = getEncoder(LEFTENCODER) - TURN_L-80;
 
 	double errorR;
 	double errorL;
@@ -698,6 +698,20 @@ bool startCellStop() {
 	return false;
 }
 
+bool centerCellStop() {
+	if (!brb) {
+		if ((x == 7 && y == 7)||(x == 7 && y == 8)||(x == 8 && y == 7)||(x == 8 && y == 8)) {
+			playBuzzer(10,0);
+			brb = true;;
+			return true;
+		}
+	}
+	if (x != 0 || y != 0) {
+		brb = false;
+	}
+	return false;
+}
+
 void searchSlow() {
 	double base_speed = 50;
 	double frontRight, frontLeft;
@@ -1036,6 +1050,7 @@ void floodSlow(double base_speed) {
 	bool rightWall, leftWall, frontWall, backWall;
 	bool mapTime = true;
 	Cell here;
+	bool center = false;
 
 	rightWall = true;
 	leftWall = true;
@@ -1044,7 +1059,7 @@ void floodSlow(double base_speed) {
 
 	uint8_t decision;
 
-	float floodRight, floodFront, floodLeft;
+	float floodRight, floodFront, floodLeft, floodBack;
 
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
@@ -1194,35 +1209,45 @@ void floodSlow(double base_speed) {
 					floodLeft = getFloodValue(setCoordinate(x,y),WEST);
 					floodFront = getFloodValue(setCoordinate(x,y),NORTH);
 					floodRight = getFloodValue(setCoordinate(x,y),EAST);
+					floodBack = getFloodValue(setCoordinate(x,y),SOUTH);
 					break;
 				case EAST:
 					floodLeft = getFloodValue(setCoordinate(x,y),NORTH);
 					floodFront = getFloodValue(setCoordinate(x,y),EAST);
 					floodRight = getFloodValue(setCoordinate(x,y),SOUTH);
+					floodBack = getFloodValue(setCoordinate(x,y),WEST);
 					break;
 				case SOUTH:
 					floodLeft = getFloodValue(setCoordinate(x,y),EAST);
 					floodFront = getFloodValue(setCoordinate(x,y),SOUTH);
 					floodRight = getFloodValue(setCoordinate(x,y),WEST);
+					floodBack = getFloodValue(setCoordinate(x,y),NORTH);
 					break;
 				case WEST:
 					floodLeft = getFloodValue(setCoordinate(x,y),SOUTH);
 					floodFront = getFloodValue(setCoordinate(x,y),WEST);
 					floodRight = getFloodValue(setCoordinate(x,y),NORTH);
+					floodBack = getFloodValue(setCoordinate(x,y),EAST);
 					break;
 				}
 
-				if (floodFront <= floodLeft && floodFront <= floodRight) {
+				if (floodFront <= floodLeft && floodFront <= floodRight && floodFront <= floodBack) {
 
 				}
 
-				else if (floodRight <= floodLeft) {
+				else if (floodRight <= floodLeft && floodRight <= floodBack) {
 					brakeInCell(base_speed);
 					turnRight();
 				}
 
+				else if (floodLeft <= floodBack) {
+					brakeInCell(base_speed);
+					turnLeft();
+				}
+
 				else {
 					brakeInCell(base_speed);
+					turnLeft();
 					turnLeft();
 				}
 
@@ -1385,6 +1410,9 @@ void floodSlow(double base_speed) {
 		}
 
 		if (startCellStop()) break;
+		if (!center) {
+			if (centerCellStop()) center = true;
+		}
 
 		correction2(base_speed);
 	}

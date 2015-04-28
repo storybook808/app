@@ -35,6 +35,7 @@ bool saveMap();
 void loadMap();
 
 void printFlood();
+void floodSpeedRun(uint8_t x_coor, uint8_t y_coor);
 
 void flood1();
 void flood2();
