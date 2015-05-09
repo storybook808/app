@@ -1512,4 +1512,5 @@ void speed1(double base_speed) {
 			turnLeft();
 		}
 	}
+	move(forward,base_speed);
 }

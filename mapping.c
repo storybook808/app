@@ -1000,21 +1000,21 @@ void floodSpeedRun(uint8_t x_coor, uint8_t y_coor) {
                         times++;
                     }
                 }
-                if (!currentCell.east && map[stack1.stack[j].x+1][stack1.stack[j].y] == true) {
+                if (!currentCell.east && map[stack1.stack[j].x+1][stack1.stack[j].y].mapped == true) {
                     if (getFloodValue(stack1.stack[j], EAST) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
                         floodCellTurn(stack1.stack[j],EAST);
                         pushStack(&stack2,stack1.stack[j].x+1,stack1.stack[j].y);
                         times++;
                     }
                 }
-                if (!currentCell.south && map[stack1.stack[j].x][stack1.stack[j].y-1] == true) {
+                if (!currentCell.south && map[stack1.stack[j].x][stack1.stack[j].y-1].mapped == true) {
                     if (getFloodValue(stack1.stack[j], SOUTH) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
                         floodCellTurn(stack1.stack[j],SOUTH);
                         pushStack(&stack2,stack1.stack[j].x,stack1.stack[j].y-1);
                         times++;
                     }
                 }
-                if (!currentCell.west && map[stack1.stack[j].x-1][stack1.stack[j].y] == true) {
+                if (!currentCell.west && map[stack1.stack[j].x-1][stack1.stack[j].y].mapped == true) {
                     if (getFloodValue(stack1.stack[j], WEST) > getFloodValue(stack1.stack[j],CURRENT) + 1) {
                         floodCellTurn(stack1.stack[j],WEST);
                         pushStack(&stack2,stack1.stack[j].x-1,stack1.stack[j].y);
@@ -1030,28 +1030,28 @@ void floodSpeedRun(uint8_t x_coor, uint8_t y_coor) {
             else flag2 = false;
             for (j = 0; j < size; ++j) {
                 currentCell = getWallsForCell(stack2.stack[j].x,stack2.stack[j].y);
-                if (!currentCell.north && map[stack2.stack[j].x][stack2.stack[j].y+1] == true) {
+                if (!currentCell.north && map[stack2.stack[j].x][stack2.stack[j].y+1].mapped == true) {
                     if (getFloodValue(stack2.stack[j], NORTH) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
                         floodCellTurn(stack2.stack[j],NORTH);
                         pushStack(&stack1,stack2.stack[j].x,stack2.stack[j].y+1);
                         times++;
                     }
                 }
-                if (!currentCell.east && map[stack2.stack[j].x+1][stack2.stack[j].y] == true) {
+                if (!currentCell.east && map[stack2.stack[j].x+1][stack2.stack[j].y].mapped == true) {
                     if (getFloodValue(stack2.stack[j], EAST) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
                         floodCellTurn(stack2.stack[j],EAST);
                         pushStack(&stack1,stack2.stack[j].x+1,stack2.stack[j].y);
                         times++;
                     }
                 }
-                if (!currentCell.south && map[stack2.stack[j].x][stack2.stack[j].y-1] == true) {
+                if (!currentCell.south && map[stack2.stack[j].x][stack2.stack[j].y-1].mapped == true) {
                     if (getFloodValue(stack2.stack[j], SOUTH) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
                         floodCellTurn(stack2.stack[j],SOUTH);
                         pushStack(&stack1,stack2.stack[j].x,stack2.stack[j].y-1);
                         times++;
                     }
                 }
-                if (!currentCell.west && map[stack2.stack[j].x-1][stack2.stack[j].y] == true) {
+                if (!currentCell.west && map[stack2.stack[j].x-1][stack2.stack[j].y].mapped == true) {
                     if (getFloodValue(stack2.stack[j], WEST) > getFloodValue(stack2.stack[j],CURRENT) + 1) {
                         floodCellTurn(stack2.stack[j],WEST);
                         pushStack(&stack1,stack2.stack[j].x-1,stack2.stack[j].y);
