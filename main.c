@@ -99,7 +99,7 @@ void main(void) {
 			x = 0;
 			y = 0;
 			dir = 0;
-			floodeCurve();
+			floodeCurve(75);
 			saveMap();
 		}
 

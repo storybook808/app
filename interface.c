@@ -198,7 +198,23 @@ Mode menu() {
 //			resetLED(GREEN);
 			mode = MODE5;
 		} else if (count > (size*5) && count <= (size*6)) {
-			testChaser(1,250);
+			resetLEDAll();
+			setLED(WHITE);
+			HAL_Delay(100);
+			setLED(BLUE);
+			HAL_Delay(100);
+			resetLED(WHITE);
+			setLED(GREEN);
+			HAL_Delay(100);
+			resetLED(BLUE);
+			setLED(RED);
+			HAL_Delay(100);
+			resetLED(GREEN);
+			mode = MODE6;
+		} else if (count > (size*6) && count <= (size*7)) {
+			resetLEDAll();
+			setLED(WHITE);
+			setLED(RED);
 			setBuzzerTone(E8);
 			playBuzzer(100,50);
 			setBuzzerTone(E8);
@@ -213,20 +229,6 @@ Mode menu() {
 			playBuzzer(200,50);
 			setBuzzerTone(G7);
 			playBuzzer(200,50);
-			mode = MODE6;
-		} else if (count > (size*6) && count <= (size*7)) {
-			resetLEDAll();
-			setLED(WHITE);
-			HAL_Delay(100);
-			setLED(BLUE);
-			HAL_Delay(100);
-			resetLED(WHITE);
-			setLED(GREEN);
-			HAL_Delay(100);
-			resetLED(BLUE);
-			setLED(RED);
-			HAL_Delay(100);
-			resetLED(GREEN);
 			mode = MODE7;
 		}
 
