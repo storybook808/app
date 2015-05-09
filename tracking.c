@@ -1048,7 +1048,7 @@ void floodSlow(double base_speed) {
 			decision += rightWall;
 
 			if (!flag) {
-				if ((x == 7 && y == 7)||(x == 8 && y == 7)||(x == 7 && y == 8)||(x == 8 && y == 8)) {
+				if ((x == 8 && y == 8)) {
 					flag = true;
 				}
 			}
