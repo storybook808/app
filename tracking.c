@@ -1236,13 +1236,11 @@ void floodSlow(double base_speed) {
 				}
 
 				else if (floodRight <= floodLeft && floodRight <= floodBack) {
-					brakeInCell(base_speed);
-					turnRight();
+					curveTurn(RIGHT,base_speed);
 				}
 
 				else if (floodLeft <= floodBack) {
-					brakeInCell(base_speed);
-					turnLeft();
+					curveTurn(LEFT,base_speed);
 				}
 
 				else {
@@ -1279,8 +1277,7 @@ void floodSlow(double base_speed) {
 				}
 
 				else {
-					brakeInCell(base_speed);
-					turnLeft();
+					curveTurn(LEFT,base_speed);
 				}
 
 				break;
@@ -1309,21 +1306,18 @@ void floodSlow(double base_speed) {
 				}
 
 				if (floodRight <= floodLeft) {
-					brakeInCell(base_speed);
-					turnRight();
+					curveTurn(RIGHT,base_speed);
 				}
 
 				else {
-					brakeInCell(base_speed);
-					turnLeft();
+					curveTurn(LEFT,base_speed);
 				}
 
 				break;
 			case 3:
 				// Left: 0 Front: 1 Right: 1
-				frontCorrection();
 				mapFrontWall(x, y, true);
-				turnLeft();
+				curveTurn(LEFT,base_speed);
 				break;
 			case 4:
 				// Left: 1 Front: 0 Right: 0
@@ -1351,8 +1345,7 @@ void floodSlow(double base_speed) {
 				}
 
 				else {
-					brakeInCell(base_speed);
-					turnRight();
+					curveTurn(RIGHT,base_speed);
 				}
 				break;
 			case 5:
@@ -1360,9 +1353,8 @@ void floodSlow(double base_speed) {
 				break;
 			case 6:
 				// Left: 1 Front: 1 Right: 0
-				frontCorrection();
 				mapFrontWall(x, y, true);
-				turnRight();
+				curveTurn(RIGHT,base_speed);
 				break;
 			case 7:
 				// Left: 1 Front: 1 Right: 1
