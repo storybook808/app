@@ -1370,7 +1370,7 @@ Path findShortestPath() {
 	Coordinate currentCell = setCoordinate(0,0);
 
 	// Flood to back center cell
-	floodToCell(center.x,center.y);
+	floodSpeedRun(center.x,center.y);
 
 	// Initialize move counter for stack
 	Path moves;
