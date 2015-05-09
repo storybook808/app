@@ -51,6 +51,7 @@ void mapSlow();
 
 void floodSlow(double base_speed);
 void floodCurve(double base_speed);
+bool centerCellStop();
 void curveTurn(Wall turn, double base_speed);
 
 void floodSearch();

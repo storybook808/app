@@ -13,6 +13,31 @@ static void incrementEncoder(Encoder channel);
 static void decrementEncoder(Encoder channel);
 
 static int leftCount, rightCount;
+static int positionLeft, positionRight;
+
+int getPosition(Encoder channel)
+{
+	if (channel == LEFTENCODER) {
+		return positionLeft;
+	}
+	else return positionRight;
+}
+
+void resetPosition(Encoder channel)
+{
+	if (channel == LEFTENCODER) {
+		positionLeft = 0;
+	}
+	else positionRight = 0;
+}
+
+void setPosition(Encoder channel)
+{
+	if (channel == LEFTENCODER) {
+		positionLeft = (CELL_L/2-CELL_L/9)-10;
+	}
+	else positionRight = (CELL_R/2-CELL_R/9)-10;
+}
 
 int getEncoder(Encoder channel)
 {
@@ -28,14 +53,26 @@ void resetEncoder(Encoder channel)
 
 static void incrementEncoder(Encoder channel)
 {
-	if (channel == LEFTENCODER) leftCount++;
-	else rightCount++;
+	if (channel == LEFTENCODER) {
+		leftCount++;
+		positionLeft++;
+	}
+	else {
+		rightCount++;
+		positionRight++;
+	}
 }
 
 static void decrementEncoder(Encoder channel)
 {
-	if (channel == LEFTENCODER) leftCount--;
-	else rightCount--;
+	if (channel == LEFTENCODER) {
+		leftCount--;
+		positionLeft--;
+	}
+	else {
+		rightCount--;
+		positionRight--;
+	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)

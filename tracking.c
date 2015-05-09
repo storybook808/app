@@ -1549,15 +1549,10 @@ void floodCurve(double base_speed) {
 		// Determine walls
 
 		// Determine location
-		location = getEncoder(LEFTENCODER);
-
-		if (location >= CELL_L) {
-			resetEncoder(RIGHTENCODER);
-			resetEncoder(LEFTENCODER);
-		}
+		location = getPosition(LEFTENCODER);
 
 		// If we are half-way through a cell
-		if (location%CELL_L >= CELL_L/2 && mapTime) {
+		if (location%CELL_L >= (CELL_L/2-CELL_L/9) && mapTime) {
 			// Check side walls.
 			rightWall = hasRightWall(centerRight);
 			leftWall = hasLeftWall(centerLeft);
@@ -1709,10 +1704,12 @@ void floodCurve(double base_speed) {
 
 				else if (floodRight <= floodLeft && floodRight <= floodBack) {
 					curveTurn(RIGHT,base_speed);
+					mapTime = true;
 				}
 
 				else if (floodLeft <= floodBack) {
 					curveTurn(LEFT,base_speed);
+					mapTime = true;
 				}
 
 				else {
@@ -1750,6 +1747,7 @@ void floodCurve(double base_speed) {
 
 				else {
 					curveTurn(LEFT,base_speed);
+					mapTime = true;
 				}
 
 				break;
@@ -1779,10 +1777,12 @@ void floodCurve(double base_speed) {
 
 				if (floodRight <= floodLeft) {
 					curveTurn(RIGHT,base_speed);
+					mapTime = true;
 				}
 
 				else {
 					curveTurn(LEFT,base_speed);
+					mapTime = true;
 				}
 
 				break;
@@ -1790,6 +1790,7 @@ void floodCurve(double base_speed) {
 				// Left: 0 Front: 1 Right: 1
 				mapFrontWall(x, y, true);
 				curveTurn(LEFT,base_speed);
+				mapTime = true;
 				break;
 			case 4:
 				// Left: 1 Front: 0 Right: 0
@@ -1818,6 +1819,7 @@ void floodCurve(double base_speed) {
 
 				else {
 					curveTurn(RIGHT,base_speed);
+					mapTime = true;
 				}
 				break;
 			case 5:
@@ -1827,6 +1829,7 @@ void floodCurve(double base_speed) {
 				// Left: 1 Front: 1 Right: 0
 				mapFrontWall(x, y, true);
 				curveTurn(RIGHT,base_speed);
+				mapTime = true;
 				break;
 			case 7:
 				// Left: 1 Front: 1 Right: 1
@@ -1883,16 +1886,16 @@ void floodCurve(double base_speed) {
 }
 
 void curveTurn(Wall turn, double base_speed) {
-//	resetEncoder(RIGHTENCODER);
-//	resetEncoder(LEFTENCODER);
+	resetEncoder(RIGHTENCODER);
+	resetEncoder(LEFTENCODER);
 	int startLeft = getEncoder(LEFTENCODER);
 	int startRight = getEncoder(RIGHTENCODER);
 	int currentLeft;
 	int currentRight;
 	bool done = false;
 
-	float curveMinor = 0.466;
-	float curveMajor = 1.4281;
+	float curveMinor = 0.55;
+	float curveMajor = 1.62;
 
 	while(!done) {
 		currentLeft = getEncoder(LEFTENCODER);
@@ -1930,6 +1933,20 @@ void curveTurn(Wall turn, double base_speed) {
 		else dir--;
 		setVelocity(base_speed);
 	}
-//	setEncoder(RIGHTENCODER,(CELL_L/2-((CELL_L*10)/18)));
-//	setEncoder(LEFTENCODER,(CELL_L/2-((CELL_L*10)/18)));
+	setPosition(LEFTENCODER);
+	setPosition(RIGHTENCODER);
+}
+
+bool centerCellStop() {
+	if (!brb) {
+		if ((x == 7 && y == 7)||(x == 7 && y == 8)||(x == 8 && y == 7)||(x == 8 && y == 8)) {
+			playBuzzer(10,0);
+			brb = true;;
+			return true;
+		}
+	}
+	if (x != 0 || y != 0) {
+		brb = false;
+	}
+	return false;
 }
