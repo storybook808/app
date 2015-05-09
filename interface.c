@@ -165,7 +165,7 @@ Mode menu() {
 	while(1) {
 		rightSensor = readSensor(RIGHT_CEN_DET);
 		count = getEncoder(RIGHTENCODER);
-		count = count%(size*5);
+		count = count%(size*7);
 
 
 		if (count >= 0 && count <= size) {
@@ -197,6 +197,37 @@ Mode menu() {
 //			resetLED(WHITE);
 //			resetLED(GREEN);
 			mode = MODE5;
+		} else if (count > (size*5) && count <= (size*6)) {
+			testChaser(1,250);
+			setBuzzerTone(E8);
+			playBuzzer(100,50);
+			setBuzzerTone(E8);
+			playBuzzer(100,50);
+			setBuzzerTone(E8);
+			playBuzzer(300,50);
+			setBuzzerTone(C7);
+			playBuzzer(100,50);
+			setBuzzerTone(E8);
+			playBuzzer(100,50);
+			setBuzzerTone(G8);
+			playBuzzer(200,50);
+			setBuzzerTone(G7);
+			playBuzzer(200,50);
+			mode = MODE6;
+		} else if (count > (size*6) && count <= (size*7)) {
+			resetLEDAll();
+			setLED(WHITE);
+			HAL_Delay(100);
+			setLED(BLUE);
+			HAL_Delay(100);
+			resetLED(WHITE);
+			setLED(GREEN);
+			HAL_Delay(100);
+			resetLED(BLUE);
+			setLED(RED);
+			HAL_Delay(100);
+			resetLED(GREEN);
+			mode = MODE7;
 		}
 
 		if (rightSensor <= thresh) {

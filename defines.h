@@ -174,7 +174,8 @@ typedef enum
 	MODE2,
 	MODE3,
 	MODE4,
-	MODE5
+	MODE5,
+	MODE6
 }Mode;
 
 /* Enumeration for Buzzer */

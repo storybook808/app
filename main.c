@@ -88,6 +88,20 @@ void main(void) {
 			floodSlow(50);
 			saveMap();
 		}
+		else if (mode == MODE6) {
+			x = 0;
+			y = 0;
+			dir = 0;
+			floodSlow(75);
+			saveMap();
+		}
+		else if (mode == MODE7) {
+			x = 0;
+			y = 0;
+			dir = 0;
+			floodeCurve();
+			saveMap();
+		}
 
 		else {
 			resetLEDAll();
