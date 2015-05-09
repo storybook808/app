@@ -916,7 +916,7 @@ void floodSlow(double base_speed) {
 	uint8_t wallCount;
 	uint8_t decision;
 
-	float floodRight, floodFront, floodLeft, floodBack;
+	float floodRight, floodFront, floodLeft;
 
 	resetEncoder(RIGHTENCODER);
 	resetEncoder(LEFTENCODER);
@@ -1069,45 +1069,35 @@ void floodSlow(double base_speed) {
 					floodLeft = getFloodValue(setCoordinate(x,y),WEST);
 					floodFront = getFloodValue(setCoordinate(x,y),NORTH);
 					floodRight = getFloodValue(setCoordinate(x,y),EAST);
-					floodBack = getFloodValue(setCoordinate(x,y),SOUTH);
 					break;
 				case EAST:
 					floodLeft = getFloodValue(setCoordinate(x,y),NORTH);
 					floodFront = getFloodValue(setCoordinate(x,y),EAST);
 					floodRight = getFloodValue(setCoordinate(x,y),SOUTH);
-					floodBack = getFloodValue(setCoordinate(x,y),WEST);
 					break;
 				case SOUTH:
 					floodLeft = getFloodValue(setCoordinate(x,y),EAST);
 					floodFront = getFloodValue(setCoordinate(x,y),SOUTH);
 					floodRight = getFloodValue(setCoordinate(x,y),WEST);
-					floodBack = getFloodValue(setCoordinate(x,y),NORTH);
 					break;
 				case WEST:
 					floodLeft = getFloodValue(setCoordinate(x,y),SOUTH);
 					floodFront = getFloodValue(setCoordinate(x,y),WEST);
 					floodRight = getFloodValue(setCoordinate(x,y),NORTH);
-					floodBack = getFloodValue(setCoordinate(x,y),EAST);
 					break;
 				}
 
-				if (floodFront <= floodLeft && floodFront <= floodRight && floodFront <= floodBack) {
+				if (floodFront <= floodLeft && floodFront <= floodRight) {
 
 				}
 
-				else if (floodRight <= floodLeft && floodRight <= floodBack) {
+				else if (floodRight <= floodLeft) {
 					brakeInCell(base_speed);
 					turnRight();
 				}
 
-				else if (floodLeft <= floodBack) {
-					brakeInCell(base_speed);
-					turnLeft();
-				}
-
 				else {
 					brakeInCell(base_speed);
-					turnLeft();
 					turnLeft();
 				}
 
