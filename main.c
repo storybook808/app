@@ -80,6 +80,15 @@ void main(void) {
 			saveMap();
 		}
 
+		else if (mode == MODE4) {
+			x = 0;
+			y = 0;
+			dir = 0;
+			speed1(175);
+			floodSlow(50);
+			saveMap();
+		}
+
 		else {
 			resetLEDAll();
 			calibrateSensors();

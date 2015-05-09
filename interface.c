@@ -165,29 +165,38 @@ Mode menu() {
 	while(1) {
 		rightSensor = readSensor(RIGHT_CEN_DET);
 		count = getEncoder(RIGHTENCODER);
-		count = count%(size*4);
+		count = count%(size*5);
 
 
 		if (count >= 0 && count <= size) {
+			resetLEDAll();
 			setLED(WHITE);
-			resetLED(RED);
-			resetLED(BLUE);
+//			resetLED(RED);
+//			resetLED(BLUE);
 			mode = MODE1;
 		} else if (count > size && count <= (size*2)) {
+			resetLEDAll();
 			setLED(BLUE);
-			resetLED(WHITE);
-			resetLED(GREEN);
+//			resetLED(WHITE);
+//			resetLED(GREEN);
 			mode = MODE2;
 		} else if (count > (size*2) && count <= (size*3)) {
+			resetLEDAll();
 			setLED(GREEN);
-			resetLED(BLUE);
-			resetLED(RED);
+//			resetLED(BLUE);
+//			resetLED(RED);
 			mode = MODE3;
 		} else if (count > (size*3) && count <= (size*4)) {
+			resetLEDAll();
 			setLED(RED);
-			resetLED(WHITE);
-			resetLED(GREEN);
+//			resetLED(WHITE);
+//			resetLED(GREEN);
 			mode = MODE4;
+		} else if (count > (size*4) && count <= (size*5)) {
+			setLEDAll();
+//			resetLED(WHITE);
+//			resetLED(GREEN);
+			mode = MODE5;
 		}
 
 		if (rightSensor <= thresh) {
