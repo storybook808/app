@@ -43,7 +43,6 @@ void main(void) {
 	resetEncoder(RIGHTENCODER);
 
 	Mode mode;
-	Path path;
 
 	while(1) {
 

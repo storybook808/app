@@ -913,7 +913,6 @@ void floodSlow(double base_speed) {
 	frontWall = false;
 	backWall = true;
 
-	uint8_t wallCount;
 	uint8_t decision;
 
 	float floodRight, floodFront, floodLeft, floodBack;
@@ -951,7 +950,6 @@ void floodSlow(double base_speed) {
 			backWall = false;
 
 			// Node decisions.
-			wallCount = rightWall + leftWall + frontWall;
 
 			switch (dir) {
 				case 0:

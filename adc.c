@@ -101,6 +101,8 @@ uint32_t readADC(ADC_Channel channel) {
 			sConfig.Offset = 0;
 			HAL_ADC_ConfigChannel(&ADCHandle, &sConfig);
 			break;
+        case VOLT_DET:
+        	break;
     }
     // Wait 8us
     while(i--);
