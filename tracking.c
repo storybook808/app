@@ -1896,11 +1896,13 @@ void curveTurn(Wall turn, double base_speed) {
 
 	float curveMinor = 0.55;
 	float curveMajor = 1.62;
+	int majorTicks = (CELL_L/18)*17.8;
+	int dist = (CELL_L/18)*4;
 
 	while(!done) {
 		currentLeft = getEncoder(LEFTENCODER);
 		correction2(base_speed);
-		if (currentLeft >= startLeft+486) {
+		if (currentLeft >= startLeft+dist) {
 			done = true;
 		}
 	}
@@ -1912,7 +1914,7 @@ void curveTurn(Wall turn, double base_speed) {
 		setLeftVelocity(base_speed*curveMajor);
 		while(!done) {
 			currentLeft = getEncoder(LEFTENCODER);
-			if ((currentLeft - (startLeft+486)) >= 4362) {
+			if ((currentLeft - (startLeft+dist)) >= majorTicks) {
 				done = true;
 			}
 		}
@@ -1925,7 +1927,7 @@ void curveTurn(Wall turn, double base_speed) {
 		setRightVelocity(base_speed*curveMajor);
 		while(!done) {
 			currentRight = getEncoder(RIGHTENCODER);
-			if ((currentRight - (startRight+486))>= 4382) {
+			if ((currentRight - (startRight+dist))>= majorTicks) {
 				done = true;
 			}
 		}
@@ -1939,7 +1941,7 @@ void curveTurn(Wall turn, double base_speed) {
 
 bool centerCellStop() {
 	if (!brb) {
-		if ((x == 7 && y == 7)||(x == 7 && y == 8)||(x == 8 && y == 7)||(x == 8 && y == 8)) {
+		if ((x == 8 && y == 8)) {
 			playBuzzer(10,0);
 			brb = true;;
 			return true;

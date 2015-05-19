@@ -34,9 +34,9 @@ void resetPosition(Encoder channel)
 void setPosition(Encoder channel)
 {
 	if (channel == LEFTENCODER) {
-		positionLeft = (CELL_L/2-CELL_L/9)-10;
+		positionLeft = (CELL_L/2-CELL_L/9);
 	}
-	else positionRight = (CELL_R/2-CELL_R/9)-10;
+	else positionRight = (CELL_R/2-CELL_R/9);
 }
 
 int getEncoder(Encoder channel)

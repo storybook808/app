@@ -159,6 +159,7 @@ Mode menu() {
 	int count;
 	double rightSensor;
 	double thresh = 700;
+	bool flag = false;
 
 	resetLEDAll();
 
@@ -174,6 +175,7 @@ Mode menu() {
 //			resetLED(RED);
 //			resetLED(BLUE);
 			mode = MODE1;
+			flag = false;
 		} else if (count > size && count <= (size*2)) {
 			resetLEDAll();
 			setLED(BLUE);
@@ -211,10 +213,12 @@ Mode menu() {
 			HAL_Delay(100);
 			resetLED(GREEN);
 			mode = MODE6;
+			flag = false;
 		} else if (count > (size*6) && count <= (size*7)) {
 			resetLEDAll();
 			setLED(WHITE);
 			setLED(RED);
+			if (!flag) {
 			setBuzzerTone(E8);
 			playBuzzer(100,50);
 			setBuzzerTone(E8);
@@ -229,6 +233,8 @@ Mode menu() {
 			playBuzzer(200,50);
 			setBuzzerTone(G7);
 			playBuzzer(200,50);
+			flag = true;
+			}
 			mode = MODE7;
 		}
 
